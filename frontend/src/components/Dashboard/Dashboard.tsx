@@ -1,12 +1,10 @@
 import { useRef, useEffect } from 'react';
 import {
-  LineChart,
   Line,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  CartesianGrid,
   Area,
   AreaChart,
 } from 'recharts';
@@ -59,6 +57,7 @@ export function Dashboard({ state, history }: DashboardProps) {
       value: `${(c.inflationRate * 100).toFixed(1)}%`,
       icon: IconInflation,
       className: 'kpi-inflation',
+      warn: c.inflationRate > 0.08,
     },
     {
       key: 'unemployment',
@@ -66,6 +65,7 @@ export function Dashboard({ state, history }: DashboardProps) {
       value: `${(c.unemploymentRate * 100).toFixed(1)}%`,
       icon: IconUnemployment,
       className: 'kpi-unemployment',
+      warn: c.unemploymentRate > 0.08,
     },
     {
       key: 'debt',
@@ -73,6 +73,7 @@ export function Dashboard({ state, history }: DashboardProps) {
       value: `${(c.debtToGdp * 100).toFixed(1)}%`,
       icon: IconDebt,
       className: 'kpi-debt',
+      warn: c.debtToGdp > 0.6,
     },
     {
       key: 'trade',
@@ -88,7 +89,15 @@ export function Dashboard({ state, history }: DashboardProps) {
       icon: IconApproval,
       className: 'kpi-approval',
       approvalPct: c.approval * 100,
+      warn: c.approval < 0.3,
     },
+  ];
+
+  const chartConfig = [
+    { key: 'gdp', label: 'GDP', color: 'var(--color-gdp)' },
+    { key: 'inflation', label: 'Inflation %', color: 'var(--color-inflation)' },
+    { key: 'debtToGdp', label: 'Debt/GDP %', color: 'var(--color-debt)' },
+    { key: 'approval', label: 'Approval %', color: 'var(--color-approval)' },
   ];
 
   return (
@@ -96,7 +105,7 @@ export function Dashboard({ state, history }: DashboardProps) {
       <h2>Economic dashboard</h2>
       <div className="kpi-grid">
         {kpis.map((item) => (
-          <div key={item.key} className={`kpi ${item.className}`}>
+          <div key={item.key} className={`kpi ${item.className}${item.warn ? ' kpi-warn' : ''}`}>
             <div className="kpi-icon" aria-hidden>
               <item.icon />
             </div>
@@ -120,74 +129,62 @@ export function Dashboard({ state, history }: DashboardProps) {
           </div>
         ))}
       </div>
-      {data.length > 0 && (
-        <div className="chart-wrap">
-          <ResponsiveContainer width="100%" height={240}>
-            <AreaChart
-              data={data}
-              margin={{ top: 8, right: 8, left: 8, bottom: 8 }}
-            >
-              <defs>
-                <linearGradient id="gdpGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--color-gdp)" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="var(--color-gdp)" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="inflationGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--color-inflation)" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="var(--color-inflation)" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="debtGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--color-debt)" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="var(--color-debt)" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="turn" stroke="var(--text-muted)" fontSize={12} />
-              <YAxis stroke="var(--text-muted)" fontSize={12} tickFormatter={(v) => v.toFixed(0)} />
-              <Tooltip
-                contentStyle={{
-                  background: 'var(--surface)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-sm)',
-                }}
-                formatter={(v: number) => [v.toFixed(2), '']}
-                labelFormatter={(t) => `Turn ${t}`}
-              />
-              <Area
-                type="monotone"
-                dataKey="gdp"
-                stroke="var(--color-gdp)"
-                fill="url(#gdpGrad)"
-                strokeWidth={2}
-                name="GDP"
-                isAnimationActive
-                animationDuration={600}
-                animationEasing="ease-out"
-              />
-              <Line
-                type="monotone"
-                dataKey="inflation"
-                stroke="var(--color-inflation)"
-                strokeWidth={2}
-                name="Inflation %"
-                dot={false}
-                isAnimationActive
-                animationDuration={600}
-                animationEasing="ease-out"
-              />
-              <Line
-                type="monotone"
-                dataKey="debtToGdp"
-                stroke="var(--color-debt)"
-                strokeWidth={2}
-                name="Debt/GDP %"
-                dot={false}
-                isAnimationActive
-                animationDuration={600}
-                animationEasing="ease-out"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+
+      {/* Separate mini-charts so each metric has its own Y-axis */}
+      {data.length > 1 && (
+        <div className="charts-grid">
+          {chartConfig.map((cfg) => (
+            <div className="mini-chart" key={cfg.key}>
+              <span className="mini-chart-label" style={{ color: cfg.color }}>
+                {cfg.label}
+              </span>
+              <ResponsiveContainer width="100%" height={120}>
+                <AreaChart
+                  data={data}
+                  margin={{ top: 4, right: 4, left: 4, bottom: 4 }}
+                >
+                  <defs>
+                    <linearGradient id={`grad-${cfg.key}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={cfg.color} stopOpacity={0.25} />
+                      <stop offset="100%" stopColor={cfg.color} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="turn" hide />
+                  <YAxis
+                    width={40}
+                    stroke="var(--text-muted)"
+                    fontSize={10}
+                    tickFormatter={(v: number) =>
+                      cfg.key === 'gdp' ? v.toFixed(0) : `${v.toFixed(0)}%`
+                    }
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: 'var(--surface)',
+                      border: '1px solid var(--border)',
+                      borderRadius: 'var(--radius-sm)',
+                      fontSize: '0.8rem',
+                    }}
+                    formatter={(v: number) => [
+                      cfg.key === 'gdp' ? v.toFixed(0) : `${v.toFixed(1)}%`,
+                      cfg.label,
+                    ]}
+                    labelFormatter={(t) => `Turn ${t}`}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey={cfg.key}
+                    stroke={cfg.color}
+                    fill={`url(#grad-${cfg.key})`}
+                    strokeWidth={2}
+                    isAnimationActive
+                    animationDuration={500}
+                    animationEasing="ease-out"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          ))}
         </div>
       )}
     </div>

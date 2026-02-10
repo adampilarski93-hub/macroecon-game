@@ -6,10 +6,47 @@ import type {
   GameMode,
   EasyConfig,
   AdvisoryItem,
+  GameResult,
+  ObjectiveGoal,
+  LLMConfig,
+  ChatMessage,
 } from '../types';
-import { scenarios as localScenarios, createInitialState } from '../scenarios';
+import { scenarios as localScenarios, createInitialState, getScenarioObjectives } from '../scenarios';
 import { step as engineStep } from '../engine/step';
 import { getAdvisory } from '../engine/advisor';
+import {
+  loadLLMConfig,
+  saveLLMConfig,
+  generateTurnBriefing,
+  generateAdvisory as llmAdvisory,
+  chatWithAdvisor,
+  generatePostGameAnalysis,
+  generateAutoPlayActions,
+} from '../services/llm';
+
+/* ── helpers ── */
+
+function getMetric(state: SimulationState, metric: string): number {
+  const c = state.country as unknown as Record<string, unknown>;
+  return (c[metric] as number) ?? 0;
+}
+
+function checkGoal(state: SimulationState, goal: ObjectiveGoal): boolean {
+  const val = getMetric(state, goal.metric);
+  return goal.compare === 'above' ? val >= goal.target : val <= goal.target;
+}
+
+function computeScore(history: SimulationState[], goals: ObjectiveGoal[]): number {
+  if (history.length === 0) return 0;
+  const last = history[history.length - 1];
+  const goalsMet = goals.filter((g) => checkGoal(last, g)).length;
+  const goalScore = goals.length > 0 ? (goalsMet / goals.length) * 60 : 30;
+  const approvalScore = last.country.approval * 20;
+  const growthScore = Math.min(20, Math.max(0, (last.country.gdpGrowth + 0.05) * 200));
+  return Math.round(goalScore + approvalScore + growthScore);
+}
+
+/* ── types ── */
 
 interface GameState {
   sessionId: string | null;
@@ -22,12 +59,32 @@ interface GameState {
   serverConnected: boolean | null;
   mode: GameMode;
   easyConfig: EasyConfig;
+
+  /* new state */
+  turnBriefing: string | null;
+  briefingLoading: boolean;
+  llmAdvisoryText: string | null;
+  gameResult: GameResult | null;
+  llmConfig: LLMConfig;
+  chatHistory: ChatMessage[];
+  chatLoading: boolean;
+  postGameAnalysis: string | null;
+  autoPlaying: boolean;
+  autoPlayLog: string[];
+
+  /* actions */
   fetchScenarios: () => Promise<void>;
   startSimulation: (scenarioId: string) => Promise<void>;
   step: (actions: PolicyActions) => Promise<void>;
+  undo: () => void;
+  sendChat: (message: string) => Promise<void>;
   setError: (err: string | null) => void;
   setMode: (mode: GameMode) => void;
   setEasyConfig: (config: EasyConfig) => void;
+  setLLMConfig: (config: LLMConfig) => void;
+  resetGame: () => void;
+  startAutoPlay: () => Promise<void>;
+  stopAutoPlay: () => void;
 }
 
 const API = '/api';
@@ -59,6 +116,18 @@ export const useGameStore = create<GameState>((set, get) => ({
     alliance: 'non_aligned',
   },
 
+  /* new state defaults */
+  turnBriefing: null,
+  briefingLoading: false,
+  llmAdvisoryText: null,
+  gameResult: null,
+  llmConfig: loadLLMConfig(),
+  chatHistory: [],
+  chatLoading: false,
+  postGameAnalysis: null,
+  autoPlaying: false,
+  autoPlayLog: [],
+
   fetchScenarios: async () => {
     set({ loading: true, error: null });
     try {
@@ -69,8 +138,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       }
       const data = await r.json();
       set({ scenarios: data.scenarios, loading: false, serverConnected: true });
-    } catch (e) {
-      const message = e instanceof Error ? e.message : 'Unknown error';
+    } catch {
       const localList: ScenarioSummary[] = localScenarios.map((s) => ({
         id: s.id,
         name: s.name,
@@ -87,9 +155,10 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   startSimulation: async (scenarioId: string) => {
+    const { mode, easyConfig } = get();
     if (get().serverConnected === false) {
       set({ loading: true, error: null });
-      const state = createInitialState(scenarioId);
+      const state = createInitialState(scenarioId, mode === 'easy' ? easyConfig : undefined);
       if (!state) {
         set({ error: 'Unknown scenario', loading: false });
         return;
@@ -100,12 +169,16 @@ export const useGameStore = create<GameState>((set, get) => ({
         history: [state],
         advisory: [],
         loading: false,
+        turnBriefing: null,
+        llmAdvisoryText: null,
+        gameResult: null,
+        chatHistory: [],
+        postGameAnalysis: null,
       });
       return;
     }
     set({ loading: true, error: null });
     try {
-      const { mode, easyConfig } = get();
       const r = await fetch(`${API}/start-simulation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -122,60 +195,232 @@ export const useGameStore = create<GameState>((set, get) => ({
         history: [data.state],
         advisory: [],
         loading: false,
+        turnBriefing: null,
+        llmAdvisoryText: null,
+        gameResult: null,
+        chatHistory: [],
+        postGameAnalysis: null,
       });
     } catch (e) {
-      set({
-        error: e instanceof Error ? e.message : 'Unknown error',
-        loading: false,
-      });
+      set({ error: e instanceof Error ? e.message : 'Unknown error', loading: false });
     }
   },
 
   step: async (actions: PolicyActions) => {
-    const { sessionId, state: s, serverConnected } = get();
+    const { sessionId, state: s, serverConnected, llmConfig } = get();
     if (!sessionId || !s) return;
-    set({ loading: true, error: null });
+
+    // Don't allow advancing past game over
+    if (get().gameResult) return;
+
+    set({ loading: true, error: null, briefingLoading: true });
+
+    let next: SimulationState;
+
     if (serverConnected === false && sessionId === 'local') {
-      const next = engineStep(s as import('../engine/state').SimulationState, actions as import('../engine/state').PolicyActions);
-      const advisory = getAdvisory(next);
-      set((prev) => ({
-        state: next as SimulationState,
-        history: [...prev.history, next as SimulationState],
-        advisory,
-        loading: false,
-      }));
-      return;
-    }
-    try {
-      const r = await fetch(`${API}/step`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, turnIndex: s.turn, actions }),
-      });
-      if (!r.ok) {
-        const data = await r.json().catch(() => ({}));
-        throw new Error(data.error || `HTTP ${r.status}`);
+      next = engineStep(
+        s as import('../engine/state').SimulationState,
+        actions as import('../engine/state').PolicyActions,
+      ) as unknown as SimulationState;
+    } else {
+      try {
+        const r = await fetch(`${API}/step`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId, turnIndex: s.turn, actions }),
+        });
+        if (!r.ok) {
+          const data = await r.json().catch(() => ({}));
+          throw new Error(data.error || `HTTP ${r.status}`);
+        }
+        const data = await r.json();
+        next = data.state as SimulationState;
+      } catch (e) {
+        set({ error: e instanceof Error ? e.message : 'Unknown error', loading: false, briefingLoading: false });
+        return;
       }
-      const data = await r.json();
-      const next = data.state as SimulationState;
-      const advisory = Array.isArray(data.advisory) ? data.advisory : [];
+    }
+
+    const advisory = getAdvisory(next as import('../engine/state').SimulationState);
+    const newHistory = [...get().history, next];
+
+    set({
+      state: next,
+      history: newHistory,
+      advisory,
+      loading: false,
+    });
+
+    // Generate turn briefing (async, doesn't block)
+    generateTurnBriefing(llmConfig, s, next, actions).then((briefing) => {
+      set({ turnBriefing: briefing, briefingLoading: false });
+    }).catch(() => set({ briefingLoading: false }));
+
+    // Generate LLM advisory (async)
+    llmAdvisory(llmConfig, next).then((text) => {
+      set({ llmAdvisoryText: text || null });
+    }).catch(() => {});
+
+    // Check game over
+    const objectives = getScenarioObjectives(next.scenario.scenarioId);
+    if (objectives && next.turn >= objectives.maxTurns) {
+      const allMet = objectives.goals.every((g) => checkGoal(next, g));
+      const score = computeScore(newHistory, objectives.goals);
+      const result: GameResult = {
+        won: allMet,
+        score,
+        turnsSurvived: next.turn,
+        maxTurns: objectives.maxTurns,
+        objectives: objectives.goals.map((g) => ({
+          label: g.label,
+          met: checkGoal(next, g),
+          description: g.description,
+        })),
+        finalState: next,
+      };
+      set({ gameResult: result });
+
+      // Generate post-game analysis (async)
+      generatePostGameAnalysis(llmConfig, newHistory, allMet, score).then((analysis) => {
+        if (analysis) set({ postGameAnalysis: analysis });
+      }).catch(() => {});
+    }
+
+    // Check for early failure (approval hits 0)
+    if (next.country.approval <= 0.05 && !get().gameResult) {
+      const score = computeScore(newHistory, objectives?.goals ?? []);
+      const result: GameResult = {
+        won: false,
+        score: Math.max(0, score - 20),
+        turnsSurvived: next.turn,
+        maxTurns: objectives?.maxTurns ?? 20,
+        objectives: (objectives?.goals ?? []).map((g) => ({
+          label: g.label,
+          met: checkGoal(next, g),
+          description: g.description,
+        })),
+        finalState: next,
+      };
+      set({ gameResult: result });
+
+      generatePostGameAnalysis(llmConfig, newHistory, false, result.score).then((analysis) => {
+        if (analysis) set({ postGameAnalysis: analysis });
+      }).catch(() => {});
+    }
+  },
+
+  undo: () => {
+    const { history, gameResult } = get();
+    if (history.length <= 1 || gameResult) return;
+    const newHistory = history.slice(0, -1);
+    const prev = newHistory[newHistory.length - 1];
+    const advisory = getAdvisory(prev as import('../engine/state').SimulationState);
+    set({
+      state: prev,
+      history: newHistory,
+      advisory,
+      turnBriefing: null,
+      llmAdvisoryText: null,
+    });
+  },
+
+  sendChat: async (message: string) => {
+    const { state: s, llmConfig, chatHistory } = get();
+    if (!s) return;
+    const userMsg: ChatMessage = { role: 'user', content: message };
+    set({ chatHistory: [...chatHistory, userMsg], chatLoading: true });
+    try {
+      const reply = await chatWithAdvisor(llmConfig, s, chatHistory, message);
+      const assistantMsg: ChatMessage = { role: 'assistant', content: reply };
       set((prev) => ({
-        state: next,
-        history: [...prev.history, next],
-        advisory,
-        loading: false,
+        chatHistory: [...prev.chatHistory, assistantMsg],
+        chatLoading: false,
       }));
-    } catch (e) {
-      set({
-        error: e instanceof Error ? e.message : 'Unknown error',
-        loading: false,
-      });
+    } catch {
+      const errMsg: ChatMessage = { role: 'assistant', content: 'Sorry, I couldn\'t generate a response. Check your API key in Settings.' };
+      set((prev) => ({
+        chatHistory: [...prev.chatHistory, errMsg],
+        chatLoading: false,
+      }));
     }
   },
 
   setError: (err) => set({ error: err }),
-
   setMode: (mode) => set({ mode }),
-
   setEasyConfig: (config) => set({ easyConfig: config }),
+
+  setLLMConfig: (config) => {
+    saveLLMConfig(config);
+    set({ llmConfig: config });
+  },
+
+  startAutoPlay: async () => {
+    const { llmConfig, state: s } = get();
+    if (!s || !llmConfig.enabled || !llmConfig.apiKey) {
+      set({ error: 'Configure an LLM API key in Settings to use auto-play.' });
+      return;
+    }
+    set({ autoPlaying: true, autoPlayLog: ['Auto-play started. The AI will run the simulation...'] });
+
+    const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+    while (get().autoPlaying && !get().gameResult) {
+      const currentState = get().state;
+      if (!currentState) break;
+
+      // Generate policy actions from LLM
+      set((prev) => ({
+        autoPlayLog: [...prev.autoPlayLog, `Turn ${currentState.turn + 1}: AI is deciding policies...`],
+      }));
+
+      const actions = await generateAutoPlayActions(llmConfig, currentState);
+      if (!actions) {
+        set((prev) => ({
+          autoPlayLog: [...prev.autoPlayLog, 'AI failed to generate actions. Stopping.'],
+          autoPlaying: false,
+        }));
+        break;
+      }
+
+      // Check if still auto-playing (user may have stopped)
+      if (!get().autoPlaying) break;
+
+      set((prev) => ({
+        autoPlayLog: [...prev.autoPlayLog, `Turn ${currentState.turn + 1}: Advancing...`],
+      }));
+
+      // Step the simulation
+      await get().step(actions);
+
+      // Small delay for readability
+      await delay(1500);
+    }
+
+    set((prev) => ({
+      autoPlaying: false,
+      autoPlayLog: [...prev.autoPlayLog, get().gameResult ? 'Game over! Auto-play complete.' : 'Auto-play stopped.'],
+    }));
+  },
+
+  stopAutoPlay: () => {
+    set({ autoPlaying: false });
+  },
+
+  resetGame: () => {
+    set({
+      sessionId: null,
+      state: null,
+      history: [],
+      advisory: [],
+      turnBriefing: null,
+      briefingLoading: false,
+      llmAdvisoryText: null,
+      gameResult: null,
+      chatHistory: [],
+      postGameAnalysis: null,
+      error: null,
+      autoPlaying: false,
+      autoPlayLog: [],
+    });
+  },
 }));

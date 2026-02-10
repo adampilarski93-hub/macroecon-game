@@ -121,3 +121,41 @@ export interface AdvisoryItem {
   instruction: string;
   explanation: string;
 }
+
+/* ── Win conditions & game-over ── */
+
+export interface ObjectiveGoal {
+  metric: string;          // dot-path into CountryState, e.g. 'approval', 'debtToGdp'
+  target: number;
+  compare: 'above' | 'below';
+  label: string;
+  description: string;
+}
+
+export interface ScenarioObjectives {
+  maxTurns: number;
+  goals: ObjectiveGoal[];
+}
+
+export interface GameResult {
+  won: boolean;
+  score: number;
+  turnsSurvived: number;
+  maxTurns: number;
+  objectives: { label: string; met: boolean; description: string }[];
+  finalState: SimulationState;
+}
+
+/* ── LLM integration ── */
+
+export interface LLMConfig {
+  apiKey: string;
+  baseUrl: string;
+  model: string;
+  enabled: boolean;
+}
+
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}

@@ -3,6 +3,7 @@ import { IconAdvisory } from './Icons';
 
 interface AdvisoryPanelProps {
   items: AdvisoryItem[];
+  llmAdvisoryText?: string | null;
 }
 
 const SCHOOL_COLORS: Record<string, string> = {
@@ -13,8 +14,10 @@ const SCHOOL_COLORS: Record<string, string> = {
   Structuralist: 'var(--color-trade)',
 };
 
-export function AdvisoryPanel({ items }: AdvisoryPanelProps) {
-  if (items.length === 0) {
+export function AdvisoryPanel({ items, llmAdvisoryText }: AdvisoryPanelProps) {
+  const hasContent = items.length > 0 || !!llmAdvisoryText;
+
+  if (!hasContent) {
     return (
       <div className="advisory-panel">
         <h2>
@@ -22,13 +25,16 @@ export function AdvisoryPanel({ items }: AdvisoryPanelProps) {
           Policy advice
         </h2>
         <p className="muted">
-          No advice this turn. When inflation or debt gets too high, we’ll show simple options from different economic traditions here.
+          No advice this turn. When inflation or debt gets too high, advice from different economic traditions will appear here.
         </p>
       </div>
     );
   }
 
-  const byTopic = { inflation: items.filter((a) => a.topic === 'inflation'), debt: items.filter((a) => a.topic === 'debt') };
+  const byTopic = {
+    inflation: items.filter((a) => a.topic === 'inflation'),
+    debt: items.filter((a) => a.topic === 'debt'),
+  };
 
   return (
     <div className="advisory-panel">
@@ -36,9 +42,21 @@ export function AdvisoryPanel({ items }: AdvisoryPanelProps) {
         <span className="icon" aria-hidden><IconAdvisory /></span>
         Policy advice
       </h2>
-      <p className="advisory-intro">
-        Each option is in plain language. Pick the mix that fits your goals.
-      </p>
+
+      {/* LLM personalised advice (shown first if available) */}
+      {llmAdvisoryText && (
+        <div className="llm-advisory">
+          <span className="llm-advisory-badge">AI analysis</span>
+          <p>{llmAdvisoryText}</p>
+        </div>
+      )}
+
+      {items.length > 0 && (
+        <p className="advisory-intro">
+          Advice from different economic schools of thought:
+        </p>
+      )}
+
       {byTopic.inflation.length > 0 && (
         <section className="advisory-topic">
           <h3>Tackling inflation</h3>
@@ -49,8 +67,11 @@ export function AdvisoryPanel({ items }: AdvisoryPanelProps) {
                   {a.school}
                 </span>
                 <h4>{a.title}</h4>
-                <p className="advisory-instruction"><strong>What to do:</strong> {a.instruction}</p>
-                <p className="advisory-explanation"><strong>Why it helps:</strong> {a.explanation}</p>
+                <details>
+                  <summary>What to do & why</summary>
+                  <p className="advisory-instruction"><strong>What to do:</strong> {a.instruction}</p>
+                  <p className="advisory-explanation"><strong>Why it helps:</strong> {a.explanation}</p>
+                </details>
               </li>
             ))}
           </ul>
@@ -66,8 +87,11 @@ export function AdvisoryPanel({ items }: AdvisoryPanelProps) {
                   {a.school}
                 </span>
                 <h4>{a.title}</h4>
-                <p className="advisory-instruction"><strong>What to do:</strong> {a.instruction}</p>
-                <p className="advisory-explanation"><strong>Why it helps:</strong> {a.explanation}</p>
+                <details>
+                  <summary>What to do & why</summary>
+                  <p className="advisory-instruction"><strong>What to do:</strong> {a.instruction}</p>
+                  <p className="advisory-explanation"><strong>Why it helps:</strong> {a.explanation}</p>
+                </details>
               </li>
             ))}
           </ul>
