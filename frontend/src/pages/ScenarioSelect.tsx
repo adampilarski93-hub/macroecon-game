@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../state/gameStore';
 import { IconScenarioEconomy, IconScenarioStagflation, IconLoading } from '../components/Icons';
@@ -23,11 +23,16 @@ export function ScenarioSelect() {
     error,
     mode,
     easyConfig,
+    customMaxTurns,
     fetchScenarios,
     startSimulation,
     setMode,
     setEasyConfig,
+    setCustomMaxTurns,
   } = useGameStore();
+
+  const [useCustomTurns, setUseCustomTurns] = useState(customMaxTurns > 0);
+  const [sliderValue, setSliderValue] = useState(customMaxTurns > 0 ? customMaxTurns : 40);
 
   useEffect(() => {
     fetchScenarios();
@@ -120,6 +125,48 @@ export function ScenarioSelect() {
           </div>
         </section>
       )}
+      {/* Turn count selector */}
+      <section className="turn-selector">
+        <div className="turn-selector-header">
+          <label className="turn-toggle">
+            <input
+              type="checkbox"
+              checked={useCustomTurns}
+              onChange={(e) => {
+                setUseCustomTurns(e.target.checked);
+                setCustomMaxTurns(e.target.checked ? sliderValue : 0);
+              }}
+            />
+            Custom game length
+          </label>
+          {useCustomTurns && (
+            <span className="turn-value">{sliderValue} turns</span>
+          )}
+        </div>
+        {useCustomTurns && (
+          <div className="turn-slider-row">
+            <span className="turn-label-min">20</span>
+            <input
+              type="range"
+              min={20}
+              max={200}
+              step={5}
+              value={sliderValue}
+              onChange={(e) => {
+                const v = Number(e.target.value);
+                setSliderValue(v);
+                setCustomMaxTurns(v);
+              }}
+              className="turn-slider"
+            />
+            <span className="turn-label-max">200</span>
+          </div>
+        )}
+        {!useCustomTurns && (
+          <p className="turn-selector-hint">Each scenario has a default turn count. Enable this to override it.</p>
+        )}
+      </section>
+
       {loading && !scenarios.length ? (
         <div className="loading-scenarios">
           <IconLoading />
@@ -138,7 +185,11 @@ export function ScenarioSelect() {
                 <h2>{s.name}</h2>
                 <div className="card-meta">
                   <span className={`difficulty ${s.difficulty}`}>{s.difficulty}</span>
-                  {obj && <span className="turns-badge">{obj.maxTurns} turns</span>}
+                  {obj && (
+                    <span className="turns-badge">
+                      {useCustomTurns ? sliderValue : obj.maxTurns} turns
+                    </span>
+                  )}
                 </div>
                 <p>{s.description}</p>
                 {obj && (

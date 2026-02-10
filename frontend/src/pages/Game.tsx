@@ -66,6 +66,8 @@ export function Game() {
   }
 
   const objectives = getScenarioObjectives(state.scenario.scenarioId);
+  const { customMaxTurns } = useGameStore();
+  const effectiveMaxTurns = customMaxTurns > 0 ? customMaxTurns : (objectives?.maxTurns ?? 20);
 
   const handlePlayAgain = () => {
     resetGame();
@@ -84,7 +86,7 @@ export function Game() {
         </div>
         <div className="game-header-right">
           <span className="turn-badge">
-            Turn {state.turn}{objectives ? ` / ${objectives.maxTurns}` : ''}
+            Turn {state.turn} / {effectiveMaxTurns}
           </span>
           {llmConfig.enabled && !gameResult && (
             <button

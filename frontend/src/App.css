@@ -301,6 +301,70 @@ header p {
   color: var(--accent-hover);
 }
 
+/* ── Turn count selector ── */
+.turn-selector {
+  margin-top: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+.turn-selector-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.turn-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text);
+}
+.turn-toggle input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.turn-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 90px;
+  text-align: right;
+}
+.turn-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.turn-slider {
+  flex: 1;
+  height: 6px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.turn-label-min,
+.turn-label-max {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  min-width: 28px;
+}
+.turn-label-max {
+  text-align: right;
+}
+.turn-selector-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
 .loading-scenarios {
   display: flex;
   flex-direction: column;

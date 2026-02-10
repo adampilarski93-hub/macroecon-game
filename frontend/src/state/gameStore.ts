@@ -59,6 +59,7 @@ interface GameState {
   serverConnected: boolean | null;
   mode: GameMode;
   easyConfig: EasyConfig;
+  customMaxTurns: number;
 
   /* new state */
   turnBriefing: string | null;
@@ -81,6 +82,7 @@ interface GameState {
   setError: (err: string | null) => void;
   setMode: (mode: GameMode) => void;
   setEasyConfig: (config: EasyConfig) => void;
+  setCustomMaxTurns: (turns: number) => void;
   setLLMConfig: (config: LLMConfig) => void;
   resetGame: () => void;
   startAutoPlay: () => Promise<void>;
@@ -115,6 +117,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     tradePosture: 'balanced',
     alliance: 'non_aligned',
   },
+  customMaxTurns: 0, // 0 = use scenario default
 
   /* new state defaults */
   turnBriefing: null,
@@ -263,14 +266,15 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     // Check game over
     const objectives = getScenarioObjectives(next.scenario.scenarioId);
-    if (objectives && next.turn >= objectives.maxTurns) {
+    const effectiveMaxTurns = get().customMaxTurns > 0 ? get().customMaxTurns : (objectives?.maxTurns ?? 20);
+    if (objectives && next.turn >= effectiveMaxTurns) {
       const allMet = objectives.goals.every((g) => checkGoal(next, g));
       const score = computeScore(newHistory, objectives.goals);
       const result: GameResult = {
         won: allMet,
         score,
         turnsSurvived: next.turn,
-        maxTurns: objectives.maxTurns,
+        maxTurns: effectiveMaxTurns,
         objectives: objectives.goals.map((g) => ({
           label: g.label,
           met: checkGoal(next, g),
@@ -293,7 +297,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         won: false,
         score: Math.max(0, score - 20),
         turnsSurvived: next.turn,
-        maxTurns: objectives?.maxTurns ?? 20,
+        maxTurns: effectiveMaxTurns,
         objectives: (objectives?.goals ?? []).map((g) => ({
           label: g.label,
           met: checkGoal(next, g),
@@ -348,6 +352,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   setError: (err) => set({ error: err }),
   setMode: (mode) => set({ mode }),
   setEasyConfig: (config) => set({ easyConfig: config }),
+  setCustomMaxTurns: (turns) => set({ customMaxTurns: turns }),
 
   setLLMConfig: (config) => {
     saveLLMConfig(config);
