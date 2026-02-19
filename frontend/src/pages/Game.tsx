@@ -154,7 +154,6 @@ export function Game() {
               chatHistory={chatHistory}
               chatLoading={chatLoading}
               onSend={sendChat}
-              llmEnabled={llmConfig.enabled}
             />
           </div>
         </section>

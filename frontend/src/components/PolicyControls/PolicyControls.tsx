@@ -6,12 +6,28 @@ function lerp(min: number, max: number, t: number) {
   return min + (max - min) * t;
 }
 
-/** Hover over the ? to see what this policy is and how it can affect the economy. */
+/** Click the ? to open an explainer box about this policy lever. */
 function PolicyHelp({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
   return (
     <span className="policy-help-wrap">
-      <span className="policy-help" aria-label="What is this and how does it affect the economy?">?</span>
-      <span className="policy-help-content" role="tooltip">{text}</span>
+      <button
+        type="button"
+        className={`policy-help ${open ? 'policy-help-active' : ''}`}
+        aria-label="What is this and how does it affect the economy?"
+        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
+      >
+        ?
+      </button>
+      {open && (
+        <>
+          <div className="policy-help-backdrop" onClick={() => setOpen(false)} />
+          <div className="policy-help-panel" role="tooltip">
+            <button type="button" className="policy-help-close" onClick={() => setOpen(false)} aria-label="Close">&times;</button>
+            <p>{text}</p>
+          </div>
+        </>
+      )}
     </span>
   );
 }

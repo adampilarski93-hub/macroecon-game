@@ -14,6 +14,9 @@ import type { NarrativeNode } from './types';
  * - Deng Xiaoping: reform and opening, pragmatic sequencing, SEZs
  * - John Smith: global labor arbitrage, value chains, imperialism of the 21st century
  * - Yingying Fu & Eduardo Olie: South-South development cooperation
+ * - Utsa Patnaik: colonial drain, food sovereignty, poverty measurement, agrarian crisis
+ * - Prabhat Patnaik: imperialism and accumulation, income deflation, money and finance,
+ *   the structural need of metropolitan capitalism for cheap tropical commodities
  */
 
 export const narrativeNodes: NarrativeNode[] = [
@@ -28,7 +31,9 @@ export const narrativeNodes: NarrativeNode[] = [
     title: 'A Nation at the Crossroads',
     narrative: `You have been elected president of the Republic of Azania, a sub-Saharan African nation of 28 million people. Your country is rich in cobalt, copper, and arable land — yet most of your people live on less than two dollars a day. The colonial economy left behind a single rail line running from the mines to the coast, built not to connect your people but to extract your wealth.
 
-Your predecessor signed a series of loans with Western creditors in the 1990s. The debt has ballooned. Debt service now consumes 40% of government revenue. Roads are crumbling. The sole teaching hospital needs generators because the power grid fails daily. Half the population is under 25 and unemployment among youth exceeds 40%.
+Azania's poverty is not an accident of geography or culture. As Utsa Patnaik's meticulous research on colonial drain has demonstrated, the wealth of the metropole was built on centuries of systematic extraction from colonies like yours. The colonial power used Azania's own tax revenues to "purchase" its exports — a mechanism that drained real resources while making the transfer invisible in trade statistics. The infrastructure the colonizers built served extraction, not development. The educational institutions they established trained clerks to administer exploitation, not engineers to build a nation. What they left behind was not undevelopment but active underdevelopment — a country made poor so that others could be rich.
+
+Your predecessor signed a series of loans with Western creditors in the 1990s. The debt has ballooned. Debt service now consumes 40% of government revenue. Roads are crumbling. The sole teaching hospital needs generators because the power grid fails daily. Half the population is under 25 and unemployment among youth exceeds 40%. As Prabhat Patnaik argues, this is not merely a fiscal crisis but a structural one: metropolitan capitalism requires access to cheap commodities and labor from the tropical world, and the financial architecture of debt and conditionality is the mechanism that ensures this access continues long after the colonial flag has been lowered.
 
 Two delegations have requested meetings with you this week. The first is from Beijing, offering infrastructure financing under the Belt and Road Initiative. The second is from the International Monetary Fund, offering a stabilization package. Your finance minister has also drawn up a plan for a domestically-financed development strategy — slower, harder, but beholden to no one.
 
@@ -110,6 +115,8 @@ Your finance minister warns that any version increases your debt-to-GDP ratio si
 
 Michael Hudson's analysis of IMF lending is unsparing: the Fund's conditionality systematically transfers wealth from debtor nations to creditor nations, forcing austerity that shrinks economies while ensuring debt service continues flowing outward. Eric Toussaint's decades of research with the Committee for the Abolition of Illegitimate Debt documents how these programs have devastated living standards across the Global South while enriching financial centers.
 
+Prabhat Patnaik's theoretical framework makes the mechanism precise: IMF conditionality imposes "income deflation" on the borrowing country. By cutting government spending, suppressing wages, and removing subsidies, demand in the periphery is compressed. This deflation serves a dual purpose for metropolitan capital: it reduces the peripheral country's imports (improving the trade balance on paper) while simultaneously lowering the prices of the primary commodities and labor that the metropole needs. The debtor nation tightens its belt so that its resources become cheaper for the creditor nations. The fiscal austerity is not a path to recovery — it is the mechanism by which the drain continues.
+
 Your economic advisor points out that the previous structural adjustment program in the 1990s led to the closure of 200 factories, the collapse of the textile sector, and the emigration of a generation of educated youth. But the IMF imprimatur would reassure Western investors, stabilize the currency, and unlock additional lending from the World Bank and bilateral donors.
 
 The IMF team presents flexibility on sequencing but not on the fundamental direction. They are willing to negotiate which reforms come first, but privatization and liberalization are non-negotiable.`,
@@ -146,9 +153,11 @@ The IMF team presents flexibility on sequencing but not on the fundamental direc
     title: 'The Sovereign Path',
     narrative: `You announce at a press conference that Azania will chart its own development course. The reaction is immediate: Western financial media warns of "economic nationalism," credit rating agencies put you on negative watch, and your finance minister receives anxious calls from bondholders. But in the streets of the capital, there is a surge of national pride.
 
-Your development team presents three priority strategies. The first, inspired by what Max Ajl calls the "agrarian path to development," would focus on land reform and agricultural modernization — ensuring food sovereignty before pursuing industrialization. As Ajl argues, the peasant question is the development question: no country has industrialized sustainably without first solving food security.
+Prabhat Patnaik's analysis of imperialism provides the theoretical foundation for your stance. He argues that metropolitan capitalism structurally requires access to the land, resources, and labor of the tropical world at prices kept low through the mechanisms of "free trade" and financial discipline. Any attempt by a peripheral nation to retain its own surplus — to use its resources for its own development rather than for the enrichment of the metropole — will be met with economic and political hostility. The credit rating downgrade is not a neutral assessment of risk; it is a disciplinary mechanism designed to punish deviation from the rules of the game.
 
-The second strategy follows the model Ali Kadri describes in his analysis of surplus retention: nationalize the mining sector, capture the full value of mineral exports rather than letting it flow to foreign shareholders, and reinvest that surplus domestically. This is the path Bolivia took with lithium, and what Nkrumah attempted with gold and cocoa.
+Your development team presents three priority strategies. The first, inspired by what Max Ajl calls the "agrarian path to development," would focus on land reform and agricultural modernization — ensuring food sovereignty before pursuing industrialization. As Ajl argues, the peasant question is the development question: no country has industrialized sustainably without first solving food security. Utsa Patnaik's work reinforces this: she has shown that the colonial drain began with the appropriation of agricultural surplus, and genuine decolonization must begin with reclaiming control of the land and what it produces.
+
+The second strategy follows the model Ali Kadri describes in his analysis of surplus retention: nationalize the mining sector, capture the full value of mineral exports rather than letting it flow to foreign shareholders, and reinvest that surplus domestically. This is the path Bolivia took with lithium, and what Nkrumah attempted with gold and cocoa. As the Patnaiks argue in their theory of imperialism, the encroachment of metropolitan capital on the resources of the periphery can only be reversed through deliberate state action to retain surplus within the national economy.
 
 The third is the long game: invest heavily in education and healthcare, build human capital, and wait for the demographic dividend. This echoes the early stages of several East Asian development stories, though your people are hungry now and patience has limits.
 
@@ -302,7 +311,9 @@ Roland Boer's analysis of Chinese socialism suggests that the strength of China'
     title: 'The Austerity Shock',
     narrative: `The structural adjustment program hits like a hurricane. Public sector workers, who haven't had a raise in years, see their wages cut by 15%. The removal of fuel subsidies doubles transport costs overnight. Food prices spike as import liberalization floods the market with subsidized Western agricultural products, destroying local farmers — exactly the dynamic Ali Kadri describes as "the destruction of productive capacity in the periphery through the mechanisms of free trade."
 
-The privatization of Azania Minerals Corp proceeds at a fire-sale price. A Canadian mining conglomerate acquires 70% of the company for $400 million — roughly one year's worth of the cobalt revenue that used to flow to the state. Your finance minister notes, with bitter irony, that the loan you received from the IMF is now being used to service older debts to Western banks, while the mining wealth that could have financed development is flowing to Toronto.
+Utsa Patnaik's research on the nutritional impact of liberalization is playing out in real time. As food subsidies are removed and prices rise, caloric intake among the poorest 40% of the population drops below minimum thresholds. Your health ministry reports a spike in childhood malnutrition and anemia among pregnant women. The IMF's poverty metrics, which Utsa Patnaik has shown systematically undercount the poor by using deflated poverty lines, will report "modest impact." The hospitals tell a different story.
+
+The privatization of Azania Minerals Corp proceeds at a fire-sale price. A Canadian mining conglomerate acquires 70% of the company for $400 million — roughly one year's worth of the cobalt revenue that used to flow to the state. Your finance minister notes, with bitter irony, that the loan you received from the IMF is now being used to service older debts to Western banks, while the mining wealth that could have financed development is flowing to Toronto. This is the income deflation Prabhat Patnaik describes made visible: Azania's demand is compressed, its assets sold cheaply, and the surplus that could fund development is instead transferred abroad.
 
 The streets are not quiet. University students occupy the parliament square. The trade unions call a general strike. The military chief requests a private meeting to discuss "stability."
 
@@ -412,7 +423,9 @@ Eric Toussaint's work suggests a third option that neither the IMF nor conventio
     title: 'Land Reform',
     narrative: `The agrarian reform program is the most ambitious undertaking since independence. You redistribute idle estate land to smallholders, establish state-backed agricultural cooperatives, and invest in irrigation infrastructure. The World Bank warns this will "distort markets." The landed elite threaten legal challenges. But Max Ajl's analysis is clear: without land reform, the rural majority remains trapped in poverty, and without food sovereignty, your nation remains dependent on food imports that drain foreign exchange.
 
-The first harvest under the new system exceeds expectations by 20%. Cooperative farms using improved seeds and shared irrigation produce more per hectare than the old estates. Food imports drop by a third. Rural communities, for the first time in a generation, see a path forward.
+Utsa Patnaik's decades of research on the agrarian crisis provides both the warning and the blueprint. She has shown how colonial and post-colonial policies systematically diverted land from food production to export crops, leaving populations unable to feed themselves even as agricultural output grew on paper. The Green Revolution's yield increases, she demonstrates, often came at the cost of nutritional diversity and farmer autonomy — producing more tonnage of fewer crops while hunger persisted. Your reform takes her analysis seriously: the cooperatives prioritize food crops alongside cash crops, ensuring that Azania feeds itself before it feeds the world market. You establish a public distribution system guaranteeing basic grains at affordable prices — the kind of food security architecture that Utsa Patnaik argues is indispensable for any nation serious about eliminating poverty as it actually exists, rather than as World Bank poverty lines define it.
+
+The first harvest under the new system exceeds expectations by 20%. Cooperative farms using improved seeds and shared irrigation produce more per hectare than the old estates. Food imports drop by a third. Rural communities, for the first time in a generation, see a path forward. Caloric intake among the bottom quintile rises for the first time in a decade.
 
 But the urban economy has not kept pace. Without major infrastructure investment, factories remain uncompetitive. The capital's middle class grumbles about higher taxes funding "peasant programs." And the old estate owners are funding an opposition movement that accuses you of "destroying property rights."
 
@@ -450,7 +463,9 @@ Internationally, the Western press compares you to Zimbabwe. The Chinese ambassa
     title: 'Nationalization',
     narrative: `The nationalization sends shockwaves through global markets. Azanian cobalt futures spike. The Canadian and Australian mining companies threaten international arbitration. The US State Department issues a "travel advisory" — diplomatic code for economic hostility. Credit rating agencies downgrade you to junk.
 
-But the revenue impact is transformative. Within six months, the state mining company is generating three times the tax revenue the foreign firms ever paid. You're capturing the full surplus value of your natural resources — what Ali Kadri calls "surplus retention," the essential precondition for sovereign development. The money flows into infrastructure, hospitals, and schools.
+But the revenue impact is transformative. Within six months, the state mining company is generating three times the tax revenue the foreign firms ever paid. You're capturing the full surplus value of your natural resources — what Ali Kadri calls "surplus retention," the essential precondition for sovereign development. The money flows into infrastructure, hospitals, and schools. The hostile international reaction confirms Prabhat Patnaik's thesis: metropolitan capitalism treats access to cheap peripheral commodities as a structural necessity, and any interruption of that access triggers a response out of proportion to the purely economic stakes involved. The credit downgrade, the arbitration threats, the diplomatic pressure — these are the disciplinary mechanisms of an imperial system that no longer needs colonial administrators because it has financial ones.
+
+Utsa Patnaik's historical research puts this in perspective: during the colonial era, the drain from the colonies to Britain — which she has estimated at $45 trillion from India alone in today's dollars — was obscured by the mechanism of using the colony's own revenues to pay for its exports. Today the mechanism is different — corporate profit repatriation, transfer pricing, debt service — but the direction of flow is the same. Your nationalization is, in effect, an attempt to reverse that flow.
 
 The foreign mining lobby is not finished, however. They're funding opposition politicians, briefing journalists about "mismanagement," and pressuring your trading partners to impose informal sanctions. Your cobalt still needs to reach global markets, and the supply chains run through companies that are hostile to your government.
 
@@ -644,7 +659,7 @@ Your decision to maintain local content requirements has slowed infrastructure c
 
 The international community offers aid, but with conditions. The US pledges $100 million in food aid if you sign a bilateral investment treaty giving American firms favorable access. The EU offers drought-resistant seed technology if you align with their climate framework. China offers emergency rice shipments with no conditions.
 
-Max Ajl's work on climate and the agrarian question is prescient here: the drought is not just a natural disaster but the intersection of colonial land patterns, monoculture agriculture, and climate change. A genuine response addresses all three.`,
+Max Ajl's work on climate and the agrarian question is prescient here: the drought is not just a natural disaster but the intersection of colonial land patterns, monoculture agriculture, and climate change. A genuine response addresses all three. Utsa Patnaik's research reinforces the point: nations that maintained robust public food distribution systems weathered food crises far better than those that liberalized food markets. The colonial pattern of diverting land from food crops to export crops left countries like Azania structurally vulnerable to exactly this kind of shock. Your response will determine whether the drought becomes a temporary hardship or a permanent deepening of dependency on food imports from the metropole — which is, as Prabhat Patnaik would note, precisely the outcome that serves metropolitan capital's interest in cheap commodity access.`,
     choices: [
       {
         id: 'drought_comprehensive',
@@ -698,9 +713,9 @@ You're building something new: a network of South-South relationships that gives
     title: 'The Deepening Crisis',
     narrative: `Your decision to hold the course is tested daily. The general strike paralyzes the capital for a week. Food prices continue rising. The military chief's "stability" meeting becomes a weekly fixture. International media runs stories about "the Azanian experiment in free-market reform."
 
-The IMF publishes a progress report praising your "fiscal discipline." GDP has stopped contracting and shows 0.3% growth. Inflation is falling. But these macroeconomic indicators mask a social catastrophe: hospital admissions for malnutrition have tripled, school dropout rates have doubled, and the informal economy — beyond the reach of your reformed tax system — has ballooned.
+The IMF publishes a progress report praising your "fiscal discipline." GDP has stopped contracting and shows 0.3% growth. Inflation is falling. But these macroeconomic indicators mask a social catastrophe: hospital admissions for malnutrition have tripled, school dropout rates have doubled, and the informal economy — beyond the reach of your reformed tax system — has ballooned. Utsa Patnaik would note the cruel irony: by the World Bank's purchasing-power-parity poverty line — which she has demonstrated systematically undercounts the poor — your poverty rate has "improved." By the standard of whether people can actually feed themselves, it has worsened dramatically.
 
-The privatized mining company is posting record profits. Its shareholders in Toronto are delighted. Your treasury receives a small royalty. The value flows outward, as it always has.`,
+The privatized mining company is posting record profits. Its shareholders in Toronto are delighted. Your treasury receives a small royalty. The value flows outward, as it always has. This is what the Patnaiks call the continued colonial drain in a new guise: the formal mechanism has changed from colonial taxation to corporate profit repatriation and debt service, but the direction of the flow — from the periphery to the metropole — has not.`,
     choices: [
       {
         id: 'deep_reverse',
@@ -893,9 +908,9 @@ The international community watches with bemusement. "Why not just export the ra
     title: 'Value-Added Agriculture',
     narrative: `Your agricultural cooperatives have evolved into something remarkable. Azanian organic coffee is finding premium markets in Europe and East Asia. Processed cocoa is being sold at three times the price of raw beans. A cooperative-owned cashew processing plant has become the largest employer in the northern province.
 
-This is exactly the kind of "delinking" from the global value chain hierarchy that development theorists have long advocated — not autarky, but engagement on your own terms, exporting processed goods rather than raw materials. Your farmers capture more of the final value, and the processing industries create non-agricultural employment.
+This is exactly the kind of "delinking" from the global value chain hierarchy that development theorists have long advocated — not autarky, but engagement on your own terms, exporting processed goods rather than raw materials. Your farmers capture more of the final value, and the processing industries create non-agricultural employment. The Patnaiks' analysis of imperialism underscores why this matters: metropolitan capitalism has historically required the terms of trade to favor manufactured goods over primary commodities. By processing your own coffee, cocoa, and cashews, you're breaking the pattern where the periphery exports cheap raw materials and imports expensive finished goods — the pattern that has drained wealth southward for centuries.
 
-But success brings new challenges. European import regulations are complex and shift unpredictably. Your "organic" certification depends on Western certification bodies that charge fees your small cooperatives can barely afford. And the largest buyers are multinational commodity traders who exert enormous market power.`,
+But success brings new challenges. European import regulations are complex and shift unpredictably — Prabhat Patnaik would note that "free trade" agreements are designed to be free for metropolitan exports while bristling with non-tariff barriers against peripheral manufactured goods. Your "organic" certification depends on Western certification bodies that charge fees your small cooperatives can barely afford. And the largest buyers are multinational commodity traders who exert enormous market power.`,
     choices: [
       {
         id: 'export_brand',
@@ -1337,9 +1352,9 @@ The risk is that you're building dependency on both sides rather than independen
     title: 'The Western Path',
     narrative: `Your alignment with the Western financial framework yields material benefits: World Bank loans at concessional rates, EU trade preferences, USAID technical assistance, and the imprimatur of "good governance" that attracts private investment.
 
-GDP grows at a respectable 4% annually. Poverty falls. Infrastructure improves, though slowly. You are, by the metrics that Western institutions use, a "success story."
+GDP grows at a respectable 4% annually. Poverty falls — at least by the World Bank metrics that Utsa Patnaik has shown systematically undercount the poor by using deflated purchasing-power-parity poverty lines. By her corrected measurements, which count those who cannot actually afford adequate nutrition, the picture is less rosy. Infrastructure improves, though slowly. You are, by the metrics that Western institutions use, a "success story."
 
-But sovereignty is compromised. Major economic decisions require IMF approval. Your monetary policy is constrained by capital account liberalization. When a global mining company pollutes a river, the bilateral investment treaty prevents meaningful regulation. You are free within the parameters others have set — which is, as Nkrumah would observe, the definition of neo-colonialism.`,
+But sovereignty is compromised. Major economic decisions require IMF approval. Your monetary policy is constrained by capital account liberalization. When a global mining company pollutes a river, the bilateral investment treaty prevents meaningful regulation. You are free within the parameters others have set — which is, as Nkrumah would observe, the definition of neo-colonialism. Prabhat Patnaik's analysis of the role of finance in imperialism is precise on this point: capital account liberalization doesn't just open markets — it subjects national economic policy to the discipline of international finance capital, whose interests are structurally opposed to those of the working people of the periphery.`,
     choices: [
       {
         id: 'western_accept',
@@ -1691,7 +1706,7 @@ The gamble is whether the reduced debt burden allows you to grow fast enough tha
     title: 'The Cartel Holds',
     narrative: `The African Critical Minerals Alliance holds firm. The consuming nations, after initial resistance, accept that the era of cheap African resources is over. Prices stabilize at levels that fund genuine development. Processing plants spring up across the continent as cartel members invest in value-addition.
 
-Your collective bargaining power has achieved what no individual nation could: a fundamental shift in the terms of trade. The surplus that used to flow from African mines to Western shareholders now circulates within the continent, funding hospitals, schools, and factories.
+Your collective bargaining power has achieved what no individual nation could: a fundamental shift in the terms of trade. The surplus that used to flow from African mines to Western shareholders now circulates within the continent, funding hospitals, schools, and factories. The Patnaiks' theoretical framework explains why this is so significant: metropolitan capitalism's accumulation process depends on the ability to obtain primary commodities from the tropical world at prices held down by the reserve army of labor and the income deflation imposed through financial discipline. A producers' cartel that sets prices based on the actual cost of dignified labor and sustainable extraction — rather than the depressed prices that income deflation generates — fundamentally challenges the terms on which the global economy has operated since the colonial era.
 
 Nkrumah's vision of Pan-African economic power is manifest. Not as a utopian union of African states, but as a practical cartel that leverages material advantage into developmental outcomes. The parallel to OPEC is apt — and like OPEC's founders, you understand that resource leverage is most powerful when it funds domestic transformation rather than mere consumption.`,
     choices: [
@@ -1739,6 +1754,8 @@ But BRICS has its own internal dynamics. China's economic weight dominates. Indi
     endingType: 'victory',
     endingTitle: 'Sovereign Development Achieved',
     endingNarrative: `The Republic of Azania stands as proof that another path is possible. Your country is not rich by the standards of the Global North — but it is sovereign, dignified, and developing on its own terms. Your people eat food grown by Azanian farmers on Azanian land. Your factories employ Azanian workers making goods for Azanian and regional markets. Your debts are manageable, your institutions accountable, your future in your own hands.
+
+The colonial drain that Utsa Patnaik documented — centuries of wealth flowing from the periphery to the metropole — has been, if not reversed, then stanched. The surplus your workers and farmers produce stays in Azania, invested in Azanian schools, hospitals, and factories. The income deflation that Prabhat Patnaik identifies as the mechanism of contemporary imperialism has been resisted: your people's wages buy food, your government's revenues fund development, and your nation's resources serve your nation's needs.
 
 You have not followed the Washington Consensus or the Beijing Consensus. You have built something that the thinkers who inspired your journey would recognize: development that serves the people who do the developing, sovereignty that is economic as well as political, and engagement with the world that does not require submission to it.
 
@@ -1790,7 +1807,9 @@ The struggle continues. It always does. But you've moved the line forward.`,
     endingTitle: 'Dependent Development',
     endingNarrative: `Azania grows, but it grows for others. Your GDP rises, but the surplus flows to foreign shareholders, creditors, and supply chain owners. Your workers are employed, but in jobs that serve global value chains rather than national development priorities. Your government operates within parameters set by international institutions and bilateral agreements that constrain genuine sovereign choice.
 
-This is what dependency theorists call "dependent development" — growth without autonomy, modernization without liberation. By the metrics the World Bank uses, you're a success story. By the metrics that matter to your people — control over their own destiny — the picture is less clear.
+This is what dependency theorists call "dependent development" — growth without autonomy, modernization without liberation. By the metrics the World Bank uses, you're a success story. But as Utsa Patnaik has demonstrated, those metrics are designed to flatter: poverty lines that don't reflect the actual cost of nutrition, GDP figures that count outward-flowing profits as national income, growth rates that obscure who is growing and who is being left behind.
+
+The colonial drain that the Patnaiks have documented — the centuries-long transfer of wealth from periphery to metropole — continues in new forms. Where once it was the direct appropriation of colonial revenues, it is now the repatriation of corporate profits, the servicing of debts contracted under duress, and the suppression of commodity prices through the income deflation that Prabhat Patnaik identifies as the central mechanism of contemporary imperialism.
 
 Nkrumah's warning has proven prophetic: "The essence of neo-colonialism is that the state which is subject to it is, in theory, independent and has all the outward trappings of international sovereignty. In reality its economic system and thus its political policy is directed from outside."
 

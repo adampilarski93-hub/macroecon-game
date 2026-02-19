@@ -5,10 +5,9 @@ interface AdvisorChatProps {
   chatHistory: ChatMessage[];
   chatLoading: boolean;
   onSend: (message: string) => void;
-  llmEnabled: boolean;
 }
 
-export function AdvisorChat({ chatHistory, chatLoading, onSend, llmEnabled }: AdvisorChatProps) {
+export function AdvisorChat({ chatHistory, chatLoading, onSend }: AdvisorChatProps) {
   const [input, setInput] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -25,24 +24,29 @@ export function AdvisorChat({ chatHistory, chatLoading, onSend, llmEnabled }: Ad
   };
 
   const suggestions = [
-    'What should I do?',
-    'How can I reduce inflation?',
-    'Why did GDP fall?',
-    'What would a real country do here?',
+    'What should I prioritize right now?',
+    'Who would agree with my current strategy?',
+    'What are the risks I should watch for?',
+    'What would happen if I delinked from world markets?',
+    'How can I fight inflation without causing unemployment?',
+    'Is my debt sustainable?',
   ];
+
+  // Show 4 random suggestions
+  const shownSuggestions = suggestions.sort(() => 0.5 - Math.random()).slice(0, 4);
 
   return (
     <div className="advisor-chat">
-      <h2>Ask the advisor</h2>
+      <h2>Economic Advisor</h2>
 
       <div className="chat-messages">
         {chatHistory.length === 0 && (
           <div className="chat-suggestions">
             <p className="chat-hint">
-              Ask the economic advisor anything about your economy.
-              {!llmEnabled && <span className="chat-hint-sub"> Add an API key in Settings for enhanced AI responses.</span>}
+              Your panel of economic advisors draws on thinkers from Piketty to Samir Amin,
+              Hudson to Polanyi. Ask anything about your economy.
             </p>
-            {suggestions.map((s) => (
+            {shownSuggestions.map((s) => (
               <button
                 key={s}
                 type="button"

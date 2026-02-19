@@ -341,7 +341,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         chatLoading: false,
       }));
     } catch {
-      const errMsg: ChatMessage = { role: 'assistant', content: 'Sorry, I couldn\'t generate a response. Check your API key in Settings.' };
+      const errMsg: ChatMessage = { role: 'assistant', content: 'Sorry, something went wrong generating a response. Please try rephrasing your question.' };
       set((prev) => ({
         chatHistory: [...prev.chatHistory, errMsg],
         chatLoading: false,
