@@ -4,19 +4,19 @@ import type { NarrativeNode } from './types';
  * Sovereign Development Path — Branching narrative decision tree
  *
  * Intellectual framework drawn from:
- * - Michael Hudson: debt as imperial instrument, super-imperialism
- * - Eric Toussaint: odious debt, legitimacy of debt repudiation
- * - Kwame Nkrumah: neo-colonialism, Pan-African solidarity, economic independence
- * - Lina Benabdallah: China-Africa relations, South-South cooperation, training programs
- * - Max Ajl: agrarian question, food sovereignty, decolonial development
- * - Ali Kadri: value transfer, unequal exchange, surplus extraction from periphery
- * - Roland Boer: Chinese socialism, planning-market dialectic
- * - Deng Xiaoping: reform and opening, pragmatic sequencing, SEZs
- * - John Smith: global labor arbitrage, value chains, imperialism of the 21st century
- * - Yingying Fu & Eduardo Olie: South-South development cooperation
- * - Utsa Patnaik: colonial drain, food sovereignty, poverty measurement, agrarian crisis
- * - Prabhat Patnaik: imperialism and accumulation, income deflation, money and finance,
- *   the structural need of metropolitan capitalism for cheap tropical commodities
+ * - Michael Hudson: debt as a tool of empire
+ * - Eric Toussaint: unfair debt, the right to refuse illegitimate loans
+ * - Kwame Nkrumah: neo-colonialism, Pan-African solidarity
+ * - Lina Benabdallah: China-Africa relations, South-South cooperation
+ * - Max Ajl: farming, food security, decolonial development
+ * - Ali Kadri: how wealth flows from poor countries to rich ones
+ * - Roland Boer: Chinese socialism, mixing state planning with markets
+ * - Deng Xiaoping: practical reform, special economic zones
+ * - John Smith: how global supply chains exploit cheap labor
+ * - Yingying Fu & Eduardo Olie: cooperation between developing nations
+ * - Utsa Patnaik: colonial wealth extraction, food security, how poverty is measured
+ * - Prabhat Patnaik: how rich countries keep poor countries poor through
+ *   debt, austerity, and control over trade
  */
 
 export const narrativeNodes: NarrativeNode[] = [
@@ -29,15 +29,15 @@ export const narrativeNodes: NarrativeNode[] = [
     id: 'start',
     phase: 1,
     title: 'A Nation at the Crossroads',
-    narrative: `You have been elected president of the Republic of Azania, a sub-Saharan African nation of 28 million people. Your country is rich in cobalt, copper, and arable land — yet most of your people live on less than two dollars a day. The colonial economy left behind a single rail line running from the mines to the coast, built not to connect your people but to extract your wealth.
+    narrative: `You've just been elected president of the Republic of Azania, an African nation of 28 million people. Your country has plenty of valuable resources — cobalt, copper, and fertile farmland — but most of your people live on less than two dollars a day. The only railway runs straight from the mines to the coast. It was built by colonizers not to help your people, but to ship your wealth overseas.
 
-Azania's poverty is not an accident of geography or culture. As Utsa Patnaik's meticulous research on colonial drain has demonstrated, the wealth of the metropole was built on centuries of systematic extraction from colonies like yours. The colonial power used Azania's own tax revenues to "purchase" its exports — a mechanism that drained real resources while making the transfer invisible in trade statistics. The infrastructure the colonizers built served extraction, not development. The educational institutions they established trained clerks to administer exploitation, not engineers to build a nation. What they left behind was not undevelopment but active underdevelopment — a country made poor so that others could be rich.
+This poverty wasn't an accident. As the historian Utsa Patnaik has shown, colonial powers got rich by draining wealth from countries like yours for centuries. They used a clever trick: they took your country's own tax money and used it to "buy" your exports, making it look like normal trade when it was really just taking. The roads, rails, and schools they built were designed to serve the colonial system, not your people. Your country wasn't simply left behind — it was actively made poor so that others could get rich.
 
-Your predecessor signed a series of loans with Western creditors in the 1990s. The debt has ballooned. Debt service now consumes 40% of government revenue. Roads are crumbling. The sole teaching hospital needs generators because the power grid fails daily. Half the population is under 25 and unemployment among youth exceeds 40%. As Prabhat Patnaik argues, this is not merely a fiscal crisis but a structural one: metropolitan capitalism requires access to cheap commodities and labor from the tropical world, and the financial architecture of debt and conditionality is the mechanism that ensures this access continues long after the colonial flag has been lowered.
+Your predecessor borrowed heavily from Western banks in the 1990s. Those debts have ballooned. Now, 40% of your government's money goes to paying off loans instead of building schools or hospitals. Roads are falling apart. The only major hospital needs backup generators because the power grid keeps failing. Half your population is under 25, and youth unemployment is over 40%. As the economist Prabhat Patnaik explains, this isn't just a money problem — it's a system designed so that powerful countries get cheap resources and labor from countries like yours, and debt is the tool they use to keep that system running.
 
-Two delegations have requested meetings with you this week. The first is from Beijing, offering infrastructure financing under the Belt and Road Initiative. The second is from the International Monetary Fund, offering a stabilization package. Your finance minister has also drawn up a plan for a domestically-financed development strategy — slower, harder, but beholden to no one.
+Two groups want to meet with you this week. The first is from China, offering to build infrastructure through their Belt and Road program. The second is from the International Monetary Fund (IMF), offering a financial rescue package. Your finance minister has also sketched out a plan to develop using your own resources — slower and harder, but you'd owe nothing to anyone.
 
-As Kwame Nkrumah warned: "The essence of neo-colonialism is that the state which is subject to it is, in theory, independent and has all the outward trappings of international sovereignty. In reality its economic system and thus its political policy is directed from outside." The question before you is how — or whether — to accept outside help without surrendering the sovereignty your people fought to win.`,
+As the Pan-African leader Kwame Nkrumah once warned: a country can look independent on the outside while being controlled from the outside through its economy. The question facing you is whether you can accept help without giving up the independence your people fought for.`,
     choices: [
       {
         id: 'choose_china',
@@ -73,13 +73,13 @@ As Kwame Nkrumah warned: "The essence of neo-colonialism is that the state which
     id: 'china_offer',
     phase: 2,
     title: 'The Belt and Road Proposal',
-    narrative: `The Chinese delegation is led by a veteran development banker who has overseen projects across East Africa. Their proposal is substantial: a $2.4 billion package covering a new railway corridor, a deep-water port, two power plants, and a fiber-optic network. The interest rate is 2% — far below what Western commercial lenders would offer. Construction would begin within six months.
+    narrative: `The Chinese team is led by an experienced development banker who has worked across East Africa. Their offer is big: $2.4 billion to build a new railway, a deep-water port, two power plants, and a fiber-optic internet network. The interest rate is just 2% — much cheaper than Western banks would charge. Construction could start in six months.
 
-But the details matter. As Lina Benabdallah's research on China-Africa relations shows, Chinese engagement is not monolithic — it ranges from exploitative resource-for-infrastructure swaps to genuine capacity-building partnerships with technical training and knowledge transfer. The terms you negotiate now will determine which kind of relationship this becomes.
+But the details matter a lot. As researcher Lina Benabdallah has shown, China's deals in Africa aren't all the same. Some are one-sided resource grabs; others include genuine training and knowledge-sharing. The terms you negotiate right now will decide which kind of deal this becomes.
 
-The Chinese team presents three possible arrangements. The first is a turnkey package: Chinese state firms build everything, Chinese workers do the labor, and repayment is partially guaranteed by future mineral exports. Fast and efficient, but your people don't learn to build, and your cobalt is pledged for decades. The second adds technology transfer clauses and requires 60% local labor. The third is a smaller, more targeted partnership focused on the power grid and digital infrastructure, leaving the railway and port for later.
+The Chinese team offers three options. The first is a "turnkey" package: Chinese companies build everything, Chinese workers do the labor, and you repay partly with future mineral exports. It's fast, but your people don't learn anything, and your cobalt is promised away for decades. The second option adds training programs and requires that 60% of workers be Azanian. The third is smaller — just the power grid and internet network — leaving the railway and port for later.
 
-Your finance minister warns that any version increases your debt-to-GDP ratio significantly. Your labor minister argues that without local hiring requirements, the construction boom will bypass Azanian workers entirely.`,
+Your finance minister warns that any option means taking on a lot more debt. Your labor minister says that without hiring requirements, the construction jobs will go entirely to foreign workers.`,
     choices: [
       {
         id: 'china_full',
@@ -111,15 +111,15 @@ Your finance minister warns that any version increases your debt-to-GDP ratio si
     id: 'imf_offer',
     phase: 2,
     title: 'The Structural Adjustment Package',
-    narrative: `The IMF team arrives with a familiar prescription. Their Extended Credit Facility would provide $1.8 billion in tranches over three years, conditional on a set of "structural reforms." The conditions include: cutting public sector wages by 15%, privatizing the state mining company (Azania Minerals Corp), removing fuel and food subsidies, liberalizing the capital account, and maintaining a primary fiscal surplus of 3% of GDP.
+    narrative: `The IMF team arrives with a familiar set of demands. They'll lend you $1.8 billion over three years, but only if you agree to major "reforms." The conditions: cut government workers' pay by 15%, sell off the state mining company to private buyers, remove fuel and food subsidies, open your financial markets to foreign money, and run a tight budget with spending cuts.
 
-Michael Hudson's analysis of IMF lending is unsparing: the Fund's conditionality systematically transfers wealth from debtor nations to creditor nations, forcing austerity that shrinks economies while ensuring debt service continues flowing outward. Eric Toussaint's decades of research with the Committee for the Abolition of Illegitimate Debt documents how these programs have devastated living standards across the Global South while enriching financial centers.
+Economist Michael Hudson has studied IMF lending closely and argues it works like a wealth transfer — poor countries are forced to cut spending and sell off assets, and the money flows back to rich countries. Eric Toussaint, who has spent decades researching Global South debt, documents how these programs have crushed living standards across Africa, Asia, and Latin America while enriching financial centers.
 
-Prabhat Patnaik's theoretical framework makes the mechanism precise: IMF conditionality imposes "income deflation" on the borrowing country. By cutting government spending, suppressing wages, and removing subsidies, demand in the periphery is compressed. This deflation serves a dual purpose for metropolitan capital: it reduces the peripheral country's imports (improving the trade balance on paper) while simultaneously lowering the prices of the primary commodities and labor that the metropole needs. The debtor nation tightens its belt so that its resources become cheaper for the creditor nations. The fiscal austerity is not a path to recovery — it is the mechanism by which the drain continues.
+Prabhat Patnaik explains the hidden logic: when the IMF forces a country to slash spending and wages, it squeezes people's buying power. This has a double benefit for wealthy nations — it makes the poorer country's exports cheaper (because desperate workers accept lower pay) while also forcing it to import less. In other words, the country tightens its belt so that its resources become cheaper for everyone else. The budget cutting isn't really a path to recovery — it's a way to keep the old pattern of wealth extraction going.
 
-Your economic advisor points out that the previous structural adjustment program in the 1990s led to the closure of 200 factories, the collapse of the textile sector, and the emigration of a generation of educated youth. But the IMF imprimatur would reassure Western investors, stabilize the currency, and unlock additional lending from the World Bank and bilateral donors.
+Your economic advisor reminds you that the last time Azania did this in the 1990s, 200 factories closed, the clothing industry collapsed, and a whole generation of educated young people left the country. But an IMF stamp of approval would calm international investors, stabilize the currency, and unlock more loans from the World Bank.
 
-The IMF team presents flexibility on sequencing but not on the fundamental direction. They are willing to negotiate which reforms come first, but privatization and liberalization are non-negotiable.`,
+The IMF team says they're flexible on timing — which reforms come first — but privatization and opening markets are not up for debate.`,
     choices: [
       {
         id: 'imf_full',
@@ -151,17 +151,17 @@ The IMF team presents flexibility on sequencing but not on the fundamental direc
     id: 'self_reliance',
     phase: 2,
     title: 'The Sovereign Path',
-    narrative: `You announce at a press conference that Azania will chart its own development course. The reaction is immediate: Western financial media warns of "economic nationalism," credit rating agencies put you on negative watch, and your finance minister receives anxious calls from bondholders. But in the streets of the capital, there is a surge of national pride.
+    narrative: `You announce that Azania will build its future using its own resources. The reaction is swift: Western financial media calls it "economic nationalism." Credit rating agencies put you on a warning list. Your finance minister gets nervous calls from people who hold Azanian bonds. But in the streets, there's a wave of national pride.
 
-Prabhat Patnaik's analysis of imperialism provides the theoretical foundation for your stance. He argues that metropolitan capitalism structurally requires access to the land, resources, and labor of the tropical world at prices kept low through the mechanisms of "free trade" and financial discipline. Any attempt by a peripheral nation to retain its own surplus — to use its resources for its own development rather than for the enrichment of the metropole — will be met with economic and political hostility. The credit rating downgrade is not a neutral assessment of risk; it is a disciplinary mechanism designed to punish deviation from the rules of the game.
+Prabhat Patnaik's work helps explain why the reaction is so hostile. He argues that the global economic system needs access to cheap resources and labor from countries like yours. Any country that tries to keep its own wealth at home — to use its minerals and farmland for its own people instead of for foreign profit — will face economic and political backlash. That credit rating downgrade isn't a neutral judgment; it's a punishment for breaking the rules of the game.
 
-Your development team presents three priority strategies. The first, inspired by what Max Ajl calls the "agrarian path to development," would focus on land reform and agricultural modernization — ensuring food sovereignty before pursuing industrialization. As Ajl argues, the peasant question is the development question: no country has industrialized sustainably without first solving food security. Utsa Patnaik's work reinforces this: she has shown that the colonial drain began with the appropriation of agricultural surplus, and genuine decolonization must begin with reclaiming control of the land and what it produces.
+Your development team presents three strategies. The first focuses on farming: redistribute land to small farmers, grow more food at home, and stop depending on expensive food imports. As researcher Max Ajl argues, no country has ever built a strong economy without first making sure its people can feed themselves. Utsa Patnaik's research backs this up — she's shown that colonial wealth extraction started with taking control of farming, so real independence has to start with taking it back.
 
-The second strategy follows the model Ali Kadri describes in his analysis of surplus retention: nationalize the mining sector, capture the full value of mineral exports rather than letting it flow to foreign shareholders, and reinvest that surplus domestically. This is the path Bolivia took with lithium, and what Nkrumah attempted with gold and cocoa. As the Patnaiks argue in their theory of imperialism, the encroachment of metropolitan capital on the resources of the periphery can only be reversed through deliberate state action to retain surplus within the national economy.
+The second strategy: take back the mines. Right now, foreign companies dig up your cobalt and copper and ship the profits overseas. Nationalize the mining sector, keep the profits at home, and invest them in hospitals, schools, and roads. This is what Bolivia did with lithium and what Nkrumah tried with gold. As the Patnaiks argue, the only way to stop wealth from flowing out is for the state to step in and keep it in the country.
 
-The third is the long game: invest heavily in education and healthcare, build human capital, and wait for the demographic dividend. This echoes the early stages of several East Asian development stories, though your people are hungry now and patience has limits.
+The third is the long game: pour money into education and healthcare, build a skilled population, and wait for the results. This echoes how East Asian countries started their rise — but your people are hungry now and patience has limits.
 
-None of these paths is easy. All require sacrifice. But as Deng Xiaoping said when launching China's reforms: "We are crossing the river by feeling the stones."`,
+None of these paths is easy. All require sacrifice. But as China's Deng Xiaoping said when launching his reforms: "We are crossing the river by feeling the stones."`,
     choices: [
       {
         id: 'self_agro',
@@ -172,7 +172,7 @@ None of these paths is easy. All require sacrifice. But as Deng Xiaoping said wh
       },
       {
         id: 'self_mining',
-        text: 'Nationalize the mining sector and capture surplus value',
+        text: 'Nationalize the mining sector and keep the profits at home',
         consequence: 'You announce the nationalization of Azania Minerals Corp and foreign mining concessions.',
         effects: { sovereignty: 15, economicStrength: 8, publicSupport: 8, internationalStanding: -15, debtBurden: -5 },
         nextNode: 'mining_national',
@@ -191,19 +191,17 @@ None of these paths is easy. All require sacrifice. But as Deng Xiaoping said wh
   // PHASE 3: CONSEQUENCES & IMPLEMENTATION
   // ═══════════════════════════════════════
 
-  // ── China Full Path ──
-
   {
     id: 'china_construction_boom',
     phase: 3,
     title: 'The Construction Boom',
-    narrative: `Within months, Azania is transformed into a construction site. Chinese engineering firms pour in with heavy equipment. The railway corridor takes shape with astonishing speed. But as the cranes rise, so do tensions.
+    narrative: `Within months, Azania is one giant construction site. Chinese engineering firms arrive with heavy equipment. The railway takes shape at amazing speed. But tensions are rising too.
 
-Local contractors are shut out of the supply chain. Chinese workers live in separate compounds, and rumors spread — some true, some exaggerated — about labor conditions and environmental damage. The opposition calls you a "sell-out" who traded sovereignty for concrete. A leaked contract clause reveals that in the event of default, China would gain operational control of the deep-water port for 99 years — echoing the kind of arrangements that John Smith identifies as the modern face of imperialism, where value extraction occurs through control of infrastructure rather than direct colonial administration.
+Local businesses are shut out. Chinese workers live in separate compounds, and rumors spread about poor working conditions and environmental damage. The opposition calls you a "sell-out." A leaked contract clause reveals that if Azania can't pay back the loan, China gets to control the deep-water port for 99 years. As researcher John Smith points out, this is the modern version of empire — controlling a country's key infrastructure instead of planting a flag.
 
-Meanwhile, global cobalt prices have dropped 30%. Your debt service payments are denominated in dollars, but your revenue is falling. The finance minister warns that without restructuring, you'll be in debt distress within two years.
+Meanwhile, global cobalt prices have crashed 30%. You owe money in US dollars, but your income is shrinking. Your finance minister warns that without changes, you'll be unable to pay your debts within two years.
 
-You need to act before the crisis deepens.`,
+You need to act fast.`,
     choices: [
       {
         id: 'china_boom_renegotiate',
@@ -229,19 +227,17 @@ You need to act before the crisis deepens.`,
     ],
   },
 
-  // ── China Negotiate Path ──
-
   {
     id: 'china_tech_partnership',
     phase: 3,
     title: 'The Technology Transfer',
-    narrative: `The negotiated deal is more complex to implement but is beginning to bear fruit. Chinese engineers work alongside Azanian trainees on the power plant construction. A vocational training center has graduated its first class of electricians and welders. The fiber-optic network is creating a tech startup scene in the capital.
+    narrative: `The negotiated deal is harder to manage, but it's starting to pay off. Chinese engineers work side by side with Azanian trainees building the power plant. A training center has graduated its first class of electricians and welders. The new internet network is sparking a tech startup scene in the capital.
 
-Lina Benabdallah's research documents exactly this dynamic: when African states negotiate firmly, Chinese partnerships can include genuine capacity-building — training programs, scholarships, and knowledge transfer that outlast the infrastructure projects themselves. Your education minister reports that 2,000 Azanian workers are now certified in advanced construction techniques.
+Researcher Lina Benabdallah has documented exactly this: when African countries negotiate firmly, Chinese partnerships can include real skills training that lasts long after the construction ends. Your education minister reports that 2,000 Azanian workers now have advanced construction certifications.
 
-But the project is behind schedule. Local labor is less experienced, and quality control issues have delayed the railway by eight months. The Chinese project manager is frustrated. Beijing is asking whether you want to "accelerate" by relaxing the local content requirements. Your infrastructure minister argues the delays are an investment in learning. Your finance minister says every month of delay costs $15 million in foregone economic activity.
+But the project is running late. Local workers are still learning, and quality issues have delayed the railway by eight months. The Chinese project manager is frustrated. Beijing is hinting that you should relax the local hiring rules to speed things up. Your infrastructure minister says the delays are worth it — your people are learning. Your finance minister says every month of delay costs $15 million.
 
-Meanwhile, a drought in the southern provinces has created a food crisis. You need to decide how to allocate scarce resources.`,
+On top of this, a drought in the south has created a food crisis. You have to decide where to spend your limited money.`,
     choices: [
       {
         id: 'tech_maintain',
@@ -267,17 +263,15 @@ Meanwhile, a drought in the southern provinces has created a food crisis. You ne
     ],
   },
 
-  // ── China Selective Path ──
-
   {
     id: 'china_selective',
     phase: 3,
     title: 'Power and Connectivity',
-    narrative: `The targeted approach is working. The new power plants have cut blackouts by 70%. The fiber-optic backbone has connected every provincial capital. Mobile money transactions have tripled. Small businesses are growing. Your debt is manageable because you only took what you needed.
+    narrative: `The targeted approach is working. New power plants have cut blackouts by 70%. Every provincial capital now has high-speed internet. Mobile payments have tripled. Small businesses are growing. And because you only borrowed what you needed, your debt is manageable.
 
-But the railway and port remain unbuilt. Moving goods from the interior to the coast still takes three days on colonial-era roads. Agricultural exports rot in transit. Mining companies complain about logistics costs. The Chinese are offering to come back and build the railway, but so is a European consortium, and a consortium of African development banks has a third proposal.
+But you still don't have a railway or port. Getting goods from the interior to the coast still takes three days on crumbling colonial-era roads. Farm produce rots before it reaches market. Mining companies complain about high transport costs. The Chinese are offering to come back and build the railway, but so are a European group and a group of African development banks.
 
-Roland Boer's analysis of Chinese socialism suggests that the strength of China's model lies not in ideology but in pragmatic sequencing — doing what works at each stage. Your power and digital infrastructure have created a platform for the next step. The question is who builds it, and on what terms.`,
+As Roland Boer writes about China's development strategy, the key is doing things in the right order — one practical step at a time. Your power grid and internet have created a foundation. The question now is who builds the next piece, and on what terms.`,
     choices: [
       {
         id: 'selective_china_return',
@@ -303,21 +297,19 @@ Roland Boer's analysis of Chinese socialism suggests that the strength of China'
     ],
   },
 
-  // ── IMF Full Path ──
-
   {
     id: 'imf_austerity',
     phase: 3,
     title: 'The Austerity Shock',
-    narrative: `The structural adjustment program hits like a hurricane. Public sector workers, who haven't had a raise in years, see their wages cut by 15%. The removal of fuel subsidies doubles transport costs overnight. Food prices spike as import liberalization floods the market with subsidized Western agricultural products, destroying local farmers — exactly the dynamic Ali Kadri describes as "the destruction of productive capacity in the periphery through the mechanisms of free trade."
+    narrative: `The IMF program hits like a hurricane. Government workers — who haven't had a raise in years — see their pay cut by 15%. Removing fuel subsidies doubles transport costs overnight. Cheap imported food floods in, destroying local farmers. As economist Ali Kadri has documented, "free trade" often destroys the ability of poorer countries to produce things for themselves.
 
-Utsa Patnaik's research on the nutritional impact of liberalization is playing out in real time. As food subsidies are removed and prices rise, caloric intake among the poorest 40% of the population drops below minimum thresholds. Your health ministry reports a spike in childhood malnutrition and anemia among pregnant women. The IMF's poverty metrics, which Utsa Patnaik has shown systematically undercount the poor by using deflated poverty lines, will report "modest impact." The hospitals tell a different story.
+Utsa Patnaik's research on what happens when countries remove food subsidies is playing out in real time. As food gets more expensive, the poorest 40% of people can no longer afford to eat properly. Hospitals report a spike in child malnutrition and anemia in pregnant women. The IMF's official poverty statistics — which Patnaik has shown use misleading methods that undercount the poor — will call the impact "modest." The hospitals tell a very different story.
 
-The privatization of Azania Minerals Corp proceeds at a fire-sale price. A Canadian mining conglomerate acquires 70% of the company for $400 million — roughly one year's worth of the cobalt revenue that used to flow to the state. Your finance minister notes, with bitter irony, that the loan you received from the IMF is now being used to service older debts to Western banks, while the mining wealth that could have financed development is flowing to Toronto. This is the income deflation Prabhat Patnaik describes made visible: Azania's demand is compressed, its assets sold cheaply, and the surplus that could fund development is instead transferred abroad.
+The state mining company is sold off at a bargain price. A Canadian mining corporation buys 70% of it for $400 million — roughly one year's worth of cobalt revenue that used to go to the government. Your finance minister points out the bitter irony: the IMF loan is now being used to pay off older debts to Western banks, while the mining wealth that could have funded development is flowing to shareholders in Toronto. This is what Prabhat Patnaik calls "income deflation" made visible: Azania's people are squeezed, its assets sold cheap, and the wealth that could build the country flows abroad instead.
 
-The streets are not quiet. University students occupy the parliament square. The trade unions call a general strike. The military chief requests a private meeting to discuss "stability."
+The streets erupt. University students occupy parliament square. Unions call a general strike. The military chief asks for a private meeting to discuss "stability."
 
-Michael Hudson would recognize this pattern immediately: the debtor nation is forced to sell assets and cut social spending to service debts, impoverishing itself while enriching the creditor class. The question is whether you can navigate the storm.`,
+As Michael Hudson warns: indebted nations are forced to sell off their assets and cut services to keep paying loans, getting poorer while the lenders get richer. Can you navigate this storm?`,
     choices: [
       {
         id: 'austerity_hold',
@@ -343,17 +335,15 @@ Michael Hudson would recognize this pattern immediately: the debtor nation is fo
     ],
   },
 
-  // ── IMF Partial Path ──
-
   {
     id: 'imf_partial',
     phase: 3,
     title: 'The Compromise',
-    narrative: `The compromise is holding, barely. You've kept Azania Minerals Corp in state hands, but the other conditions are taking their toll. Fuel subsidy removal has angered the urban poor. Wage restraints in the public sector are driving teachers and nurses to emigrate. The fiscal surplus target requires cutting infrastructure spending, which means the roads continue to deteriorate.
+    narrative: `The compromise is holding — barely. You kept the mining company in government hands, but the other conditions are taking a toll. Removing fuel subsidies has angered city dwellers. Pay freezes are driving teachers and nurses to emigrate. Budget targets mean you can't fix the roads.
 
-But there are signs of stability. The currency has stopped falling. Foreign direct investment in the mining sector has increased. The World Bank has approved supplementary loans for healthcare and education. Your credit rating has been upgraded from "junk" to "speculative."
+But there are signs of stability. The currency has stopped falling. Foreign investment in mining has picked up. The World Bank approved extra loans for healthcare and education. Your credit rating has improved slightly.
 
-The Chinese ambassador requests a private meeting. China is willing to offer infrastructure financing on favorable terms — but only if you steer the next mining concession their way. The Americans warn, through diplomatic channels, that any significant Chinese involvement would "complicate" your relationship with Washington. You're caught in the geopolitical crossfire that increasingly defines the choices available to Global South nations.`,
+Then the Chinese ambassador requests a private meeting. China will build infrastructure on good terms — if you steer the next mining deal their way. The Americans warn, through back channels, that serious Chinese involvement would "complicate" your relationship with Washington. You're caught in a tug-of-war between great powers — a situation that more and more Global South countries face.`,
     choices: [
       {
         id: 'partial_lean_china',
@@ -379,17 +369,15 @@ The Chinese ambassador requests a private meeting. China is willing to offer inf
     ],
   },
 
-  // ── IMF Minimal Path ──
-
   {
     id: 'imf_minimal_path',
     phase: 3,
     title: 'The Regional Approach',
-    narrative: `The combination of a small IMF facility and African continental bonds is unconventional, and the markets are watching closely. Your regional bond issuance was oversubscribed — there is appetite among African institutional investors for African sovereign debt, though at higher interest rates than you'd pay to the IMF.
+    narrative: `Your combination of a small IMF loan and African bonds is unusual, and markets are watching. The African bond sale did well — there's real appetite among African investors for African government debt, though at higher interest rates than the IMF charges.
 
-The smaller IMF package means lighter conditionality, but it also means less money. You have enough to stabilize the currency and maintain basic services, but not enough for the infrastructure transformation your country needs. You're in a holding pattern: stable enough not to collapse, constrained enough not to grow.
+The smaller IMF package means fewer strings attached, but also less money. You have enough to keep the currency stable and maintain basic services, but not enough for the infrastructure your country desperately needs. You're in a holding pattern: stable enough not to collapse, too constrained to grow.
 
-Eric Toussaint's work suggests a third option that neither the IMF nor conventional markets would endorse: a debt audit. Your country's original debts were contracted by a military dictator in the 1980s, used to buy weapons and enrich cronies. Under international law, this could constitute "odious debt" — illegitimate obligations that a democratic successor government has no obligation to honor. Repudiating these debts would free up enormous fiscal space, but the financial consequences would be severe.`,
+Eric Toussaint's research points to a bold third option: a debt audit. Your country's original debts were taken on by a military dictator in the 1980s, spent on weapons and stolen through corruption. Under international law, these could be "odious debts" — debts that a democratic government has no obligation to repay because they never benefited the people. Refusing to pay them would free up huge amounts of money, but the financial backlash would be severe.`,
     choices: [
       {
         id: 'minimal_debt_audit',
@@ -415,21 +403,19 @@ Eric Toussaint's work suggests a third option that neither the IMF nor conventio
     ],
   },
 
-  // ── Self-Reliance: Agrarian Path ──
-
   {
     id: 'agro_reform',
     phase: 3,
     title: 'Land Reform',
-    narrative: `The agrarian reform program is the most ambitious undertaking since independence. You redistribute idle estate land to smallholders, establish state-backed agricultural cooperatives, and invest in irrigation infrastructure. The World Bank warns this will "distort markets." The landed elite threaten legal challenges. But Max Ajl's analysis is clear: without land reform, the rural majority remains trapped in poverty, and without food sovereignty, your nation remains dependent on food imports that drain foreign exchange.
+    narrative: `Your land reform program is the biggest project since independence. You take unused estate land and give it to small farmers, set up farming cooperatives backed by the state, and invest in irrigation. The World Bank warns you're "distorting markets." The old landowners threaten to sue. But as Max Ajl argues, without land reform, the rural majority stays trapped in poverty, and without being able to feed itself, your country stays dependent on expensive food imports.
 
-Utsa Patnaik's decades of research on the agrarian crisis provides both the warning and the blueprint. She has shown how colonial and post-colonial policies systematically diverted land from food production to export crops, leaving populations unable to feed themselves even as agricultural output grew on paper. The Green Revolution's yield increases, she demonstrates, often came at the cost of nutritional diversity and farmer autonomy — producing more tonnage of fewer crops while hunger persisted. Your reform takes her analysis seriously: the cooperatives prioritize food crops alongside cash crops, ensuring that Azania feeds itself before it feeds the world market. You establish a public distribution system guaranteeing basic grains at affordable prices — the kind of food security architecture that Utsa Patnaik argues is indispensable for any nation serious about eliminating poverty as it actually exists, rather than as World Bank poverty lines define it.
+Utsa Patnaik's decades of research provide both a warning and a roadmap. She's shown how colonial rulers forced farmers to grow cash crops for export instead of food for their own people — leaving populations hungry even as farm output grew on paper. Her research also showed that the Green Revolution's bigger harvests often came at the cost of nutrition and farmer independence — more tons of fewer crops while hunger continued. Taking her analysis seriously, your cooperatives grow food crops first and cash crops second, making sure Azania feeds itself before selling to the world. You set up a public food distribution system guaranteeing affordable basic grains — the kind of safety net Patnaik says is essential for any country serious about ending real poverty, not just poverty as measured by misleading World Bank statistics.
 
-The first harvest under the new system exceeds expectations by 20%. Cooperative farms using improved seeds and shared irrigation produce more per hectare than the old estates. Food imports drop by a third. Rural communities, for the first time in a generation, see a path forward. Caloric intake among the bottom quintile rises for the first time in a decade.
+The first harvest beats expectations by 20%. Cooperative farms produce more per acre than the old estates. Food imports drop by a third. For the first time in a generation, rural communities see a future. Nutrition among the poorest improves for the first time in a decade.
 
-But the urban economy has not kept pace. Without major infrastructure investment, factories remain uncompetitive. The capital's middle class grumbles about higher taxes funding "peasant programs." And the old estate owners are funding an opposition movement that accuses you of "destroying property rights."
+But the cities haven't kept up. Without better infrastructure, factories can't compete. The urban middle class grumbles about higher taxes funding "peasant programs." And the old landowners are bankrolling an opposition party that accuses you of "destroying property rights."
 
-Internationally, the Western press compares you to Zimbabwe. The Chinese ambassador observes, with studied neutrality, that "China's own reform began with agriculture before moving to industry."`,
+The Western press compares you to Zimbabwe. The Chinese ambassador notes, with careful neutrality, that "China's own reform started with agriculture before moving to industry."`,
     choices: [
       {
         id: 'agro_industrialize',
@@ -455,21 +441,19 @@ Internationally, the Western press compares you to Zimbabwe. The Chinese ambassa
     ],
   },
 
-  // ── Self-Reliance: Mining Nationalization Path ──
-
   {
     id: 'mining_national',
     phase: 3,
     title: 'Nationalization',
-    narrative: `The nationalization sends shockwaves through global markets. Azanian cobalt futures spike. The Canadian and Australian mining companies threaten international arbitration. The US State Department issues a "travel advisory" — diplomatic code for economic hostility. Credit rating agencies downgrade you to junk.
+    narrative: `The nationalization shocks global markets. Cobalt prices spike. The Canadian and Australian mining companies threaten to sue in international courts. The US issues a "travel advisory" — diplomatic code for economic hostility. Credit agencies downgrade you to junk status.
 
-But the revenue impact is transformative. Within six months, the state mining company is generating three times the tax revenue the foreign firms ever paid. You're capturing the full surplus value of your natural resources — what Ali Kadri calls "surplus retention," the essential precondition for sovereign development. The money flows into infrastructure, hospitals, and schools. The hostile international reaction confirms Prabhat Patnaik's thesis: metropolitan capitalism treats access to cheap peripheral commodities as a structural necessity, and any interruption of that access triggers a response out of proportion to the purely economic stakes involved. The credit downgrade, the arbitration threats, the diplomatic pressure — these are the disciplinary mechanisms of an imperial system that no longer needs colonial administrators because it has financial ones.
+But the money tells a different story. Within six months, the state mining company is making three times what the foreign firms ever paid in taxes. You're now keeping the full value of your resources at home — what economist Ali Kadri calls "surplus retention," the most basic requirement for building your own economy. The money flows into roads, hospitals, and schools. The hostile reaction from powerful countries confirms what Prabhat Patnaik argues: the global economic system treats access to cheap resources from poorer countries as a necessity, and any disruption triggers a response far bigger than the money at stake. The credit downgrade, the lawsuits, the diplomatic pressure — these are punishment tools of a system that no longer needs colonial governors because it has financial ones.
 
-Utsa Patnaik's historical research puts this in perspective: during the colonial era, the drain from the colonies to Britain — which she has estimated at $45 trillion from India alone in today's dollars — was obscured by the mechanism of using the colony's own revenues to pay for its exports. Today the mechanism is different — corporate profit repatriation, transfer pricing, debt service — but the direction of flow is the same. Your nationalization is, in effect, an attempt to reverse that flow.
+Utsa Patnaik's historical research puts this in context. During colonial times, the drain of wealth from colonies to Britain — which she estimates at $45 trillion from India alone in today's money — was hidden by making it look like normal trade. Today the methods are different — corporate profits sent abroad, creative accounting, debt payments — but the direction of the flow is the same. Your nationalization is an attempt to reverse that flow.
 
-The foreign mining lobby is not finished, however. They're funding opposition politicians, briefing journalists about "mismanagement," and pressuring your trading partners to impose informal sanctions. Your cobalt still needs to reach global markets, and the supply chains run through companies that are hostile to your government.
+But the foreign mining lobby isn't done. They're funding opposition politicians, feeding negative stories to journalists, and pressuring your trading partners. Your cobalt still has to reach world markets, and the supply chains run through companies that are hostile to you.
 
-Meanwhile, your mining engineers are capable but short-staffed. Production efficiency has dropped 15% since nationalization. You need technical expertise, and you need it without surrendering control.`,
+Meanwhile, your mining engineers are capable but understaffed. Production efficiency has dropped 15% since nationalization. You need expertise — but without giving up control.`,
     choices: [
       {
         id: 'mining_china_deal',
@@ -495,19 +479,17 @@ Meanwhile, your mining engineers are capable but short-staffed. Production effic
     ],
   },
 
-  // ── Self-Reliance: Education Path ──
-
   {
     id: 'education_investment',
     phase: 3,
     title: 'The Knowledge Foundation',
-    narrative: `You launch the most ambitious education program in Azania's history. Drawing on Cuba's literacy campaign model and Kerala's public health achievements, you deploy 10,000 new teachers and community health workers to rural areas. University enrollment doubles. A new polytechnic opens, focused on engineering and agricultural science.
+    narrative: `You launch the biggest education program in Azania's history, inspired by Cuba's literacy campaigns and Kerala's public health success. You deploy 10,000 new teachers and health workers to rural areas. University enrollment doubles. A new technical school opens, focused on engineering and agricultural science.
 
-The results won't show for years, but the signals are encouraging. Maternal mortality drops 25%. Child malnutrition falls. Youth crime declines as community programs provide alternatives. Your human development index begins climbing.
+The results won't show for years, but the signs are good. Deaths during childbirth drop 25%. Child malnutrition falls. Youth crime declines as community programs offer alternatives. Your human development numbers start climbing.
 
-But the economy grows slowly. Infrastructure remains decrepit. The educated youth you're producing can't find jobs that match their skills. A brain drain begins: your best graduates are recruited by European hospitals, Gulf state construction firms, and American tech companies. You're investing in human capital that other countries harvest — what John Smith would recognize as the periphery subsidizing the core through labor arbitrage.
+But the economy grows slowly. Infrastructure is still crumbling. The educated graduates you're producing can't find good jobs at home. A brain drain begins: your best students get recruited by European hospitals, Gulf construction firms, and American tech companies. You're investing in talent that other countries harvest — as John Smith documents, this is how poorer countries end up subsidizing richer ones through the movement of trained workers.
 
-Your opposition says you're building a nation of educated unemployed. Your supporters say you're planting seeds that will bear fruit for generations.`,
+Your opponents say you're building a nation of educated unemployed. Your supporters say you're planting seeds that will feed generations.`,
     choices: [
       {
         id: 'edu_industrialize',
@@ -537,17 +519,15 @@ Your opposition says you're building a nation of educated unemployed. Your suppo
   // PHASE 4: THE CRUCIBLE
   // ═══════════════════════════════════════
 
-  // Convergent nodes — different paths lead here through different routes
-
   {
     id: 'china_renegotiate',
     phase: 4,
     title: 'Renegotiating with Beijing',
-    narrative: `The renegotiation with China is tense but more productive than expected. Beijing has learned from the Sri Lankan backlash — the global optics of "debt-trap diplomacy" have forced a recalibration. They agree to extend repayment from 20 to 30 years, reduce the interest rate, and convert a portion of debt to equity in a joint infrastructure company where Azania holds 51%.
+    narrative: `The renegotiation with China is tense but goes better than expected. Beijing has learned from bad press elsewhere — the "debt trap" accusations have forced them to soften their approach. They agree to stretch payments from 20 to 30 years, lower the interest rate, and convert some debt into shares in a joint infrastructure company where Azania holds 51%.
 
-This is the dynamic Benabdallah documents: Chinese engagement in Africa is not static. It responds to African agency. When states negotiate firmly, the outcomes are materially better. Your team's preparation — detailed knowledge of every contract clause, alternative financing options lined up, and public support at home — gave you leverage.
+This matches what Benabdallah documents: China's approach in Africa isn't fixed. When countries push back firmly, the deals get better. Your team came prepared — they knew every contract detail, had alternative financing options ready, and had strong public support — and that gave you real bargaining power.
 
-But the port remains under a 50-year lease. And a new challenge emerges: the European Union has announced a Carbon Border Adjustment Mechanism. Your mining exports to Europe will face punitive tariffs unless you green your energy grid — and the coal power plants China built are now a liability.`,
+But the port is still under a 50-year Chinese lease. And a new problem has appeared: the EU has announced a carbon tax on imports. Your mining exports to Europe will face steep penalties unless you switch to clean energy — and the coal power plants China built are now a problem.`,
     choices: [
       {
         id: 'renego_green',
@@ -570,13 +550,13 @@ But the port remains under a 50-year lease. And a new challenge emerges: the Eur
     id: 'china_sez',
     phase: 4,
     title: 'The Special Economic Zones',
-    narrative: `The SEZ program along the railway corridor is attracting investment. Chinese firms relocating from higher-cost provinces set up electronics assembly, textile, and light manufacturing operations. Employment rises. But working conditions in some factories echo the sweatshop dynamics that John Smith documents in global value chains — Azanian workers producing goods for export at wages that barely cover subsistence.
+    narrative: `The economic zones along the railway are attracting investment. Chinese factories set up electronics assembly, textile, and light manufacturing operations. Jobs are being created. But conditions in some factories are harsh — as John Smith documents in his study of global supply chains, workers in poorer countries often produce goods for export at wages that barely cover basic needs.
 
-Deng Xiaoping faced similar criticism during China's reform era: the coastal SEZs were called "capitalist enclaves" by leftists within the Party. His response was pragmatic — economic development requires experimentation, and the benefits of growth would eventually spread. But would they?
+China's Deng Xiaoping faced the same criticism in the 1980s: his coastal economic zones were called "capitalist sell-outs" by critics. His answer was practical — you have to experiment to grow, and the benefits would spread over time. But would they?
 
-Your labor minister wants to enforce higher wages and safety standards. The investors threaten to relocate to a neighboring country with cheaper labor. Your youth employment rate has improved dramatically. The factories, for all their problems, are providing the first industrial jobs many workers have ever had.
+Your labor minister wants to enforce better wages and safety rules. The factory owners threaten to move to a cheaper country. Your youth unemployment rate has improved a lot. The factories, for all their problems, are providing the first industrial jobs many young people have ever had.
 
-The question Deng confronted is now yours: how much sovereignty do you compromise for economic growth, and when do you claw it back?`,
+The question Deng faced is now yours: how much do you compromise for economic growth, and when do you start taking back control?`,
     choices: [
       {
         id: 'sez_regulate',
@@ -599,11 +579,11 @@ The question Deng confronted is now yours: how much sovereignty do you compromis
     id: 'china_confrontation',
     phase: 4,
     title: 'The Standoff',
-    narrative: `Your local content demands have created a confrontation. The Chinese construction firms are threatening to pull out. Beijing has frozen the next disbursement. Half-built bridges stand as monuments to the impasse. The opposition accuses you of "economic sabotage."
+    narrative: `Your demand for local hiring has created a standoff. Chinese construction firms threaten to leave. Beijing has frozen the next payment. Half-built bridges stand abandoned. The opposition accuses you of wrecking the economy.
 
-But your gamble has rallied something powerful: national pride. The construction workers' union has organized 50,000 members demanding "Azanian jobs for Azanian projects." Youth movements are marching under banners reading "Sovereignty is not negotiable." Even the military chief has publicly backed your stance.
+But your gamble has rallied something powerful: national pride. The construction workers' union has organized 50,000 members marching for "Azanian jobs on Azanian projects." Youth movements carry banners reading "Sovereignty is not negotiable." Even the military chief has publicly backed you.
 
-This is the moment Nkrumah described — when political independence must be defended through economic independence, when the rhetoric of sovereignty meets the material reality of global power. Beijing needs your cobalt. You need their infrastructure. The question is who blinks first, and whether there's a path where nobody needs to.`,
+This is the moment Nkrumah described — when political independence has to be backed up by economic independence. Beijing needs your cobalt. You need their infrastructure. The question is who blinks first, and whether there's a way forward where nobody has to.`,
     choices: [
       {
         id: 'confront_negotiate',
@@ -626,11 +606,11 @@ This is the moment Nkrumah described — when political independence must be def
     id: 'china_accelerated',
     phase: 4,
     title: 'The Price of Speed',
-    narrative: `The infrastructure is built. The railway runs. The port hums with activity. Azania's economy is growing at 7% annually. But the growth has a hollow quality. Chinese firms dominate the logistics sector. The technology transfer you hoped for never materialized. Your workers load and unload containers but don't design or manage the systems.
+    narrative: `The infrastructure is built. The railway runs. The port is busy. The economy is growing at 7% a year. But the growth feels hollow. Chinese firms run the logistics. The technology transfer you hoped for never happened. Your workers load and unload shipping containers but don't design or manage the systems.
 
-And the debt. The accelerated construction meant accepting higher costs and less favorable terms. Your debt-to-GDP ratio has crossed 80%. Every year, a larger share of export revenue flows to Beijing in debt service — the same dynamic that Hudson documents in US financial hegemony, now reproduced through infrastructure lending.
+And the debt. Rushing construction meant accepting worse terms. Your debt now exceeds 80% of GDP. Every year, more export revenue goes to Beijing as loan payments — the same pattern Michael Hudson describes in US financial dominance, now repeated through infrastructure lending.
 
-The population is divided. The urban middle class enjoys new amenities. The rural poor have been bypassed. The youth have jobs, but they see the Chinese managers earning ten times their wages for the same hours.`,
+People are divided. The urban middle class likes the new roads and internet. The rural poor have been left out. Young people have jobs, but they see Chinese managers earning ten times their wages.`,
     choices: [
       {
         id: 'accel_assert',
@@ -653,13 +633,13 @@ The population is divided. The urban middle class enjoys new amenities. The rura
     id: 'drought_response',
     phase: 4,
     title: 'The Drought Crisis',
-    narrative: `The drought in the south is worse than the meteorologists predicted. Three provinces declare emergencies. 2 million people face food insecurity. Climate change — a crisis your nation did almost nothing to create — is reshaping your development options.
+    narrative: `The southern drought is worse than predicted. Three provinces declare emergencies. Two million people face hunger. Climate change — a crisis your nation barely contributed to — is rewriting your development plans.
 
-Your decision to maintain local content requirements has slowed infrastructure construction, but the training programs have produced something unexpected: a cadre of capable Azanian project managers who can organize relief operations efficiently. The fiber-optic network lets you coordinate aid distribution in real time. The capacity you built is paying off in an unforeseen way.
+Your decision to keep training local workers has slowed construction, but the trained Azanian managers can now organize relief operations efficiently. The internet network lets you coordinate aid in real time. The skills you built are paying off in ways nobody expected.
 
-The international community offers aid, but with conditions. The US pledges $100 million in food aid if you sign a bilateral investment treaty giving American firms favorable access. The EU offers drought-resistant seed technology if you align with their climate framework. China offers emergency rice shipments with no conditions.
+The international community offers help, but with strings. The US pledges $100 million in food aid if you sign a treaty giving American companies special access. The EU offers drought-resistant seeds if you join their climate framework. China offers emergency rice with no conditions.
 
-Max Ajl's work on climate and the agrarian question is prescient here: the drought is not just a natural disaster but the intersection of colonial land patterns, monoculture agriculture, and climate change. A genuine response addresses all three. Utsa Patnaik's research reinforces the point: nations that maintained robust public food distribution systems weathered food crises far better than those that liberalized food markets. The colonial pattern of diverting land from food crops to export crops left countries like Azania structurally vulnerable to exactly this kind of shock. Your response will determine whether the drought becomes a temporary hardship or a permanent deepening of dependency on food imports from the metropole — which is, as Prabhat Patnaik would note, precisely the outcome that serves metropolitan capital's interest in cheap commodity access.`,
+As Max Ajl has written, droughts like this aren't just natural disasters — they're the result of colonial land use, single-crop farming, and climate change all crashing together. Utsa Patnaik's research adds that countries that kept strong public food distribution systems handled food crises much better than those that let markets handle everything. The old colonial pattern — forcing farmers to grow exports instead of food — made countries like Azania especially vulnerable to exactly this kind of shock. As Prabhat Patnaik would note, becoming dependent on food imports is exactly what serves the interests of wealthy countries that want cheap access to your resources.`,
     choices: [
       {
         id: 'drought_comprehensive',
@@ -682,13 +662,13 @@ Max Ajl's work on climate and the agrarian question is prescient here: the droug
     id: 'pan_african_solidarity',
     phase: 4,
     title: 'Pan-African Solidarity',
-    narrative: `Your appeal to the African Union yields results. Kenya, Ethiopia, and South Africa contribute emergency grain reserves. The African Development Bank fast-tracks a $200 million climate resilience loan. Nigeria's Dangote Group offers to build a cement factory at cost. Rwanda shares its agricultural extension model.
+    narrative: `Your appeal to the African Union works. Kenya, Ethiopia, and South Africa send emergency grain. The African Development Bank fast-tracks a $200 million climate loan. Nigeria's Dangote Group offers to build a cement factory at cost. Rwanda shares its successful farming methods.
 
-This is the vision Nkrumah articulated in "Africa Must Unite" — not just political unity but economic cooperation among African states. The infrastructure your Chinese partners built is being put to use carrying African solidarity shipments. The irony is not lost on the diplomatic corps.
+This is the vision Nkrumah laid out in "Africa Must Unite" — not just political speeches but real economic cooperation. The infrastructure China helped build is now carrying African solidarity shipments. The irony isn't lost on anyone.
 
-But Pan-African solidarity has limits. Each contributing nation has its own interests. South Africa wants preferential access to your cobalt. Kenya wants your market for its manufactured goods. Ethiopia sees you as a potential rival for Chinese investment. The solidarity is real, but it coexists with competition.
+But solidarity has limits. Each contributing country has its own agenda. South Africa wants first dibs on your cobalt. Kenya wants access to your market. Ethiopia sees you as a rival for Chinese investment. The solidarity is real, but so is the competition.
 
-You're building something new: a network of South-South relationships that gives you options beyond the old binary of East versus West.`,
+You're building something new: a network of partnerships among developing nations that gives you alternatives beyond just choosing between East and West.`,
     choices: [
       {
         id: 'pan_af_deepen',
@@ -711,11 +691,11 @@ You're building something new: a network of South-South relationships that gives
     id: 'austerity_deepens',
     phase: 4,
     title: 'The Deepening Crisis',
-    narrative: `Your decision to hold the course is tested daily. The general strike paralyzes the capital for a week. Food prices continue rising. The military chief's "stability" meeting becomes a weekly fixture. International media runs stories about "the Azanian experiment in free-market reform."
+    narrative: `Holding the course gets harder every day. A general strike shuts down the capital for a week. Food prices keep rising. The military chief's "stability" meetings become a weekly event. International media runs stories praising "the Azanian experiment in free-market reform."
 
-The IMF publishes a progress report praising your "fiscal discipline." GDP has stopped contracting and shows 0.3% growth. Inflation is falling. But these macroeconomic indicators mask a social catastrophe: hospital admissions for malnutrition have tripled, school dropout rates have doubled, and the informal economy — beyond the reach of your reformed tax system — has ballooned. Utsa Patnaik would note the cruel irony: by the World Bank's purchasing-power-parity poverty line — which she has demonstrated systematically undercounts the poor — your poverty rate has "improved." By the standard of whether people can actually feed themselves, it has worsened dramatically.
+The IMF releases a report praising your "fiscal discipline." GDP is technically growing at 0.3%. Inflation is falling. But behind those numbers hides a disaster: hospital admissions for malnutrition have tripled, school dropout rates have doubled, and the informal economy — people selling things on the street because they can't find real jobs — has exploded. Utsa Patnaik would spot the cruel irony: by the World Bank's poverty measurements — which she's proven systematically undercount the poor — your poverty rate has "improved." By the standard of whether people can actually feed their families, it's gotten much worse.
 
-The privatized mining company is posting record profits. Its shareholders in Toronto are delighted. Your treasury receives a small royalty. The value flows outward, as it always has. This is what the Patnaiks call the continued colonial drain in a new guise: the formal mechanism has changed from colonial taxation to corporate profit repatriation and debt service, but the direction of the flow — from the periphery to the metropole — has not.`,
+The privatized mining company is making record profits. Its shareholders in Toronto are thrilled. Your government gets a small royalty. The wealth flows out, as it always has. This is what the Patnaiks call the colonial drain in a new disguise: the method has changed from direct colonial taxation to corporate profits shipped abroad and debt payments, but the direction of the money flow — from poor countries to rich ones — hasn't changed at all.`,
     choices: [
       {
         id: 'deep_reverse',
@@ -738,11 +718,11 @@ The privatized mining company is posting record profits. Its shareholders in Tor
     id: 'imf_renegotiate',
     phase: 4,
     title: 'Social Protection',
-    narrative: `The IMF, sensitive to criticism, agrees to modify the program. Social protection floors are established: guaranteed school meals, healthcare exemptions for the poorest, and a cash transfer program for vulnerable households. The austerity continues, but its sharpest edges are blunted.
+    narrative: `The IMF, stung by criticism, agrees to soften the program. New safety nets are put in place: free school meals, healthcare for the poorest, and cash payments for vulnerable families. The austerity continues, but its worst edges are blunted.
 
-Your finance minister finds creative fiscal space by renegotiating contracts with telecom monopolies and introducing a digital services tax that captures revenue from multinational tech firms. These aren't the kinds of "reforms" the IMF typically recommends, but they work — domestic revenue grows without cutting services.
+Your finance minister finds creative ways to raise money: renegotiating contracts with telecom monopolies and putting a tax on multinational tech companies. These aren't the kinds of "reforms" the IMF usually recommends, but they work — government revenue grows without cutting services.
 
-The compromise position is inherently unstable, though. You're satisfying neither the IMF hawks who want faster privatization nor the social movements who want the program abandoned entirely. Elections are in two years, and the opposition is running on a platform of "no more Washington diktat."`,
+The compromise satisfies nobody completely. IMF hardliners want faster privatization. Social movements want the whole program scrapped. Elections are in two years, and the opposition is campaigning on "no more orders from Washington."`,
     choices: [
       {
         id: 'renego_innovate',
@@ -765,13 +745,13 @@ The compromise position is inherently unstable, though. You're satisfying neithe
     id: 'debt_moratorium',
     phase: 4,
     title: 'The Moratorium',
-    narrative: `The debt moratorium triggers an immediate financial crisis. Your currency drops 30% against the dollar. Capital flight empties bank accounts. The London Club of creditors threatens legal action. The US Treasury warns of "consequences."
+    narrative: `Stopping debt payments triggers an immediate crisis. Your currency drops 30%. Money flees the country. Creditors threaten lawsuits. The US Treasury warns of "consequences."
 
-But something else happens too. Eric Toussaint would recognize this moment: the moratorium breaks the debt cycle that has drained your treasury for decades. Freed from debt service, your government suddenly has fiscal space. You invest in food stockpiles, import substitution, and emergency infrastructure. The currency depreciation, though painful, makes your exports competitive and your imports expensive — which is exactly what you need to build domestic industry.
+But something else happens. As Eric Toussaint would recognize, the pause breaks the debt cycle that's been draining your treasury for decades. Freed from loan payments, your government suddenly has money to spend. You invest in food stockpiles, start making things at home instead of importing them, and build emergency infrastructure. The currency drop, while painful, actually helps — it makes your exports cheaper and imports more expensive, which is exactly what you need to kick-start domestic industry.
 
-Latin American precedents are mixed. Argentina's 2001 default led to recovery; Ecuador's 2008 debt audit freed resources for social spending. But these countries had larger economies and more diversified export bases than Azania. You're more vulnerable, and the creditors know it.
+History gives mixed signals. Argentina's 2001 default eventually led to recovery. Ecuador's 2008 debt audit freed money for social programs. But those countries had bigger, more diverse economies. You're more vulnerable, and the creditors know it.
 
-International solidarity arrives from unexpected quarters. Bolivia, Venezuela, and Cuba offer expertise. The African Union passes a (non-binding) resolution supporting your right to development. China remains conspicuously silent — watching to see if this creates an opportunity.`,
+Support arrives from unexpected places. Bolivia, Venezuela, and Cuba offer expertise. The African Union passes a resolution supporting your right to development. China stays quiet — watching to see if this creates an opening for them.`,
     choices: [
       {
         id: 'morat_negotiate',
@@ -794,11 +774,11 @@ International solidarity arrives from unexpected quarters. Bolivia, Venezuela, a
     id: 'debt_audit',
     phase: 4,
     title: 'The Debt Audit',
-    narrative: `The citizen debt audit commissions are thorough and damning. They document how the military dictator's regime borrowed $3.2 billion in the 1980s: $800 million went to arms purchases from France, $1.2 billion was embezzled to Swiss bank accounts, and $1.2 billion funded prestige projects that were never completed. The interest and penalties on these original loans now total $8 billion — more than your entire GDP.
+    narrative: `The citizen debt audit teams are thorough and devastating. They document how the military dictator borrowed $3.2 billion in the 1980s: $800 million went to weapons from France, $1.2 billion was stolen and hidden in Swiss bank accounts, and $1.2 billion funded prestige projects that were never finished. With interest and penalties, those original loans now total $8 billion — more than your entire annual GDP.
 
-Following Ecuador's 2008 precedent, the audit commission declares 60% of the debt "illegitimate and odious." Toussaint's legal framework is clear: debts contracted by despotic regimes for purposes hostile to the population, where the creditors were aware of these circumstances, do not bind successor democratic governments.
+Following Ecuador's 2008 example, the audit declares 60% of the debt "illegitimate." Toussaint's legal argument is straightforward: debts taken on by dictators for corrupt purposes, where the lenders knew what was happening, don't bind the democratic government that comes after.
 
-The creditors are furious. Legal proceedings begin in London, New York, and Paris. Your foreign assets are frozen. But domestically, the audit has galvanized the nation. For the first time, citizens understand where the debt came from and why they've been paying for a dictator's weapons and Swiss villas.`,
+The creditors are furious. Lawsuits begin in London, New York, and Paris. Your foreign bank accounts are frozen. But at home, the audit has united the nation. For the first time, citizens understand where the debt came from and why they've been paying for a dictator's weapons and Swiss bank accounts.`,
     choices: [
       {
         id: 'audit_repudiate',
@@ -821,11 +801,11 @@ The creditors are furious. Legal proceedings begin in London, New York, and Pari
     id: 'south_south_finance',
     phase: 4,
     title: 'New Development Banks',
-    narrative: `The BRICS New Development Bank and the Asian Infrastructure Investment Bank offer a different kind of multilateral lending — without the structural adjustment conditions of the IMF. The interest rates are comparable, the terms are reasonable, and the governance gives developing nations a voice.
+    narrative: `The BRICS New Development Bank and the Asian Infrastructure Investment Bank offer a different kind of lending — without the harsh conditions the IMF demands. The interest rates are similar, the terms are fair, and developing countries actually have a say in how these banks are run.
 
-But these institutions are young and their capacity limited. The NDB can offer $300 million for your railway project — significant, but not enough. The AIIB can co-finance a renewable energy program. Together with your African bond issuance, you're cobbling together a financing package from multiple sources.
+But these banks are young and limited. The NDB can offer $300 million for your railway — significant but not enough. The AIIB can help fund a renewable energy program. Combined with your African bonds, you're piecing together financing from many sources.
 
-This patchwork approach has a hidden advantage: diversification. You're not dependent on any single creditor. As Roland Boer's analysis of Chinese development institutions suggests, the emergence of alternative lenders has fundamentally changed the bargaining dynamics for Global South nations. The IMF monopoly is broken, even if no single institution has replaced it.`,
+This patchwork approach has a hidden advantage: you're not dependent on any single lender. As Roland Boer notes in his study of Chinese development banks, having alternatives has fundamentally changed the game for developing countries. The IMF's monopoly is broken, even if no single institution has replaced it.`,
     choices: [
       {
         id: 'ss_diversify',
@@ -848,13 +828,13 @@ This patchwork approach has a hidden advantage: diversification. You're not depe
     id: 'bootstrap_development',
     phase: 4,
     title: 'Pulling Yourself Up',
-    narrative: `The bootstrap strategy is grueling but clarifying. Without large external loans, you're forced to prioritize ruthlessly. Your finance minister implements a new revenue code that actually collects taxes from multinational corporations operating in Azania — something the IMF never required, because those corporations are based in creditor countries.
+    narrative: `Going it alone is exhausting but clarifying. Without big foreign loans, you have to choose carefully. Your finance minister creates a new tax code that actually collects money from multinational corporations in Azania — something the IMF never pushed for, since those companies are based in creditor countries.
 
-You discover that domestic savings, properly mobilized, can finance more than anyone expected. A national development bank channels household savings into infrastructure bonds. Pension funds invest in domestic industry. The informal sector is slowly formalized through registration incentives rather than punitive enforcement.
+You discover that domestic savings, properly organized, can fund more than anyone expected. A national development bank turns household savings into infrastructure bonds. Pension funds invest in local industry. Street vendors and small businesses are gradually brought into the formal economy through incentives, not punishments.
 
-Growth is modest — 3% per year — but it's genuine, rooted in domestic production rather than debt-financed consumption. Your debt burden is falling, slowly. International observers are confused: you don't fit any model they recognize.
+Growth is modest — 3% a year — but it's real, built on what your people actually produce rather than borrowed money. Your debt is slowly falling. International observers are confused: your approach doesn't fit any model they recognize.
 
-But 3% growth is not enough to absorb a growing population. Youth unemployment remains high. The educated young see more opportunity abroad than at home. You need to accelerate without leveraging up.`,
+But 3% growth isn't enough for a fast-growing population. Youth unemployment stays high. Educated young people see better opportunities abroad. You need to speed things up without piling on debt.`,
     choices: [
       {
         id: 'boot_sez',
@@ -873,17 +853,15 @@ But 3% growth is not enough to absorb a growing population. Youth unemployment r
     ],
   },
 
-  // ── Mining & Agriculture Convergent Paths ──
-
   {
     id: 'agro_industrial',
     phase: 4,
     title: 'From Farm to Factory',
-    narrative: `The transition from agriculture to industry is the most critical and dangerous passage in development. Your agricultural surplus provides the capital, but building factories requires skills, supply chains, and infrastructure that don't yet exist. You study the models: South Korea's state-directed chaebols, China's township and village enterprises, India's mixed approach.
+    narrative: `Moving from farming to manufacturing is the most important — and dangerous — step in development. Your farm surplus provides the money, but building factories requires skills, supply chains, and infrastructure you don't yet have. You study the playbooks: South Korea's state-directed companies, China's small-town factories, India's mixed approach.
 
-Your light manufacturing program starts with food processing — canning, packaging, and preserving the crops your cooperatives grow. Then textiles, using domestically grown cotton. Then simple tools and construction materials. Each step up the value chain is harder than the last.
+You start simple: canning and packaging the food your cooperatives grow. Then textiles from locally grown cotton. Then basic tools and building materials. Each step up is harder than the last.
 
-The international community watches with bemusement. "Why not just export the raw commodities and import manufactured goods?" asks a visiting economist. This is precisely the colonial logic of "comparative advantage" that Kadri identifies as the intellectual justification for keeping peripheral economies in permanent subordination.`,
+A visiting Western economist asks, "Why not just export the raw materials and buy manufactured goods?" This is exactly the colonial-era logic that economist Kadri identifies as the excuse used to keep poorer countries locked into exporting cheap raw materials forever.`,
     choices: [
       {
         id: 'agro_ind_state',
@@ -906,11 +884,11 @@ The international community watches with bemusement. "Why not just export the ra
     id: 'agro_export',
     phase: 4,
     title: 'Value-Added Agriculture',
-    narrative: `Your agricultural cooperatives have evolved into something remarkable. Azanian organic coffee is finding premium markets in Europe and East Asia. Processed cocoa is being sold at three times the price of raw beans. A cooperative-owned cashew processing plant has become the largest employer in the northern province.
+    narrative: `Your farming cooperatives have evolved into something impressive. Azanian organic coffee is selling in premium shops across Europe and East Asia. Processed cocoa brings three times the price of raw beans. A cooperative-owned cashew processing plant is now the biggest employer in the northern province.
 
-This is exactly the kind of "delinking" from the global value chain hierarchy that development theorists have long advocated — not autarky, but engagement on your own terms, exporting processed goods rather than raw materials. Your farmers capture more of the final value, and the processing industries create non-agricultural employment. The Patnaiks' analysis of imperialism underscores why this matters: metropolitan capitalism has historically required the terms of trade to favor manufactured goods over primary commodities. By processing your own coffee, cocoa, and cashews, you're breaking the pattern where the periphery exports cheap raw materials and imports expensive finished goods — the pattern that has drained wealth southward for centuries.
+Instead of selling cheap raw materials and buying expensive finished products, you're selling processed goods and keeping more of the money. The Patnaiks explain why this matters: throughout history, the trade system has been rigged so that processed goods from wealthy countries cost more than raw materials from poorer ones. By roasting your own coffee and processing your own cocoa, you're breaking that old pattern.
 
-But success brings new challenges. European import regulations are complex and shift unpredictably — Prabhat Patnaik would note that "free trade" agreements are designed to be free for metropolitan exports while bristling with non-tariff barriers against peripheral manufactured goods. Your "organic" certification depends on Western certification bodies that charge fees your small cooperatives can barely afford. And the largest buyers are multinational commodity traders who exert enormous market power.`,
+But success brings new problems. European import rules are complicated and keep changing — Prabhat Patnaik would note that "free trade" deals are designed to be free for wealthy countries' exports while creating endless obstacles for goods from developing nations. Your "organic" certification depends on Western agencies that charge fees your small cooperatives can barely afford. And the biggest buyers are huge multinational traders with enormous bargaining power.`,
     choices: [
       {
         id: 'export_brand',
@@ -933,11 +911,11 @@ But success brings new challenges. European import regulations are complex and s
     id: 'agro_china_assist',
     phase: 4,
     title: 'Chinese Agricultural Expertise',
-    narrative: `The Chinese agricultural mission sends 50 agronomists who work alongside your farmers in the southern provinces. Their hybrid rice varieties triple yields. Their drip irrigation systems transform arid land. The training is hands-on and effective — Benabdallah documents this as one of the most successful dimensions of China-Africa cooperation, where practical technical knowledge transfers more effectively than in Western "capacity building" programs that often consist of consultants writing reports.
+    narrative: `Fifty Chinese farming experts arrive and work alongside your farmers in the south. Their new rice varieties triple crop yields. Their drip irrigation systems turn dry land productive. The training is hands-on and practical — Benabdallah has documented this as one of the most successful parts of China-Africa cooperation, where real skills transfer better than Western "capacity building" programs that often just produce consultant reports.
 
-But the mission also introduces Chinese seed companies that compete with local varieties. Dependency on imported seeds would recreate the Green Revolution trap that Ajl critiques — productivity gains that come at the cost of farmer autonomy and agrobiodiversity. Your agricultural scientists are concerned.
+But the Chinese mission also introduces Chinese seed companies that compete with local varieties. Depending on imported seeds would repeat the "Green Revolution" trap that Ajl warns about — bigger harvests that come at the cost of farmer independence. Your agricultural scientists are worried.
 
-Meanwhile, the success of the program has created a template. Other sectors want similar partnerships: your mining engineers request Chinese training, your tech sector wants access to Chinese AI research, your transport ministry wants help with logistics systems.`,
+The farming program's success has created demand. Other sectors want similar partnerships: your mining engineers want Chinese training, your tech sector wants access to Chinese AI research, your transport ministry wants logistics help.`,
     choices: [
       {
         id: 'china_assist_expand',
@@ -960,15 +938,15 @@ Meanwhile, the success of the program has created a template. Other sectors want
     id: 'mining_china_partner',
     phase: 4,
     title: 'The Joint Venture',
-    narrative: `The Chinese joint venture in the mining sector is transformative. Chinese expertise stabilizes production. New processing facilities mean you're exporting refined cobalt instead of raw ore — capturing five times the value per ton. Chinese market access means you're no longer dependent on the London Metals Exchange, where pricing power has historically favored Western traders.
+    narrative: `The Chinese joint venture transforms the mining sector. Chinese expertise stabilizes production. New processing plants mean you're exporting refined cobalt instead of raw ore — worth five times as much per ton. Chinese market access means you're no longer dependent on the London metals market, where pricing has historically favored Western traders.
 
-But the 30% Chinese stake comes with influence. Chinese managers in key technical positions. Supply chains routed through Chinese logistics firms. Equipment sourced from Chinese manufacturers. The joint venture is profitable, but the knowledge remains largely within the Chinese team.
+But the 30% Chinese stake comes with influence. Chinese managers hold key positions. Supply chains run through Chinese companies. Equipment comes from Chinese manufacturers. The joint venture is profitable, but the know-how stays mostly with the Chinese team.
 
-Your mining engineers are learning, but the pace of technology transfer depends on the good faith of your partner. Roland Boer's analysis of Chinese state enterprises suggests that technology sharing is more likely when both parties have long-term strategic interests — but Azania needs to ensure its interests remain central.`,
+Your engineers are learning, but how fast depends on your partner's good faith. Roland Boer's research on Chinese companies suggests technology sharing is more likely when both sides see a long-term future together — but Azania needs to make sure its own interests stay front and center.`,
     choices: [
       {
         id: 'jv_assert',
-        text: 'Use profits to train an Azanian technical cadre and gradually assert majority control',
+        text: 'Use profits to train an Azanian technical team and gradually assert majority control',
         consequence: 'You earmark 20% of joint venture profits for a Mining Academy and management training.',
         effects: { sovereignty: 10, humanDevelopment: 8, economicStrength: 5, publicSupport: 5 },
         nextNode: 'late_development_push',
@@ -987,11 +965,11 @@ Your mining engineers are learning, but the pace of technology transfer depends 
     id: 'mining_self_develop',
     phase: 4,
     title: 'The Sovereign Mining Company',
-    narrative: `The decision to develop mining capacity domestically is paying off, slowly. Your university's mining engineering program has graduated three cohorts. Production efficiency is recovering. You've hired retired engineers from South Africa and Chile as mentors — South-South expertise sharing outside any institutional framework.
+    narrative: `Building mining capacity at home is paying off, slowly. Your university's mining engineering program has graduated three classes. Efficiency is recovering. You've hired retired engineers from South Africa and Chile as mentors — developing nations sharing expertise without any big institution involved.
 
-The revenue from nationalized mines, combined with efficiency improvements, is now your largest source of government income. You're using it to fund a sovereign wealth fund — an idea borrowed from Norway's oil fund model but adapted to your context.
+Revenue from nationalized mines is now your government's biggest income source. You're using it to fund a sovereign wealth fund — like Norway's oil savings fund, adapted to your situation.
 
-But the Western arbitration case is proceeding. The former mining companies are claiming $4.5 billion in compensation — more than your annual GDP. The tribunal's jurisdiction is questionable, but the threat is real: if they rule against you, your foreign assets could be seized and your access to international financial markets severely constrained.`,
+But the foreign companies are suing. They're claiming $4.5 billion in compensation — more than your entire GDP. The court they want to use is questionable, but the threat is real: if they win, your foreign bank accounts could be frozen and your access to global financial markets cut off.`,
     choices: [
       {
         id: 'self_mine_fight',
@@ -1014,13 +992,13 @@ But the Western arbitration case is proceeding. The former mining companies are 
     id: 'minerals_cartel',
     phase: 4,
     title: 'The Minerals Alliance',
-    narrative: `The regional minerals cartel idea catches fire. Zambia, the DRC, Tanzania, and Mozambique all have critical minerals that the green energy transition desperately needs. Together, you control 60% of global cobalt, 35% of copper, and significant lithium reserves. The bargaining power is immense.
+    narrative: `The idea of an African minerals alliance catches fire. Zambia, the DRC, Tanzania, and Mozambique all have minerals essential for electric cars and renewable energy. Together, you control 60% of the world's cobalt and 35% of its copper. That's enormous bargaining power.
 
-You convene the founding meeting of the African Critical Minerals Alliance (ACMA) in your capital. The attending heads of state sign a charter committing to: coordinated pricing, shared processing facilities, joint negotiation with buyers, and a common fund for industrial development. The Western press calls it "an OPEC for cobalt." Markets are nervous.
+You host the founding meeting of the African Critical Minerals Alliance (ACMA). The attending leaders commit to: coordinating prices, sharing processing facilities, negotiating together with buyers, and creating a joint fund for development. Western media calls it "OPEC for cobalt." Markets are nervous.
 
-This is the Pan-African economic solidarity Nkrumah dreamed of — not just political resolutions but material cooperation that shifts the terms of trade. For the first time, the producers of the raw materials essential to the global economy are acting collectively.
+This is the economic Pan-African solidarity Nkrumah dreamed of — not just speeches but real cooperation that changes the balance of trade.
 
-The response from consuming nations is swift. The US announces a "critical minerals security initiative." The EU proposes "strategic partnerships" with individual member states — an obvious attempt to divide the cartel. China offers to be a "preferred buyer" with guaranteed volume at above-market prices.`,
+The big consumer nations react fast. The US announces a "critical minerals security initiative." The EU tries to cut separate deals with individual members — an obvious divide-and-conquer tactic. China offers to be a "preferred buyer" at above-market prices.`,
     choices: [
       {
         id: 'cartel_hold',
@@ -1039,17 +1017,15 @@ The response from consuming nations is swift. The US announces a "critical miner
     ],
   },
 
-  // ── Education convergent paths ──
-
   {
     id: 'state_industrialization',
     phase: 4,
     title: 'The National Development Corporation',
-    narrative: `Your National Development Corporation (NDC) begins operations. State-owned factories produce construction materials, pharmaceuticals, and electronics components. Your educated workforce finally has domestic employment options. The brain drain slows.
+    narrative: `Your National Development Corporation (NDC) opens for business. State-owned factories produce construction materials, medicine, and electronics components. Your educated workforce finally has good jobs at home. The brain drain slows.
 
-The NDC model draws on the experience of South Korea's chaebols, Singapore's Temasek Holdings, and China's state-owned enterprises — all examples of state-led industrialization that defied the free-market orthodoxy. As Boer documents in his analysis of Chinese socialism, the key is not whether the state or the market drives development, but whether the state has the capacity to direct investment toward productive ends.
+The NDC follows models from South Korea, Singapore, and China — all countries that used state-led industry to grow, despite Western economists saying free markets were the only way. As Boer documents, the real question isn't whether the government or the market drives growth — it's whether the government is good enough to direct investment where it's needed most.
 
-The challenge is efficiency. Some NDC factories are world-class. Others are bloated with patronage hires. Quality control is uneven. Private sector competitors complain about unfair advantages. Your anti-corruption commission is overwhelmed.`,
+The challenge is efficiency. Some NDC factories are world-class. Others are bloated with political hires. Quality control is uneven. Private businesses complain about unfair competition. Your anti-corruption team is overwhelmed.`,
     choices: [
       {
         id: 'ndc_reform',
@@ -1072,13 +1048,13 @@ The challenge is efficiency. Some NDC factories are world-class. Others are bloa
     id: 'diaspora_mobilization',
     phase: 4,
     title: 'The Diaspora Returns',
-    narrative: `The diaspora engagement strategy works better than expected. Azanians abroad — doctors, engineers, tech workers, entrepreneurs — respond to your call. Diaspora bonds raise $500 million. Returnees establish clinics, tech startups, and consulting firms. A retired professor from MIT returns to build a computational research center.
+    narrative: `The diaspora strategy works better than expected. Azanians living abroad — doctors, engineers, tech workers, entrepreneurs — answer your call. Diaspora bonds raise $500 million. Returnees open clinics, tech startups, and consulting firms. A retired MIT professor comes home to build a research center.
 
-The returning diaspora brings not just skills but networks — connections to global supply chains, knowledge of international markets, and bilingual/bicultural capacity that is invaluable for a country trying to engage with the world on its own terms.
+The returnees bring more than skills — they bring connections to global supply chains, knowledge of international markets, and the ability to bridge cultures. That's invaluable for a country trying to engage with the world on its own terms.
 
-But tensions emerge. Returnees earn higher salaries than locals with similar qualifications, creating resentment. Some diaspora entrepreneurs import foreign business models that don't suit local conditions. The "been-to" phenomenon — respect mixed with suspicion for those who've been abroad — complicates workplace dynamics.
+But tensions emerge. Returnees earn more than locals with similar qualifications, creating resentment. Some import foreign business ideas that don't fit local reality. The mix of respect and suspicion toward those who've been abroad complicates things.
 
-Your challenge is to harness diaspora capacity without creating a dual economy where the connected thrive and everyone else stagnates.`,
+Your challenge: use the diaspora's talent without creating a two-tier economy where the connected thrive and everyone else falls behind.`,
     choices: [
       {
         id: 'diaspora_integrate',
@@ -1101,11 +1077,11 @@ Your challenge is to harness diaspora capacity without creating a dual economy w
     id: 'sez_development',
     phase: 4,
     title: 'The Zone Experiment',
-    narrative: `The special economic zones attract investment rapidly. Electronics assembly plants, garment factories, and call centers spring up. Your educated youth find employment. GDP growth accelerates to 5%.
+    narrative: `The special economic zones attract investment fast. Electronics assembly plants, garment factories, and call centers spring up. Your educated youth find jobs. GDP growth hits 5%.
 
-But the zones are enclaves. Tax exemptions mean little revenue flows to the state. Working conditions vary. Some firms treat Azanian workers well; others extract maximum labor for minimum pay. The zones are connected to global supply chains but disconnected from the domestic economy — what dependency theorists would call "growth without development."
+But the zones are bubbles. Tax breaks mean little money flows to the government. Working conditions vary wildly. The zones are connected to global supply chains but disconnected from the rest of Azania — what economists call "growth without development."
 
-Deng Xiaoping's SEZ strategy in China eventually spread from coastal enclaves to transform the entire economy. But that required massive state investment in education, infrastructure, and technology over decades. Your SEZs could be the beginning of that trajectory — or they could become permanent enclaves of low-wage assembly work.`,
+When Deng Xiaoping created SEZs in China, they eventually spread and transformed the whole economy. But that took massive government investment in education, infrastructure, and technology over decades. Your zones could follow that path — or they could become permanent pockets of low-wage factory work.`,
     choices: [
       {
         id: 'sez_upgrade_push',
@@ -1128,617 +1104,280 @@ Deng Xiaoping's SEZ strategy in China eventually spread from coastal enclaves to
   // PHASE 5: RESOLUTION & ENDINGS
   // ═══════════════════════════════════════
 
-  {
-    id: 'green_transition',
-    phase: 5,
-    title: 'The Green Pivot',
-    narrative: `Your pivot to renewable energy becomes a strategic masterstroke. Converting the coal plants into solar panel and wind turbine manufacturing facilities — using Chinese technology with Azanian labor — positions you at the center of Africa's green transition. The EU carbon border tax, which threatened your mining exports, now works in your favor: you're producing the green technology that others need to comply.
+  { id: 'railway_negotiation', phase: 4, title: 'Railway on Your Terms',
+    narrative: `With reliable power and internet already in place, you're in a much stronger position to negotiate the railway deal. China knows your economy is growing and other bidders are circling. You push hard for better terms — lower interest rates, local hiring, technology transfer, and no asset seizure clauses.
 
-Your cobalt, essential for electric vehicle batteries, is now processed domestically and sold at a premium as "green cobalt" — mined with renewable energy and fair labor practices. The premium commands a 20% price advantage over competitors.
-
-The development model you've built doesn't fit any ideological box. It has elements of state planning, market competition, South-South cooperation, and environmental sustainability. It is, as Deng might have said, "development with Azanian characteristics."`,
+The Chinese team grumbles but concedes. They need success stories, and Azania with its new digital economy is a showcase they can't afford to lose. The revised deal gives you a railway with real local ownership built into the contract from day one.`,
     choices: [
-      {
-        id: 'green_sovereign',
-        text: 'Consolidate — use your strategic position to achieve full economic sovereignty',
-        consequence: 'You leverage your green technology position to renegotiate all remaining debt on favorable terms.',
-        effects: { sovereignty: 15, economicStrength: 10, debtBurden: -10, internationalStanding: 10, publicSupport: 8 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+      { id: 'rail_green', text: 'Pair the railway with a green energy strategy for long-term competitiveness', consequence: 'You combine the railway project with a renewable energy initiative along the corridor.', effects: { infrastructure: 8, sovereignty: 5, economicStrength: 5, internationalStanding: 5 }, nextNode: 'green_transition' },
+      { id: 'rail_bloc', text: 'Extend the railway to connect with neighboring countries and build a regional network', consequence: 'You propose a continental railway link that turns Azania into a transit hub.', effects: { infrastructure: 10, internationalStanding: 8, economicStrength: 8, sovereignty: 5 }, nextNode: 'regional_bloc' },
+    ] },
 
-  {
-    id: 'port_reclamation',
-    phase: 5,
-    title: 'Reclaiming the Port',
-    narrative: `The legal proceedings to reclaim the port are complex but your legal team, educated in Azanian law schools you funded, is formidable. They argue that the original concession was signed under duress — the implicit threat of debt acceleration if you refused. The arbitration panel includes an African judge for the first time.
+  { id: 'competitive_bidding', phase: 4, title: 'The Bidding War',
+    narrative: `Your competitive bidding strategy works. The Chinese lower their interest rates. The Europeans add a grant component. The African Development Bank offers the most sovereignty-friendly terms. Each delegation privately urges you to choose them, sweetening offers with side deals — scholarships, trade preferences, technology partnerships.
 
-While the legal process unfolds, you develop an alternative: a second port, smaller but entirely domestically owned, that handles agricultural and manufactured exports. The Chinese-operated port still handles mining bulk cargo, but your economy is no longer entirely dependent on it.
-
-The port case becomes a symbol. Not just for Azania, but for the dozens of countries reassessing infrastructure concessions made under financial pressure. A win here sets a precedent; a loss entrenches the model.`,
+You've turned your infrastructure need into leverage. By refusing to commit to any single partner, you're extracting better terms from all of them. This is the advantage of a multipolar world: when multiple powers want what you have, you can set the terms.`,
     choices: [
-      {
-        id: 'port_win',
-        text: 'See the case through — sovereignty over strategic infrastructure is non-negotiable',
-        consequence: 'After three years of legal battle, the tribunal rules in your favor on key provisions.',
-        effects: { sovereignty: 15, internationalStanding: 10, publicSupport: 10, infrastructure: 5 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+      { id: 'bid_best_terms', text: 'Pick the best overall package regardless of geopolitics', consequence: 'You select a mixed package: African bank financing, Chinese construction, European green technology.', effects: { infrastructure: 10, sovereignty: 5, economicStrength: 8, internationalStanding: 5, debtBurden: 5 }, nextNode: 'diversified_development' },
+      { id: 'bid_african', text: 'Choose the African consortium to strengthen continental solidarity', consequence: 'You go with the Pan-African option, signaling commitment to continental cooperation.', effects: { infrastructure: 8, sovereignty: 10, internationalStanding: 10, publicSupport: 5 }, nextNode: 'regional_bloc' },
+    ] },
 
-  {
-    id: 'late_development_push',
-    phase: 5,
-    title: 'The Development Push',
-    narrative: `Years of investment in human capital, infrastructure, and institutional capacity are compounding. Your economy is growing at 6% annually. Manufacturing output has quadrupled since independence. The university graduates who once emigrated are now founding companies at home. Poverty has fallen by half.
+  { id: 'late_sovereignty_push', phase: 5, title: 'Reclaiming Control',
+    narrative: `Your mandate requiring Azanian directors in all projects meets fierce resistance from Chinese managers — but it works. Within two years, Azanian professionals sit in every boardroom and control room. They've learned by doing, and now they can run these systems themselves.
 
-Your development model has caught the attention of other Global South nations. Delegations from Laos, Bolivia, and Senegal visit to study your approach. A think tank in your capital publishes studies on "the Azanian model" — neither Washington Consensus nor Beijing Consensus, but something new.
+The transition is bumpy. Some projects slow down. A few Chinese firms pull back. But the ones that stay find that Azanian management, familiar with local conditions and supply chains, actually improves operations. Your workforce has gone from loading containers to running the logistics.
 
-Nkrumah's dream of economic independence as the completion of political independence is, for the first time, within reach. Not fully achieved — no developing nation achieves full sovereignty in a single generation — but the trajectory is clear and the foundations are solid.
-
-The election approaches. Your record is strong but the task is not finished. The question is whether to consolidate gains or push further.`,
+The economic infrastructure China built is now yours — not just legally, but operationally. The knowledge that was locked inside Chinese management teams has been transferred to Azanian professionals.`,
     choices: [
-      {
-        id: 'dev_push_consolidate',
-        text: 'Consolidate — institutionalize the gains so they survive any future government',
-        consequence: 'You enshrine key development institutions in constitutional amendments and build independent oversight.',
-        effects: { sovereignty: 10, publicSupport: 8, economicStrength: 5, humanDevelopment: 5 },
-        nextNode: 'ending_sovereign_development',
-      },
-      {
-        id: 'dev_push_accelerate',
-        text: 'Accelerate — this is the moment to push for full industrial transformation',
-        consequence: 'You launch an ambitious 10-year industrialization plan.',
-        effects: { economicStrength: 12, sovereignty: 5, debtBurden: 5, publicSupport: 3, infrastructure: 8 },
-        nextNode: 'ending_rising_power',
-      },
-    ],
-  },
+      { id: 'late_sov_consolidate', text: 'Consolidate gains and build toward full economic independence', consequence: 'You use your operational control to negotiate from a position of genuine strength.', effects: { sovereignty: 12, economicStrength: 8, publicSupport: 8, humanDevelopment: 5 }, nextNode: 'ending_sovereign_development' },
+      { id: 'late_sov_accelerate', text: 'Use the operational expertise to accelerate industrialization', consequence: 'You channel your new management capacity into an industrial expansion program.', effects: { economicStrength: 12, sovereignty: 8, infrastructure: 5, debtBurden: 3 }, nextNode: 'ending_rising_power' },
+    ] },
 
-  {
-    id: 'diversified_development',
-    phase: 5,
-    title: 'The Diversified Path',
-    narrative: `Your strategy of diversification — multiple partners, multiple sectors, multiple sources of finance — has created resilience. No single creditor controls your destiny. No single commodity defines your economy. No single alliance constrains your foreign policy.
+  { id: 'green_transition', phase: 5, title: 'The Green Pivot',
+    narrative: `Your shift to renewable energy becomes a masterstroke. Converting the coal plants into solar panel and wind turbine factories — using Chinese technology with Azanian workers — puts you at the center of Africa's green energy revolution. The EU's carbon tax, which threatened your mining exports, now works in your favor: you're making the green technology others need.
 
-It's not the fastest path, or the most dramatic. But it's sustainable. Your children will inherit a country with options, not a country locked into dependency on any single patron.
+Your cobalt, essential for electric car batteries, is now processed at home and sold at a premium as "green cobalt" — mined with clean energy and fair wages. That premium gives you a 20% price advantage over competitors.
 
-As Deng said of China's reform: "It doesn't matter if the cat is black or white, as long as it catches mice." Your development has been pragmatic, borrowing from every model while submitting to none. The question now is whether pragmatism is enough, or whether a bolder vision is needed for the next stage.`,
+The development path you've built doesn't fit any textbook. It has elements of government planning, market competition, cooperation with other developing nations, and environmental leadership. As Deng might have said, this is "development with Azanian characteristics."`,
+    choices: [{ id: 'green_sovereign', text: 'Consolidate — use your strategic position to achieve full economic sovereignty', consequence: 'You leverage your green technology position to renegotiate all remaining debt on favorable terms.', effects: { sovereignty: 15, economicStrength: 10, debtBurden: -10, internationalStanding: 10, publicSupport: 8 }, nextNode: 'ending_sovereign_development' }] },
+
+  { id: 'port_reclamation', phase: 5, title: 'Reclaiming the Port',
+    narrative: `The legal fight over the port is complex, but your legal team — educated in Azanian law schools that you funded — is formidable. They argue the original deal was signed under pressure: if you'd refused, China could have called in your loans. The panel includes an African judge for the first time.
+
+While the case plays out, you build a second port — smaller but 100% domestically owned — for agricultural and manufactured exports. The Chinese port still handles mining cargo, but your economy no longer depends entirely on it.
+
+The port case becomes a symbol worldwide. Dozens of countries are reassessing infrastructure deals made under financial pressure. A win here sets a precedent; a loss locks in the old model.`,
+    choices: [{ id: 'port_win', text: 'See the case through — sovereignty over strategic infrastructure is non-negotiable', consequence: 'After three years of legal battle, the tribunal rules in your favor on key provisions.', effects: { sovereignty: 15, internationalStanding: 10, publicSupport: 10, infrastructure: 5 }, nextNode: 'ending_sovereign_development' }] },
+
+  { id: 'late_development_push', phase: 5, title: 'The Development Push',
+    narrative: `Years of investing in people, infrastructure, and institutions are paying off. The economy grows at 6% a year. Manufacturing has quadrupled since independence. Graduates who used to emigrate are now starting companies at home. Poverty has fallen by half.
+
+Other developing countries are taking notice. Delegations from Laos, Bolivia, and Senegal visit to study your approach. A think tank in your capital publishes studies on "the Azanian model" — not Washington's way, not Beijing's way, but your own.
+
+Nkrumah's dream of economic independence completing political independence is, for the first time, within reach. Not yet achieved — no developing nation gets full sovereignty in one generation — but the direction is clear and the foundations are solid.
+
+Elections are coming. Your record is strong, but the job isn't finished. Do you lock in what you've built, or push harder?`,
     choices: [
-      {
-        id: 'diverse_institutionalize',
-        text: 'Institutionalize the diversified model for long-term stability',
-        consequence: 'You create a permanent development planning agency with a 30-year vision.',
-        effects: { sovereignty: 8, economicStrength: 5, publicSupport: 5, humanDevelopment: 5, internationalStanding: 5 },
-        nextNode: 'ending_pragmatic_sovereignty',
-      },
-      {
-        id: 'diverse_ambition',
-        text: 'Use the stable base to launch an ambitious leap into high-value sectors',
-        consequence: 'You invest heavily in technology, advanced manufacturing, and knowledge economy.',
-        effects: { economicStrength: 12, sovereignty: 5, debtBurden: 5, humanDevelopment: 8 },
-        nextNode: 'ending_rising_power',
-      },
-    ],
-  },
+      { id: 'dev_push_consolidate', text: 'Consolidate — institutionalize the gains so they survive any future government', consequence: 'You enshrine key development institutions in constitutional amendments and build independent oversight.', effects: { sovereignty: 10, publicSupport: 8, economicStrength: 5, humanDevelopment: 5 }, nextNode: 'ending_sovereign_development' },
+      { id: 'dev_push_accelerate', text: 'Accelerate — this is the moment to push for full industrial transformation', consequence: 'You launch an ambitious 10-year industrialization plan.', effects: { economicStrength: 12, sovereignty: 5, debtBurden: 5, publicSupport: 3, infrastructure: 8 }, nextNode: 'ending_rising_power' },
+    ] },
 
-  {
-    id: 'regional_bloc',
-    phase: 5,
-    title: 'The Southern Alliance',
-    narrative: `The regional economic bloc you championed is becoming a force. Six nations now coordinate industrial policy, share infrastructure costs, and negotiate collectively with external partners. A common market of 180 million people attracts investment that no single member could command alone.
+  { id: 'diversified_development', phase: 5, title: 'The Diversified Path',
+    narrative: `Your strategy of working with many partners — not just one — has built resilience. No single creditor controls your fate. No single product defines your economy. No single alliance limits your foreign policy.
 
-This is continental solidarity made material. Not the bureaucratic stagnation of previous regional organizations, but a dynamic cooperation driven by shared development interests. Your railway connects to your neighbor's highway. Your power grid feeds their factories. Their agricultural surplus feeds your cities.
+It's not the fastest or most dramatic path. But it's sustainable. Your children will inherit a country with choices, not a country locked into dependency on one patron.
 
-The old colonial borders, drawn to divide and weaken, are being rendered economically irrelevant by the connections you're building. Nkrumah's vision of African unity through economic integration, dismissed as utopian for decades, is taking practical form.`,
+As Deng said: "It doesn't matter if the cat is black or white, as long as it catches mice." Your development has been practical, borrowing from every model but submitting to none. Is pragmatism enough, or do you need a bolder vision for the next chapter?`,
     choices: [
-      {
-        id: 'bloc_lead',
-        text: 'Position Azania as the anchor economy and institutional center of the bloc',
-        consequence: 'You invest in making your capital the financial and logistical hub of the alliance.',
-        effects: { sovereignty: 10, internationalStanding: 12, economicStrength: 10, publicSupport: 5, infrastructure: 5 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+      { id: 'diverse_institutionalize', text: 'Institutionalize the diversified model for long-term stability', consequence: 'You create a permanent development planning agency with a 30-year vision.', effects: { sovereignty: 8, economicStrength: 5, publicSupport: 5, humanDevelopment: 5, internationalStanding: 5 }, nextNode: 'ending_pragmatic_sovereignty' },
+      { id: 'diverse_ambition', text: 'Use the stable base to launch an ambitious leap into high-value sectors', consequence: 'You invest heavily in technology, advanced manufacturing, and knowledge economy.', effects: { economicStrength: 12, sovereignty: 5, debtBurden: 5, humanDevelopment: 8 }, nextNode: 'ending_rising_power' },
+    ] },
 
-  {
-    id: 'sovereignty_stand',
-    phase: 5,
-    title: 'The Stand',
-    narrative: `Your firm stance — whether against unfavorable debt terms, arbitrary tribunals, or geopolitical pressure — has cost you in the short term. Credit has been harder to access. Investment has been slower to arrive. Growth has been more modest than it might have been with a more accommodating approach.
+  { id: 'regional_bloc', phase: 5, title: 'The Southern Alliance',
+    narrative: `The regional economic bloc you built is becoming a force. Six nations now coordinate industrial policy, share infrastructure costs, and negotiate as a group with outside partners. A combined market of 180 million people attracts investment no single member could get alone.
 
-But you own what you have. Your infrastructure is yours. Your mining revenue stays in your treasury. Your policy space is your own. International arbitration tribunals cannot touch your sovereign wealth fund, because it's invested in domestic assets that no foreign court has jurisdiction over.
+Your railway connects to your neighbor's highway. Your power grid feeds their factories. Their farm surplus feeds your cities. The colonial borders — drawn to divide and weaken — are becoming irrelevant because of the connections you're building.
 
-The short-term costs are fading. Other countries see that defiance of the international financial order is survivable. Your example is quietly changing the calculations of finance ministers across the Global South. As Toussaint argues, the power of creditors depends on the belief that there is no alternative — and your survival disproves that belief.`,
+Nkrumah's vision of African unity through economic cooperation, dismissed as utopian for decades, is taking real shape.`,
+    choices: [{ id: 'bloc_lead', text: 'Position Azania as the anchor economy and institutional center of the bloc', consequence: 'You invest in making your capital the financial and logistical hub of the alliance.', effects: { sovereignty: 10, internationalStanding: 12, economicStrength: 10, publicSupport: 5, infrastructure: 5 }, nextNode: 'ending_sovereign_development' }] },
+
+  { id: 'sovereignty_stand', phase: 5, title: 'The Stand',
+    narrative: `Standing firm — against unfair debt terms, biased courts, or big-power pressure — has cost you in the short term. Loans have been harder to get. Investment has been slower. Growth has been more modest than if you'd been more compliant.
+
+But you own what you have. Your infrastructure is yours. Your mining revenue stays in your treasury. Your policy space is your own.
+
+The short-term costs are fading. Other countries see that refusing to play by the old rules is survivable. Your example is quietly changing how finance ministers across the developing world think. As Toussaint argues, creditors' power depends on the belief that there's no alternative — and your survival disproves that belief.`,
+    choices: [{ id: 'stand_build', text: 'Build on the foundation of sovereignty — now that you own it, develop it', consequence: 'With full control of your resources and institutions, you launch a comprehensive development program.', effects: { sovereignty: 10, economicStrength: 8, publicSupport: 10, humanDevelopment: 5, infrastructure: 5 }, nextNode: 'ending_sovereign_development' }] },
+
+  { id: 'debt_resolution', phase: 5, title: 'Breaking Free',
+    narrative: `Resolving the debt — whether by refusing to pay, negotiating, or winning a writedown — frees your budget. For the first time since independence, your government spends more on development than on loan payments. Schools get built. Hospitals get staffed. Roads get paved.
+
+The international financial system adapts. It always does. Creditors prefer to restructure rather than get nothing. Your bonds are eventually re-rated — not to top grade, but enough to access markets again.
+
+You've proven Toussaint right: the debt system's power comes from everyone believing there's no way out. Once a country shows it can challenge the system and survive, the spell is broken. The costs were real — frozen accounts, years of restricted access, legal battles. But the alternative was decades more of paying a dictator's debts while children went hungry.`,
+    choices: [{ id: 'debt_free_develop', text: 'Channel the freed fiscal space into the most comprehensive development program yet', consequence: 'With debt service cut by 70%, you pour resources into infrastructure, education, and industry.', effects: { sovereignty: 10, economicStrength: 10, infrastructure: 10, humanDevelopment: 10, publicSupport: 8 }, nextNode: 'ending_sovereign_development' }] },
+
+  { id: 'debtors_coalition', phase: 5, title: 'The Debtors\' Movement',
+    narrative: `The Debtors' Conference in your capital draws representatives from 40 nations. Together you call for: a fair debt arbitration system not controlled by creditors, legal recognition of illegitimate debts, and a new global financial system that doesn't systematically disadvantage borrowing nations.
+
+The conference doesn't immediately change the world. But it starts something. Debt relief deals multiply. The IMF is forced to ease its conditions. The BRICS bank's lending triples as countries seek alternatives.
+
+Your role as host of this movement gives you international influence far beyond what your economy alone would justify. Small nations send ambassadors specifically to stay close to you. Development economists study your policies. Your voice in global forums carries real weight.`,
+    choices: [{ id: 'coalition_build', text: 'Build on this momentum to create lasting international institutions', consequence: 'You help establish a permanent Secretariat for Global South Economic Cooperation.', effects: { sovereignty: 12, internationalStanding: 15, publicSupport: 8, economicStrength: 5 }, nextNode: 'ending_sovereign_development' }] },
+
+  { id: 'pragmatic_resolution', phase: 5, title: 'The Pragmatic Path',
+    narrative: `The compromise on local hiring — phased in gradually instead of demanded all at once — doesn't satisfy anyone completely but works in practice. Chinese firms accept the timeline. Azanian workers gain skills step by step. Infrastructure gets built, not as fast as the full Chinese package, but with real local capacity growing alongside it.
+
+Pragmatism isn't heroic. It doesn't make headlines. But it adds up quietly. Five years in, your workforce can maintain every system the Chinese built. Ten years in, they're designing improvements on their own.
+
+As Deng understood, big changes sometimes need small, steady steps. Where you end up matters more than how fast you get there.`,
+    choices: [{ id: 'prag_mature', text: 'Let the pragmatic approach mature into full operational sovereignty', consequence: 'You continue the gradual transition until all critical infrastructure is locally managed.', effects: { sovereignty: 10, economicStrength: 8, humanDevelopment: 8, publicSupport: 5, infrastructure: 5 }, nextNode: 'ending_pragmatic_sovereignty' }] },
+
+  { id: 'geopolitical_balancing', phase: 5, title: 'The Balancing Act',
+    narrative: `Playing China and the West against each other is risky, but you're good at it. You take Chinese infrastructure loans while keeping the IMF program going. You give mining rights to both Chinese and Western firms, making sure neither dominates. You vote independently at the United Nations — sometimes with the West, sometimes with China, always in your own interest.
+
+Both sides want your cobalt. Both want your vote. You give each just enough to keep your leverage.
+
+The risk: you could end up depending on both instead of being free from either. But in a world with multiple great powers, having several patrons may be the closest thing to real independence a small developing country can achieve.`,
+    choices: [{ id: 'balance_sovereign', text: 'Use the balancing position to build genuine economic independence over time', consequence: 'You channel the benefits of competition into domestic capacity building.', effects: { sovereignty: 8, economicStrength: 8, internationalStanding: 5, publicSupport: 5, debtBurden: -5 }, nextNode: 'ending_pragmatic_sovereignty' }] },
+
+  { id: 'western_alignment', phase: 5, title: 'The Western Path',
+    narrative: `Aligning with the Western financial system brings real benefits: cheap World Bank loans, EU trade deals, USAID technical help, and the "good governance" badge that attracts private investors.
+
+GDP grows at a respectable 4% a year. Poverty falls — at least by World Bank numbers. But Utsa Patnaik has shown those numbers use misleading methods that undercount the poor. By her corrected measurements — counting people who can't actually afford to eat properly — the picture is less rosy. Infrastructure improves, but slowly. By Western standards, you're a "success story."
+
+But sovereignty is limited. Major economic decisions need IMF approval. When a mining company pollutes a river, your trade treaty with the US prevents real punishment. As Nkrumah would say, you're free — within the limits others have set. Prabhat Patnaik is precise about how this works: opening your financial markets to foreign money doesn't just create opportunities — it puts your national economy under the control of international finance, whose interests are opposed to those of working people in your country.`,
     choices: [
-      {
-        id: 'stand_build',
-        text: 'Build on the foundation of sovereignty — now that you own it, develop it',
-        consequence: 'With full control of your resources and institutions, you launch a comprehensive development program.',
-        effects: { sovereignty: 10, economicStrength: 8, publicSupport: 10, humanDevelopment: 5, infrastructure: 5 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+      { id: 'western_accept', text: 'Accept the trade-off — growth within the system is better than stagnation outside it', consequence: 'You deepen integration with the global economy on the terms available.', effects: { economicStrength: 8, internationalStanding: 8, sovereignty: -5, publicSupport: -3 }, nextNode: 'ending_dependent_development' },
+      { id: 'western_pivot', text: 'Begin a quiet pivot — use Western investment to build capacity for eventual independence', consequence: 'You accept the framework while systematically building sovereign alternatives.', effects: { sovereignty: 5, economicStrength: 5, humanDevelopment: 5, publicSupport: 3 }, nextNode: 'ending_pragmatic_sovereignty' },
+    ] },
 
-  {
-    id: 'debt_resolution',
-    phase: 5,
-    title: 'Breaking Free',
-    narrative: `The debt resolution — whether through repudiation, negotiation, or writedown — liberates your fiscal position. For the first time since independence, your government's primary expenditure is on development rather than debt service. Schools are built. Hospitals are staffed. Roads are paved. The human capital you invest in stays, because for the first time there are opportunities at home.
+  { id: 'non_aligned_path', phase: 5, title: 'Genuine Non-Alignment',
+    narrative: `True non-alignment in the 21st century is harder than during the Cold War. Back then, you could play two superpowers against each other. Now, US-China rivalry overlaps with complicated trade, technology, and financial networks that make pure neutrality nearly impossible.
 
-The international financial system adapts. It always does. Creditors prefer to restructure rather than lose everything. Your bonds are eventually re-rated, not to investment grade — the legacy of defiance lingers — but to a level that allows market access.
+But you try. You join neither the US infrastructure partnership nor China's Belt and Road. You buy technology from whoever gives the best deal. You sell cobalt to the highest bidder. You vote your conscience at the UN.
 
-You've proven Toussaint right: the debt system's power lies in its perceived inevitability. Once a nation demonstrates the will to challenge it and survives, the spell is broken. The cost was real — years of restricted access, frozen assets, legal battles. But the alternative was decades more of paying for a dictator's debts while your children went hungry.`,
+The cost is real. Neither great power champions you. Aid is modest. Investment comes without strategic backing. But every decision is yours, and your people know it.`,
+    choices: [{ id: 'non_aligned_build', text: 'Build domestic capacity to make non-alignment economically sustainable', consequence: 'You invest in self-sufficiency in food, energy, and essential manufacturing.', effects: { sovereignty: 12, economicStrength: 5, publicSupport: 8, humanDevelopment: 5, debtBurden: -5 }, nextNode: 'ending_sovereign_development' }] },
+
+  { id: 'late_reversal', phase: 5, title: 'The Reversal',
+    narrative: `Breaking with the IMF sends shockwaves. Credit agencies downgrade you further. Money flees. The currency drops. The IMF suspends your remaining funding.
+
+But the emergency social program stops the famine and calms the streets. Mining royalties, redirected from debt payments to domestic spending, fund public works that put 100,000 people back to work. Food subsidies return. Clinics reopen.
+
+The financial world predicted collapse. Instead, you stabilize at a lower but sustainable level. Growth resumes, driven by local demand and regional trade rather than foreign money. The approach is messy and imperfect. But it's alive, and it's yours.`,
+    choices: [{ id: 'reversal_rebuild', text: 'Rebuild on sovereign foundations — never again', consequence: 'You launch a domestically-financed development strategy with strict limits on foreign borrowing.', effects: { sovereignty: 15, publicSupport: 10, economicStrength: 5, debtBurden: -10, humanDevelopment: 5 }, nextNode: 'ending_sovereign_development' }] },
+
+  { id: 'reform_completion', phase: 5, title: 'The Completed Reform',
+    narrative: `The IMF program runs its course. By the numbers, it worked: inflation is tamed, the currency is stable, debt ratios are down, and foreign investment is flowing in. The IMF publishes Azania as a success story.
+
+But the social costs are built into a generation. Kids who dropped out during austerity are now adults without skills. Factories closed during liberalization never reopened. The privatized mining company's profits flow to shareholders in Toronto and London. Inequality has widened sharply.
+
+You've achieved stability, but at the cost of sovereignty and equality. What comes next depends on what you choose — and whether you still have the power to choose.`,
     choices: [
-      {
-        id: 'debt_free_develop',
-        text: 'Channel the freed fiscal space into the most comprehensive development program yet',
-        consequence: 'With debt service cut by 70%, you pour resources into infrastructure, education, and industry.',
-        effects: { sovereignty: 10, economicStrength: 10, infrastructure: 10, humanDevelopment: 10, publicSupport: 8 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+      { id: 'reform_continue', text: 'Continue on the path — deepen market reforms and attract more investment', consequence: 'You double down on the liberal reform agenda.', effects: { economicStrength: 8, sovereignty: -8, internationalStanding: 8, publicSupport: -5 }, nextNode: 'ending_dependent_development' },
+      { id: 'reform_rebalance', text: 'Rebalance — use the stability to rebuild social programs and domestic industry', consequence: 'You maintain macro stability but redirect policy toward equity and sovereignty.', effects: { sovereignty: 8, publicSupport: 8, humanDevelopment: 8, economicStrength: 3 }, nextNode: 'ending_pragmatic_sovereignty' },
+    ] },
 
-  {
-    id: 'debtors_coalition',
-    phase: 5,
-    title: 'The Debtors\' Movement',
-    narrative: `The Debtors' Conference in your capital draws representatives from 40 nations. The joint declaration calls for: an international debt arbitration mechanism independent of creditor control, recognition of odious debt doctrine in international law, and a new global financial architecture that doesn't systematically disadvantage borrowing nations.
+  { id: 'regulated_industry', phase: 5, title: 'Dignified Industry',
+    narrative: `Your regulated factories produce less than the unregulated alternatives, but what they produce comes with dignity. Living wages mean workers can afford housing and schooling for their kids. Safety standards mean fewer accidents. Environmental rules mean cleaner rivers.
 
-The conference doesn't immediately change the world. But it catalyzes something. Bilateral debt relief agreements multiply. The IMF is forced to introduce more flexible conditionality. The BRICS New Development Bank's lending volume triples as countries seek alternatives. The intellectual hegemony of the Washington Consensus, already crumbling, suffers another blow.
-
-Your country's role as convener of this movement gives you outsized international standing. Small nations send ambassadors specifically to maintain relations with you. Development economists study your policies. Your voice in international forums carries weight that your GDP alone wouldn't justify.`,
-    choices: [
-      {
-        id: 'coalition_build',
-        text: 'Build on this momentum to create lasting international institutions',
-        consequence: 'You help establish a permanent Secretariat for Global South Economic Cooperation.',
-        effects: { sovereignty: 12, internationalStanding: 15, publicSupport: 8, economicStrength: 5 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
-
-  // ── Intermediate nodes for path convergence ──
-
-  {
-    id: 'pragmatic_resolution',
-    phase: 5,
-    title: 'The Pragmatic Path',
-    narrative: `The compromise on local content — phased implementation rather than immediate mandates — satisfies no one completely but works in practice. Chinese firms accept the timeline. Azanian workers gain skills progressively. Infrastructure gets built, not as fast as the full turnkey approach, but with genuine local capacity growing alongside it.
-
-Pragmatism isn't heroic. It doesn't make headlines. But it accumulates quietly into something substantial. Five years in, your trained workforce can maintain and operate every system the Chinese built. Ten years in, they're designing modifications and improvements independently.
-
-As Deng understood, revolutionary transformation sometimes requires evolutionary methods. The destination matters more than the speed of travel.`,
-    choices: [
-      {
-        id: 'prag_mature',
-        text: 'Let the pragmatic approach mature into full operational sovereignty',
-        consequence: 'You continue the gradual transition until all critical infrastructure is locally managed.',
-        effects: { sovereignty: 10, economicStrength: 8, humanDevelopment: 8, publicSupport: 5, infrastructure: 5 },
-        nextNode: 'ending_pragmatic_sovereignty',
-      },
-    ],
-  },
-
-  {
-    id: 'geopolitical_balancing',
-    phase: 5,
-    title: 'The Balancing Act',
-    narrative: `Playing China and the West against each other is a dangerous game, but you're skilled at it. You accept Chinese infrastructure financing while maintaining IMF program compliance. You grant mining concessions to both Chinese and Western firms, ensuring neither dominates. You vote independently at the United Nations, sometimes with the West, sometimes with China, always in your interest.
-
-This is the modern version of the Non-Aligned Movement — not ideological neutrality, but strategic ambiguity. Both sides want your cobalt. Both sides want your vote. You give both just enough to maintain leverage.
-
-The risk is that you're building dependency on both sides rather than independence from either. But in a multipolar world, having multiple patrons may be the closest thing to sovereignty available to a small developing state.`,
-    choices: [
-      {
-        id: 'balance_sovereign',
-        text: 'Use the balancing position to build genuine economic independence over time',
-        consequence: 'You channel the benefits of competition into domestic capacity building.',
-        effects: { sovereignty: 8, economicStrength: 8, internationalStanding: 5, publicSupport: 5, debtBurden: -5 },
-        nextNode: 'ending_pragmatic_sovereignty',
-      },
-    ],
-  },
-
-  {
-    id: 'western_alignment',
-    phase: 5,
-    title: 'The Western Path',
-    narrative: `Your alignment with the Western financial framework yields material benefits: World Bank loans at concessional rates, EU trade preferences, USAID technical assistance, and the imprimatur of "good governance" that attracts private investment.
-
-GDP grows at a respectable 4% annually. Poverty falls — at least by the World Bank metrics that Utsa Patnaik has shown systematically undercount the poor by using deflated purchasing-power-parity poverty lines. By her corrected measurements, which count those who cannot actually afford adequate nutrition, the picture is less rosy. Infrastructure improves, though slowly. You are, by the metrics that Western institutions use, a "success story."
-
-But sovereignty is compromised. Major economic decisions require IMF approval. Your monetary policy is constrained by capital account liberalization. When a global mining company pollutes a river, the bilateral investment treaty prevents meaningful regulation. You are free within the parameters others have set — which is, as Nkrumah would observe, the definition of neo-colonialism. Prabhat Patnaik's analysis of the role of finance in imperialism is precise on this point: capital account liberalization doesn't just open markets — it subjects national economic policy to the discipline of international finance capital, whose interests are structurally opposed to those of the working people of the periphery.`,
-    choices: [
-      {
-        id: 'western_accept',
-        text: 'Accept the trade-off — growth within the system is better than stagnation outside it',
-        consequence: 'You deepen integration with the global economy on the terms available.',
-        effects: { economicStrength: 8, internationalStanding: 8, sovereignty: -5, publicSupport: -3 },
-        nextNode: 'ending_dependent_development',
-      },
-      {
-        id: 'western_pivot',
-        text: 'Begin a quiet pivot — use Western investment to build capacity for eventual independence',
-        consequence: 'You accept the framework while systematically building sovereign alternatives.',
-        effects: { sovereignty: 5, economicStrength: 5, humanDevelopment: 5, publicSupport: 3 },
-        nextNode: 'ending_pragmatic_sovereignty',
-      },
-    ],
-  },
-
-  {
-    id: 'non_aligned_path',
-    phase: 5,
-    title: 'Genuine Non-Alignment',
-    narrative: `Genuine non-alignment in the 21st century is harder than during the Cold War. Then, the Non-Aligned Movement could play two superpowers against each other. Now, the US-China rivalry coexists with a complex web of trade relationships, technology dependencies, and financial flows that make pure neutrality nearly impossible.
-
-But you try. You join neither the US-led "Partnership for Global Infrastructure and Investment" nor the Chinese Belt and Road. You source technology from whoever offers the best terms. You sell your cobalt to the highest bidder. You vote your conscience at the UN.
-
-The diplomatic cost is significant. Neither great power champions your cause. Aid flows are modest. Investment comes without strategic backing. But every decision is yours, and your people know it.`,
-    choices: [
-      {
-        id: 'non_aligned_build',
-        text: 'Build domestic capacity to make non-alignment economically sustainable',
-        consequence: 'You invest in self-sufficiency in food, energy, and essential manufacturing.',
-        effects: { sovereignty: 12, economicStrength: 5, publicSupport: 8, humanDevelopment: 5, debtBurden: -5 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
-
-  {
-    id: 'late_reversal',
-    phase: 5,
-    title: 'The Reversal',
-    narrative: `Your break with the IMF program sends shockwaves. Credit agencies downgrade you further. Capital flees. The currency drops. The IMF suspends the remaining tranches.
-
-But the emergency social program prevents famine and stabilizes public order. Your mining royalty revenue, redirected from debt service to domestic spending, funds public works that put 100,000 people to work. Food subsidies return. Clinics reopen. The streets are calm.
-
-The international financial community predicted collapse. Instead, you stabilize at a lower but sustainable level. Growth resumes, driven by domestic demand and regional trade rather than foreign capital. The model is imperfect, messy, and far from the "best practices" the IMF recommends. But it's alive, and it's yours.`,
-    choices: [
-      {
-        id: 'reversal_rebuild',
-        text: 'Rebuild on sovereign foundations — never again',
-        consequence: 'You launch a domestically-financed development strategy with strict limits on foreign borrowing.',
-        effects: { sovereignty: 15, publicSupport: 10, economicStrength: 5, debtBurden: -10, humanDevelopment: 5 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
-
-  {
-    id: 'reform_completion',
-    phase: 5,
-    title: 'The Completed Reform',
-    narrative: `The structural adjustment program runs its course. By macroeconomic indicators, it's a success: inflation is tamed, the currency is stable, debt-to-GDP has fallen, and FDI is flowing in. The IMF publishes your country as a case study in "successful reform."
-
-But the social costs are embedded in a generation. Children who missed school during the austerity years are now adults without skills. Factories closed during liberalization never reopened. The privatized mining company's profits flow to shareholders in Toronto and London. Wealth inequality has widened dramatically.
-
-You've achieved stability at the cost of sovereignty and equality. Whether that's a price worth paying depends on what comes next — and who decides what comes next.`,
-    choices: [
-      {
-        id: 'reform_continue',
-        text: 'Continue on the path — deepen market reforms and attract more investment',
-        consequence: 'You double down on the liberal reform agenda.',
-        effects: { economicStrength: 8, sovereignty: -8, internationalStanding: 8, publicSupport: -5 },
-        nextNode: 'ending_dependent_development',
-      },
-      {
-        id: 'reform_rebalance',
-        text: 'Rebalance — use the stability to rebuild social programs and domestic industry',
-        consequence: 'You maintain macro stability but redirect policy toward equity and sovereignty.',
-        effects: { sovereignty: 8, publicSupport: 8, humanDevelopment: 8, economicStrength: 3 },
-        nextNode: 'ending_pragmatic_sovereignty',
-      },
-    ],
-  },
-
-  {
-    id: 'regulated_industry',
-    phase: 5,
-    title: 'Dignified Industry',
-    narrative: `The regulated industrial zones produce less total output than the deregulated alternatives, but what they produce comes with dignity. Living wages mean workers can afford housing and education for their children. Safety standards mean fewer industrial accidents. Environmental regulations mean cleaner rivers.
-
-The firms that stayed are the ones committed to long-term partnerships. They invest in worker training because they can't simply replace workers at cheaper rates. The productivity of your manufacturing sector, per worker, is higher than neighboring countries with lower wages. Quality replaces quantity as your competitive advantage.
+The companies that stayed are the committed ones. They invest in training because they can't just replace workers with cheaper ones. Your manufacturing sector's productivity per worker is higher than neighboring countries with lower wages. Quality replaces quantity as your competitive edge.
 
 This is development that serves the people, not the other way around. It's slower, but it's building a middle class — the foundation of both economic growth and political stability.`,
-    choices: [
-      {
-        id: 'regulated_expand',
-        text: 'Expand the model nationally — make dignified work the norm, not the exception',
-        consequence: 'You extend labor and environmental standards from the zones to the entire economy.',
-        effects: { sovereignty: 10, publicSupport: 10, humanDevelopment: 8, economicStrength: 5 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+    choices: [{ id: 'regulated_expand', text: 'Expand the model nationally — make dignified work the norm, not the exception', consequence: 'You extend labor and environmental standards from the zones to the entire economy.', effects: { sovereignty: 10, publicSupport: 10, humanDevelopment: 8, economicStrength: 5 }, nextNode: 'ending_sovereign_development' }] },
 
-  {
-    id: 'industrial_upgrading',
-    phase: 5,
-    title: 'Moving Up the Chain',
-    narrative: `The push to move from assembly to manufacturing is succeeding. Your factories now produce circuit boards, not just assemble phones. Your textile mills weave fabric, not just sew garments. Your food processing plants design packaging, not just fill boxes.
+  { id: 'industrial_upgrading', phase: 5, title: 'Moving Up the Chain',
+    narrative: `The push from simple assembly to real manufacturing is succeeding. Your factories now make circuit boards, not just snap phones together. Your textile mills weave fabric, not just sew seams. Your food plants design packaging, not just fill boxes.
 
-Each step up the value chain captures more of the final price. Your export revenue per unit has doubled. Your workers earn more because they produce more value. The technology you're accumulating is becoming a national asset — tacit knowledge embedded in your workforce that can't be arbitraged away.
+Each step up captures more of the final price. Export revenue per item has doubled. Workers earn more because they create more value. The skills you're building are becoming a national asset — know-how embedded in your people that can't be taken away.
 
-This is the industrial upgrading trajectory that every successful developing country has followed. The difference is that you're doing it consciously, with institutions designed to push firms up the value chain rather than letting them settle into low-wage equilibria.`,
-    choices: [
-      {
-        id: 'upgrade_tech',
-        text: 'Push further — invest in R&D and aim for technology leadership in key sectors',
-        consequence: 'You establish a national research and development fund targeting clean energy, biotech, and AI.',
-        effects: { economicStrength: 12, humanDevelopment: 8, sovereignty: 8, internationalStanding: 8 },
-        nextNode: 'ending_rising_power',
-      },
-    ],
-  },
+Every successful developing country has followed this path. The difference is you're doing it deliberately, with institutions designed to push companies up the value ladder instead of letting them settle into low-wage routines.`,
+    choices: [{ id: 'upgrade_tech', text: 'Push further — invest in R&D and aim for technology leadership in key sectors', consequence: 'You establish a national research and development fund targeting clean energy, biotech, and AI.', effects: { economicStrength: 12, humanDevelopment: 8, sovereignty: 8, internationalStanding: 8 }, nextNode: 'ending_rising_power' }] },
 
-  {
-    id: 'cooperative_industry',
-    phase: 5,
-    title: 'The Cooperative Economy',
-    narrative: `The worker-cooperative industrial model is unique in the developing world. Your factories are owned by the workers who run them. Profits are shared. Management is elected. Investment decisions are collective.
+  { id: 'cooperative_industry', phase: 5, title: 'The Cooperative Economy',
+    narrative: `Your worker-cooperative factories are unlike anything in the developing world. Workers own the companies they run. Profits are shared. Managers are elected. Investment decisions are made together.
 
-The model has inefficiencies — democratic decision-making is slower than autocratic management. But it has strengths the conventional model lacks: workers who own their factory don't sabotage it, steal from it, or leave for marginal wage differences. Quality is higher because pride is higher. Innovation comes from the shop floor because shop-floor workers have a stake in improvement.
+The model has downsides — democratic decision-making is slower than top-down management. But it has strengths others lack: workers who own their factory don't sabotage it, steal from it, or leave for small pay differences. Quality is higher because pride is higher. Innovation comes from the shop floor because workers have a real stake.
 
-Your cooperative economy attracts academic attention and ideological controversy. The World Bank calls it "interesting but not scalable." The ILO calls it "a model for dignified development." China's development bank studies it with interest — it echoes aspects of Mao-era collective enterprises, though with democratic governance Mao's version lacked.`,
-    choices: [
-      {
-        id: 'coop_scale',
-        text: 'Scale the cooperative model and make it the foundation of your national economy',
-        consequence: 'You enshrine cooperative ownership in economic policy and provide institutional support for expansion.',
-        effects: { sovereignty: 12, publicSupport: 12, economicStrength: 8, humanDevelopment: 8 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+The World Bank calls it "interesting but not scalable." The International Labour Organization calls it "a model for dignified development." China's development bank studies it with curiosity.`,
+    choices: [{ id: 'coop_scale', text: 'Scale the cooperative model and make it the foundation of your national economy', consequence: 'You enshrine cooperative ownership in economic policy and provide institutional support for expansion.', effects: { sovereignty: 12, publicSupport: 12, economicStrength: 8, humanDevelopment: 8 }, nextNode: 'ending_sovereign_development' }] },
 
-  {
-    id: 'comprehensive_partnership',
-    phase: 5,
-    title: 'The Comprehensive Partnership',
-    narrative: `The comprehensive Chinese partnership has transformed your economy. Agriculture is mechanized. Infrastructure is modern. Manufacturing is growing. Your workers have been trained by Chinese experts and are beginning to train others.
+  { id: 'comprehensive_partnership', phase: 5, title: 'The Comprehensive Partnership',
+    narrative: `The broad Chinese partnership has transformed your economy. Farming is mechanized. Infrastructure is modern. Manufacturing is growing. Workers trained by Chinese experts are starting to train others.
 
-But the breadth of Chinese involvement raises questions about dependency. Your supply chains run through Chinese logistics companies. Your data flows through Chinese-built networks. Your industrial equipment requires Chinese maintenance. You've traded dependency on the West for dependency on the East — or have you?
+But the scale of Chinese involvement raises questions. Your supply chains run through Chinese companies. Your data flows over Chinese networks. Your equipment needs Chinese maintenance. Have you traded dependency on the West for dependency on the East?
 
-Benabdallah's research suggests the answer is nuanced. Chinese-built capacity, unlike IMF-mandated reforms, leaves physical and human capital behind. Even if the relationship soured, you'd have the railways, the power plants, and the trained workforce. The dependency is real but the assets are real too.`,
-    choices: [
-      {
-        id: 'comp_diversify',
-        text: 'Gradually diversify partnerships while maintaining the Chinese relationship',
-        consequence: 'You engage new partners in sectors where Chinese involvement is weakest.',
-        effects: { sovereignty: 8, economicStrength: 8, internationalStanding: 8, publicSupport: 5 },
-        nextNode: 'ending_pragmatic_sovereignty',
-      },
-    ],
-  },
+Benabdallah's research suggests the answer is complicated. Unlike IMF reforms, Chinese-built projects leave real things behind — railways, power plants, and trained workers. Even if the relationship soured, those assets would remain. The dependency is real, but so are the assets.`,
+    choices: [{ id: 'comp_diversify', text: 'Gradually diversify partnerships while maintaining the Chinese relationship', consequence: 'You engage new partners in sectors where Chinese involvement is weakest.', effects: { sovereignty: 8, economicStrength: 8, internationalStanding: 8, publicSupport: 5 }, nextNode: 'ending_pragmatic_sovereignty' }] },
 
-  {
-    id: 'selective_engagement',
-    phase: 5,
-    title: 'Selective Partners, Sovereign Path',
-    narrative: `Your approach of containing Chinese involvement to agriculture while developing other sectors through diverse partnerships has created a balanced portfolio. Indian IT firms help build your digital government. Turkish construction companies compete with Chinese ones on infrastructure. Brazilian agricultural scientists complement Chinese agronomists. European research institutions partner with your universities.
+  { id: 'selective_engagement', phase: 5, title: 'Selective Partners, Sovereign Path',
+    narrative: `Your approach — Chinese help in farming, but other partners for other sectors — has created a balanced mix. Indian IT firms build your digital government. Turkish companies compete with Chinese ones on construction. Brazilian scientists work alongside Chinese farming experts. European universities partner with yours.
 
-No single partner dominates. No single creditor controls your policy. You are, in the language of international relations, a "swing state" — courted by all, captured by none. This gives you negotiating leverage that your GDP alone would never provide.
+No single partner dominates. No single creditor controls your policy. Everyone wants your partnership; nobody has captured it. This gives you bargaining power your economy alone would never provide.
 
-The diversified engagement model is less efficient than a single deep partnership. But efficiency was never the only goal. Sovereignty requires options, and you have them.`,
-    choices: [
-      {
-        id: 'selective_mature',
-        text: 'Continue the selective engagement model as you mature toward full sovereignty',
-        consequence: 'You maintain strategic partnerships while building domestic capacity in every sector.',
-        effects: { sovereignty: 10, economicStrength: 8, publicSupport: 5, humanDevelopment: 5, internationalStanding: 5 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+Working with many partners is less efficient than going deep with one. But efficiency was never the only goal. Sovereignty requires options, and you have them.`,
+    choices: [{ id: 'selective_mature', text: 'Continue the selective engagement model as you mature toward full sovereignty', consequence: 'You maintain strategic partnerships while building domestic capacity in every sector.', effects: { sovereignty: 10, economicStrength: 8, publicSupport: 5, humanDevelopment: 5, internationalStanding: 5 }, nextNode: 'ending_sovereign_development' }] },
 
-  {
-    id: 'sovereign_sez',
-    phase: 5,
-    title: 'Sovereign Economic Zones',
-    narrative: `Your SEZs are unlike any in the developing world. Mandatory technology transfer means every foreign firm must partner with an Azanian counterpart. Sunset clauses on tax breaks mean incentives expire after seven years, by which time the firms either integrate into the domestic economy or leave — and the knowledge stays. A sovereign data requirement keeps all information about Azanian markets, consumers, and supply chains under national jurisdiction.
+  { id: 'sovereign_sez', phase: 5, title: 'Sovereign Economic Zones',
+    narrative: `Your economic zones are unlike any others. Every foreign company must partner with an Azanian one and share technology. Tax breaks expire after seven years — by then, companies either integrate into the local economy or leave, but the knowledge stays. All data about Azanian markets stays under national control.
 
-These aren't the compliant, investor-friendly zones the World Bank recommends. Foreign firms grumble about the regulations. But the firms that accept the terms are the ones you want — committed to a long-term presence, willing to share knowledge, planning to stay.
+Foreign firms grumble. But the ones who accept the terms are the ones you want — committed for the long term, willing to share knowledge, planning to stay.
 
-The result is an industrial base that is foreign-invested but nationally embedded. Your workers manage the factories. Your engineers maintain the equipment. Your data scientists analyze the market. If a firm leaves, the capacity remains.`,
-    choices: [
-      {
-        id: 'sov_sez_national',
-        text: 'Transition the most successful zones to full national ownership',
-        consequence: 'You exercise buyout clauses to bring the most productive enterprises under Azanian control.',
-        effects: { sovereignty: 12, economicStrength: 10, publicSupport: 8, debtBurden: 5 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+The result: an industrial base that's foreign-funded but nationally rooted. Your workers run the factories. Your engineers maintain the equipment. If a company leaves, the skills remain.`,
+    choices: [{ id: 'sov_sez_national', text: 'Transition the most successful zones to full national ownership', consequence: 'You exercise buyout clauses to bring the most productive enterprises under Azanian control.', effects: { sovereignty: 12, economicStrength: 10, publicSupport: 8, debtBurden: 5 }, nextNode: 'ending_sovereign_development' }] },
 
-  {
-    id: 'sovereign_brand',
-    phase: 5,
-    title: 'The Azanian Brand',
-    narrative: `"Made in Azania" becomes a brand associated with quality, sustainability, and fair labor. Your organic coffee is served in specialty cafes from Tokyo to Berlin. Your fair-trade cobalt is sought by EV manufacturers marketing green credentials. Your artisanal crafts command premium prices online.
+  { id: 'sovereign_brand', phase: 5, title: 'The Azanian Brand',
+    narrative: `"Made in Azania" becomes a brand known for quality, sustainability, and fair labor. Your organic coffee is served in specialty shops from Tokyo to Berlin. Your fair-trade cobalt is sought by electric vehicle makers marketing green credentials. Your artisan crafts sell at premium prices online.
 
-Branding transforms the terms of trade. Instead of selling raw materials at commodity prices set by international markets, you're selling finished products at premium prices set by the value your story and standards add. The surplus stays in Azania, in the hands of the workers and farmers who created it.
+Branding changes the game. Instead of selling raw materials at prices set by international markets, you're selling finished products at premium prices based on your story and standards. The money stays in Azania, in the hands of the workers and farmers who created the value.
 
-This is what development looks like when it serves the people who do the developing. Not GDP growth as an abstraction, but rising living standards as a lived reality.`,
-    choices: [
-      {
-        id: 'brand_expand',
-        text: 'Expand the sovereign brand model across all export sectors',
-        consequence: 'You build a national export promotion agency centered on the Azanian quality standard.',
-        effects: { sovereignty: 10, economicStrength: 12, publicSupport: 10, internationalStanding: 8, humanDevelopment: 5 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+This is what development looks like when it serves the people doing the developing. Not abstract GDP growth, but rising living standards as a lived reality.`,
+    choices: [{ id: 'brand_expand', text: 'Expand the sovereign brand model across all export sectors', consequence: 'You build a national export promotion agency centered on the Azanian quality standard.', effects: { sovereignty: 10, economicStrength: 12, publicSupport: 10, internationalStanding: 8, humanDevelopment: 5 }, nextNode: 'ending_sovereign_development' }] },
 
-  {
-    id: 'fiscal_innovation',
-    phase: 5,
-    title: 'The New Fiscal Architecture',
-    narrative: `Your innovative fiscal approach has created a revenue base independent of both IMF conditionality and excessive borrowing. Digital taxes capture value from tech multinationals. Financial transaction levies generate stable revenue. Diaspora bonds connect your global community to national development. A small tax on natural resource extraction feeds a sovereign wealth fund.
+  { id: 'fiscal_innovation', phase: 5, title: 'The New Fiscal Architecture',
+    narrative: `Your creative tax approach has built a revenue base that doesn't depend on IMF conditions or excessive borrowing. Taxes on tech multinationals capture value. Financial transaction levies generate steady income. Diaspora bonds connect your global community to national development. A small mining tax feeds a sovereign wealth fund.
 
-This fiscal sovereignty — the ability to fund your own development through domestic revenue rather than foreign loans — is perhaps the most fundamental form of sovereignty there is. As Hudson argues, financial control is the ultimate form of imperial power; financial independence is therefore the ultimate form of liberation.
+Being able to fund your own development from your own revenue — without foreign loans or their conditions — may be the most fundamental form of sovereignty. As Hudson argues, financial control is the ultimate tool of empire; financial independence is the ultimate form of freedom.
 
-Your fiscal innovation is being studied by other developing nations. A "New Bretton Woods" conference, organized by the same coalition you helped build, proposes these mechanisms as alternatives to the debt-dependency model.`,
-    choices: [
-      {
-        id: 'fiscal_institutionalize',
-        text: 'Institutionalize these innovations and share them with the Global South',
-        consequence: 'You establish an international center for fiscal innovation in your capital.',
-        effects: { sovereignty: 12, internationalStanding: 10, economicStrength: 8, publicSupport: 5, humanDevelopment: 5 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+Other developing nations are studying your approach. A "New Bretton Woods" conference proposes your innovations as alternatives to the old debt-and-dependency model.`,
+    choices: [{ id: 'fiscal_institutionalize', text: 'Institutionalize these innovations and share them with the Global South', consequence: 'You establish an international center for fiscal innovation in your capital.', effects: { sovereignty: 12, internationalStanding: 10, economicStrength: 8, publicSupport: 5, humanDevelopment: 5 }, nextNode: 'ending_sovereign_development' }] },
 
-  {
-    id: 'electoral_development',
-    phase: 5,
-    title: 'Development and Democracy',
-    narrative: `The election approaches with a strong development record. Roads reach villages that were isolated for decades. Clinics serve communities that never had healthcare. Markets connect producers to consumers efficiently. Your approval rating is strong.
+  { id: 'electoral_development', phase: 5, title: 'Development and Democracy',
+    narrative: `Election time approaches with a strong development record. Roads reach villages that were isolated for decades. Clinics serve communities that never had healthcare. Markets connect farmers to buyers efficiently.
 
-But elections in developing countries are precarious moments. The opposition, funded by interests hostile to your reforms, runs on a platform of "opening up to investors" — code for reversing nationalization and lowering labor standards. External actors funnel money to opposition campaigns. Social media manipulation targets your base.
+But elections in developing countries are fragile moments. The opposition, funded by interests hostile to your reforms, campaigns on "opening up to investors" — code for reversing nationalization and lowering wages. Foreign money flows to opposition campaigns. Social media manipulation targets your supporters.
 
-Democracy and development are in tension. The reforms that serve the people long-term can be reversed by an election financed by those who profit from dependency. The challenge is to make your development achievements durable enough to survive any electoral outcome.`,
-    choices: [
-      {
-        id: 'elect_institutional',
-        text: 'Focus on institutionalizing gains — constitutional protections for key development policies',
-        consequence: 'You propose amendments that protect sovereign resources and social programs.',
-        effects: { sovereignty: 10, publicSupport: 8, humanDevelopment: 5, economicStrength: 5 },
-        nextNode: 'ending_pragmatic_sovereignty',
-      },
-    ],
-  },
+The challenge: make your development achievements strong enough to survive any election result.`,
+    choices: [{ id: 'elect_institutional', text: 'Focus on institutionalizing gains — constitutional protections for key development policies', consequence: 'You propose amendments that protect sovereign resources and social programs.', effects: { sovereignty: 10, publicSupport: 8, humanDevelopment: 5, economicStrength: 5 }, nextNode: 'ending_pragmatic_sovereignty' }] },
 
-  {
-    id: 'climate_sovereignty',
-    phase: 5,
-    title: 'Climate and Sovereignty',
-    narrative: `Your comprehensive climate adaptation program becomes a model for the continent. Drought-resistant crops developed by your agricultural scientists are shared with neighboring countries. Solar-powered irrigation systems free farmers from dependence on unreliable rainfall. Reforestation programs restore degraded land and sequester carbon.
+  { id: 'climate_sovereignty', phase: 5, title: 'Climate and Sovereignty',
+    narrative: `Your climate adaptation program becomes a continental model. Drought-resistant crops developed by your scientists are shared with neighbors. Solar-powered irrigation frees farmers from unreliable rainfall. Tree-planting programs restore degraded land.
 
-The climate crisis, which threatened to derail your development, has become an opportunity. Green technologies adapted to African conditions are your fastest-growing export. Climate financing — available on better terms than development loans — funds your infrastructure. Your moral authority as a climate-vulnerable nation leading on adaptation gives you international standing that your economy alone wouldn't provide.
+The climate crisis, which nearly derailed your development, has become an opportunity. Green technology adapted for African conditions is your fastest-growing export. Climate funding — available on better terms than development loans — pays for infrastructure. Your moral authority as a climate-vulnerable nation leading on solutions gives you international standing your economy alone couldn't provide.
 
-As Ajl argues, genuine climate justice requires challenging the economic structures that created the crisis. Your approach does exactly that: building resilient local food systems instead of depending on global commodity chains, generating clean energy instead of importing fossil fuels, and claiming climate finance as a right, not a favor.`,
-    choices: [
-      {
-        id: 'climate_lead',
-        text: 'Leverage climate leadership into broader sovereign development',
-        consequence: 'You make Azania the center of African climate innovation and sovereign development.',
-        effects: { sovereignty: 10, internationalStanding: 12, economicStrength: 8, publicSupport: 10, humanDevelopment: 8 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+As Ajl argues, real climate justice means challenging the economic structures that caused the crisis. Your approach does exactly that: resilient local food systems instead of dependence on global markets, clean energy instead of imported fossil fuels, and climate finance claimed as a right, not a favor.`,
+    choices: [{ id: 'climate_lead', text: 'Leverage climate leadership into broader sovereign development', consequence: 'You make Azania the center of African climate innovation and sovereign development.', effects: { sovereignty: 10, internationalStanding: 12, economicStrength: 8, publicSupport: 10, humanDevelopment: 8 }, nextNode: 'ending_sovereign_development' }] },
 
-  {
-    id: 'pragmatic_relief',
-    phase: 5,
-    title: 'The Pragmatic Compromise',
-    narrative: `The aid arrives. Your people eat. The crisis passes. But the bilateral investment treaty you signed with the US limits your regulatory options for a decade. The EU seed patents create dependencies. You've survived the emergency at the cost of future policy space.
+  { id: 'pragmatic_relief', phase: 5, title: 'The Pragmatic Compromise',
+    narrative: `The aid arrives. Your people eat. The crisis passes. But the investment treaty you signed with the US limits your regulatory power for a decade. The EU seed patents create new dependencies. You survived the emergency by giving up future options.
 
-This is the recurring dilemma of the Global South: short-term survival versus long-term sovereignty. No leader can let their people starve on principle. But every concession made under duress narrows the path forward.
+This is the recurring dilemma of poorer nations: short-term survival versus long-term freedom. No leader can watch their people starve on principle. But every deal made under desperation narrows the path forward.
 
-Your challenge now is to work within these new constraints while slowly expanding your options. It's not the revolutionary path, but revolutions require resources you don't yet have.`,
-    choices: [
-      {
-        id: 'relief_work_within',
-        text: 'Work within constraints while building alternatives — the long game',
-        consequence: 'You comply with treaty obligations while investing in domestic capacity that reduces future dependency.',
-        effects: { sovereignty: 5, economicStrength: 5, publicSupport: 3, humanDevelopment: 5 },
-        nextNode: 'ending_pragmatic_sovereignty',
-      },
-    ],
-  },
+Your task now is to work within these new constraints while slowly building alternatives. It's not the revolutionary path, but revolutions need resources you don't yet have.`,
+    choices: [{ id: 'relief_work_within', text: 'Work within constraints while building alternatives — the long game', consequence: 'You comply with treaty obligations while investing in domestic capacity that reduces future dependency.', effects: { sovereignty: 5, economicStrength: 5, publicSupport: 3, humanDevelopment: 5 }, nextNode: 'ending_pragmatic_sovereignty' }] },
 
-  {
-    id: 'bilateral_web',
-    phase: 5,
-    title: 'The Web of Partnerships',
-    narrative: `Your bilateral approach yields a complex web of relationships, each optimized for specific sectors. South Africa for manufacturing partnerships. Kenya for technology. Ethiopia for agricultural cooperation. Rwanda for governance reform. Nigeria for market access. Each relationship is calibrated to mutual benefit.
+  { id: 'bilateral_web', phase: 5, title: 'The Web of Partnerships',
+    narrative: `Your bilateral approach creates a web of relationships, each optimized for specific needs. South Africa for manufacturing. Kenya for technology. Ethiopia for farming. Rwanda for governance ideas. Nigeria for market access.
 
-The web is more resilient than any single partnership. If one relationship frays, others compensate. You're building the kind of South-South cooperation that development economists have theorized about for decades — not through grand institutions but through practical, bilateral relationships that create real value.
+The web is resilient — if one relationship frays, others fill the gap. You're building the kind of South-South cooperation that economists have theorized about for decades — not through grand institutions but through practical deals that create real value.
 
-Your development is proceeding on multiple fronts simultaneously, driven by the specific advantages each partner brings. It's pragmatic, incremental, and effective.`,
-    choices: [
-      {
-        id: 'web_formalize',
-        text: 'Formalize the strongest partnerships into a permanent development network',
-        consequence: 'You propose an African Development Cooperation Framework built on your bilateral successes.',
-        effects: { sovereignty: 8, internationalStanding: 10, economicStrength: 8, publicSupport: 5 },
-        nextNode: 'ending_pragmatic_sovereignty',
-      },
-    ],
-  },
+Development is happening on multiple fronts at once, driven by what each partner does best. It's practical, incremental, and effective.`,
+    choices: [{ id: 'web_formalize', text: 'Formalize the strongest partnerships into a permanent development network', consequence: 'You propose an African Development Cooperation Framework built on your bilateral successes.', effects: { sovereignty: 8, internationalStanding: 10, economicStrength: 8, publicSupport: 5 }, nextNode: 'ending_pragmatic_sovereignty' }] },
 
-  {
-    id: 'debt_equity_gamble',
-    phase: 5,
-    title: 'The Equity Gamble',
-    narrative: `The debt-for-equity swap halves your outstanding debt but gives China permanent ownership stakes in your infrastructure. The railway, the port, and two power plants now have Chinese shareholders. Debt service drops dramatically, freeing fiscal space, but dividends flow to Beijing indefinitely.
+  { id: 'debt_equity_gamble', phase: 5, title: 'The Equity Gamble',
+    narrative: `Swapping debt for equity cuts your outstanding loans in half, but gives China permanent ownership stakes in your infrastructure. The railway, port, and two power plants now have Chinese shareholders. Loan payments drop dramatically, but dividends flow to Beijing forever.
 
-This is a new form of the dependency trap — not debt dependency but equity dependency. Your infrastructure generates wealth, but a permanent share of that wealth flows outward. As Kadri's analysis of value transfer would predict, the surplus created by Azanian labor is partially captured by external capital.
+This is a new kind of dependency trap — not through debt but through ownership. Your infrastructure creates wealth, but a permanent share goes abroad. As Kadri's work on wealth transfer would predict, the surplus created by Azanian workers is partly captured by foreign owners.
 
-The gamble is whether the reduced debt burden allows you to grow fast enough that the equity share becomes proportionally smaller. If your economy doubles, China's fixed stake halves in relative terms. But if growth stalls, you've sold the family silver.`,
-    choices: [
-      {
-        id: 'equity_grow',
-        text: 'Focus on maximum growth to dilute the Chinese equity position over time',
-        consequence: 'You pursue aggressive expansion to make the economy larger than the equity stakes.',
-        effects: { economicStrength: 10, sovereignty: -3, debtBurden: -5, publicSupport: 3 },
-        nextNode: 'ending_dependent_development',
-      },
-    ],
-  },
+The bet: if your economy grows fast enough, China's fixed stake shrinks in relative terms. If growth stalls, you've sold the family silver.`,
+    choices: [{ id: 'equity_grow', text: 'Focus on maximum growth to dilute the Chinese equity position over time', consequence: 'You pursue aggressive expansion to make the economy larger than the equity stakes.', effects: { economicStrength: 10, sovereignty: -3, debtBurden: -5, publicSupport: 3 }, nextNode: 'ending_dependent_development' }] },
 
-  {
-    id: 'sovereign_bloc_victory',
-    phase: 5,
-    title: 'The Cartel Holds',
-    narrative: `The African Critical Minerals Alliance holds firm. The consuming nations, after initial resistance, accept that the era of cheap African resources is over. Prices stabilize at levels that fund genuine development. Processing plants spring up across the continent as cartel members invest in value-addition.
+  { id: 'sovereign_bloc_victory', phase: 5, title: 'The Cartel Holds',
+    narrative: `The African Critical Minerals Alliance holds firm. After initial resistance, consuming nations accept that the era of cheap African resources is over. Prices stabilize at levels that actually fund development. Processing plants spring up across the continent as members invest in turning raw materials into finished products.
 
-Your collective bargaining power has achieved what no individual nation could: a fundamental shift in the terms of trade. The surplus that used to flow from African mines to Western shareholders now circulates within the continent, funding hospitals, schools, and factories. The Patnaiks' theoretical framework explains why this is so significant: metropolitan capitalism's accumulation process depends on the ability to obtain primary commodities from the tropical world at prices held down by the reserve army of labor and the income deflation imposed through financial discipline. A producers' cartel that sets prices based on the actual cost of dignified labor and sustainable extraction — rather than the depressed prices that income deflation generates — fundamentally challenges the terms on which the global economy has operated since the colonial era.
+Your collective power has achieved what no single country could: a real shift in who benefits from trade. The profits that used to flow from African mines to Western shareholders now circulate within the continent, funding hospitals, schools, and factories. The Patnaiks explain why this matters so much: the global economic system has always depended on getting cheap raw materials from poorer countries by keeping their workers' wages low and their governments weak. A producers' alliance that sets prices based on fair wages and sustainable mining — rather than the artificially depressed prices that austerity creates — challenges the way the global economy has worked since colonial times.
 
-Nkrumah's vision of Pan-African economic power is manifest. Not as a utopian union of African states, but as a practical cartel that leverages material advantage into developmental outcomes. The parallel to OPEC is apt — and like OPEC's founders, you understand that resource leverage is most powerful when it funds domestic transformation rather than mere consumption.`,
-    choices: [
-      {
-        id: 'cartel_victory',
-        text: 'Use cartel revenues to achieve comprehensive sovereign development',
-        consequence: 'You channel mineral wealth into a generation-defining development program.',
-        effects: { sovereignty: 15, economicStrength: 12, publicSupport: 10, humanDevelopment: 8, infrastructure: 8 },
-        nextNode: 'ending_sovereign_development',
-      },
-    ],
-  },
+Nkrumah's vision of Pan-African economic power is real. Not as a utopian dream, but as a practical alliance that turns resource leverage into development outcomes.`,
+    choices: [{ id: 'cartel_victory', text: 'Use cartel revenues to achieve comprehensive sovereign development', consequence: 'You channel mineral wealth into a generation-defining development program.', effects: { sovereignty: 15, economicStrength: 12, publicSupport: 10, humanDevelopment: 8, infrastructure: 8 }, nextNode: 'ending_sovereign_development' }] },
 
-  {
-    id: 'brics_alignment',
-    phase: 5,
-    title: 'The BRICS Path',
-    narrative: `As a BRICS member, you gain access to alternative financial infrastructure: the NDB for development loans, the Contingent Reserve Arrangement as a safety net, and bilateral swap lines that reduce dollar dependency. Your trade is increasingly settled in local currencies.
+  { id: 'brics_alignment', phase: 5, title: 'The BRICS Path',
+    narrative: `As a BRICS member, you gain access to alternative financial tools: the NDB for development loans, emergency backup funds, and agreements to trade in local currencies instead of dollars.
 
-The BRICS framework offers something the Western system never did: a voice. As a small African economy in the IMF, you had no influence over rules that governed your life. In BRICS, the governance structure, though imperfect, gives developing nations genuine representation.
+BRICS offers something the Western system never did: a voice. In the IMF, Azania had no power over the rules that governed its life. In BRICS, developing nations actually have representation, even if it's imperfect.
 
-But BRICS has its own internal dynamics. China's economic weight dominates. India and China have competing visions for the bloc. Russia's geopolitical conflicts create complications. You navigate these currents carefully, always seeking the arrangement that maximizes your sovereign development space.`,
-    choices: [
-      {
-        id: 'brics_sovereign',
-        text: 'Use the BRICS platform to advance sovereign development goals',
-        consequence: 'You leverage BRICS membership for financing, technology, and diplomatic support.',
-        effects: { sovereignty: 8, economicStrength: 8, internationalStanding: 8, publicSupport: 5, debtBurden: -5 },
-        nextNode: 'ending_pragmatic_sovereignty',
-      },
-    ],
-  },
+But BRICS has its own internal politics. China's economic weight dominates. India and China compete for influence. Russia's conflicts create complications. You navigate carefully, always looking for what gives Azania the most room to develop on its own terms.`,
+    choices: [{ id: 'brics_sovereign', text: 'Use the BRICS platform to advance sovereign development goals', consequence: 'You leverage BRICS membership for financing, technology, and diplomatic support.', effects: { sovereignty: 8, economicStrength: 8, internationalStanding: 8, publicSupport: 5, debtBurden: -5 }, nextNode: 'ending_pragmatic_sovereignty' }] },
 
   // ═══════════════════════════════════════
   // ENDINGS
@@ -1753,11 +1392,11 @@ But BRICS has its own internal dynamics. China's economic weight dominates. Indi
     isEnding: true,
     endingType: 'victory',
     endingTitle: 'Sovereign Development Achieved',
-    endingNarrative: `The Republic of Azania stands as proof that another path is possible. Your country is not rich by the standards of the Global North — but it is sovereign, dignified, and developing on its own terms. Your people eat food grown by Azanian farmers on Azanian land. Your factories employ Azanian workers making goods for Azanian and regional markets. Your debts are manageable, your institutions accountable, your future in your own hands.
+    endingNarrative: `The Republic of Azania stands as proof that another path is possible. Your country isn't rich by Global North standards — but it's sovereign, dignified, and developing on its own terms. Your people eat food grown by Azanian farmers on Azanian land. Your factories employ Azanian workers making goods for Azanian and regional markets. Your debts are manageable, your institutions accountable, your future in your own hands.
 
-The colonial drain that Utsa Patnaik documented — centuries of wealth flowing from the periphery to the metropole — has been, if not reversed, then stanched. The surplus your workers and farmers produce stays in Azania, invested in Azanian schools, hospitals, and factories. The income deflation that Prabhat Patnaik identifies as the mechanism of contemporary imperialism has been resisted: your people's wages buy food, your government's revenues fund development, and your nation's resources serve your nation's needs.
+The centuries-long drain of wealth that Utsa Patnaik documented — from poorer countries to richer ones — has been, if not reversed, then stopped. The wealth your workers and farmers create stays in Azania, invested in Azanian schools, hospitals, and factories. The squeezing of people's income that Prabhat Patnaik identifies as modern imperialism's key tool has been resisted: your people's wages buy food, your government's revenues fund development, and your nation's resources serve your nation's needs.
 
-You have not followed the Washington Consensus or the Beijing Consensus. You have built something that the thinkers who inspired your journey would recognize: development that serves the people who do the developing, sovereignty that is economic as well as political, and engagement with the world that does not require submission to it.
+You didn't follow Washington's playbook or Beijing's. You built something the thinkers who inspired your journey would recognize: development that serves the people doing the developing, sovereignty that's economic as well as political, and engagement with the world that doesn't require submission to it.
 
 As Nkrumah wrote: "We face neither East nor West; we face forward." Azania faces forward.`,
   },
@@ -1771,11 +1410,11 @@ As Nkrumah wrote: "We face neither East nor West; we face forward." Azania faces
     isEnding: true,
     endingType: 'victory',
     endingTitle: 'A Rising Power',
-    endingNarrative: `Azania has not merely developed — it has transformed. Your economy grows at rates that command international attention. Your technology sector innovates. Your manufactured exports compete globally. Your universities attract students from across the continent.
+    endingNarrative: `Azania hasn't just developed — it has transformed. Your economy grows at rates that command international attention. Your tech sector innovates. Your manufactured exports compete globally. Your universities attract students from across the continent.
 
-The path here required compromises. Some sovereignty was traded for growth. Some debt was taken on for investment. Some foreign equity was accepted for technology. But the net direction is unmistakable: Azania is ascending, and its ascent is lifting its neighbors with it.
+The path required compromises. Some sovereignty was traded for growth. Some debt was taken on for investment. Some foreign ownership was accepted for technology. But the direction is clear: Azania is rising, and its rise is lifting its neighbors too.
 
-The development model you pioneered — pragmatic, flexible, borrowing from every tradition while submitting to none — is being studied and adapted across the Global South. You have proven that a developing nation in the 21st century can industrialize, can build domestic capacity, can chart its own course. The future is not written in Washington or Beijing. It is written in Azania.`,
+The development model you built — practical, flexible, borrowing from every tradition while submitting to none — is being studied across the Global South. You've proven that a developing nation in the 21st century can industrialize, build real capacity, and chart its own course. The future isn't written in Washington or Beijing. It's written in Azania.`,
   },
 
   {
@@ -1787,11 +1426,11 @@ The development model you pioneered — pragmatic, flexible, borrowing from ever
     isEnding: true,
     endingType: 'partial_victory',
     endingTitle: 'Pragmatic Sovereignty',
-    endingNarrative: `Azania's path has been neither revolutionary nor submissive. You've navigated the currents of global power with skill, accepting constraints where necessary while always pushing for greater independence. Your sovereignty is real but imperfect — constrained by international agreements, trade relationships, and the structural realities of a global economy designed by and for richer nations.
+    endingNarrative: `Azania's path has been neither revolutionary nor submissive. You navigated global power with skill, accepting limits where necessary while always pushing for more independence. Your sovereignty is real but imperfect — constrained by international agreements, trade relationships, and a global economy designed by and for richer nations.
 
-Your people are better off than they were. Poverty has fallen. Services have improved. The economy grows, if not spectacularly. The institutions you've built are imperfect but functional. Democracy is messy but alive.
+Your people are better off. Poverty has fallen. Services have improved. The economy grows, if not spectacularly. Your institutions are imperfect but functional. Democracy is messy but alive.
 
-This is not the triumphant sovereignty Nkrumah dreamed of. But it may be the achievable sovereignty that history allows. As Deng understood, perfection is the enemy of progress. You have made progress, and the next generation inherits a country with more options than you had.
+This isn't the triumphant sovereignty Nkrumah dreamed of. But it may be the achievable sovereignty that the real world allows. As Deng understood, perfection is the enemy of progress. You made progress, and the next generation inherits a country with more options than you had.
 
 The struggle continues. It always does. But you've moved the line forward.`,
   },
@@ -1805,13 +1444,13 @@ The struggle continues. It always does. But you've moved the line forward.`,
     isEnding: true,
     endingType: 'defeat',
     endingTitle: 'Dependent Development',
-    endingNarrative: `Azania grows, but it grows for others. Your GDP rises, but the surplus flows to foreign shareholders, creditors, and supply chain owners. Your workers are employed, but in jobs that serve global value chains rather than national development priorities. Your government operates within parameters set by international institutions and bilateral agreements that constrain genuine sovereign choice.
+    endingNarrative: `Azania grows, but it grows for others. Your GDP rises, but profits flow to foreign shareholders, creditors, and supply chain owners. Your workers have jobs, but in roles that serve global companies rather than national priorities. Your government operates within limits set by international institutions and treaties that prevent real sovereign choice.
 
-This is what dependency theorists call "dependent development" — growth without autonomy, modernization without liberation. By the metrics the World Bank uses, you're a success story. But as Utsa Patnaik has demonstrated, those metrics are designed to flatter: poverty lines that don't reflect the actual cost of nutrition, GDP figures that count outward-flowing profits as national income, growth rates that obscure who is growing and who is being left behind.
+Economists call this "dependent development" — growth without independence, modernization without liberation. By World Bank metrics, you're a success story. But as Utsa Patnaik has shown, those metrics are designed to flatter: poverty lines that don't reflect what food actually costs, GDP numbers that count outgoing profits as national income, and growth rates that hide who's really benefiting.
 
-The colonial drain that the Patnaiks have documented — the centuries-long transfer of wealth from periphery to metropole — continues in new forms. Where once it was the direct appropriation of colonial revenues, it is now the repatriation of corporate profits, the servicing of debts contracted under duress, and the suppression of commodity prices through the income deflation that Prabhat Patnaik identifies as the central mechanism of contemporary imperialism.
+The drain of wealth that the Patnaiks have documented — centuries of money flowing from poorer countries to richer ones — continues in new forms. It used to be direct colonial taxation. Now it's corporate profits shipped abroad, debt payments on loans made under pressure, and low commodity prices forced on countries whose people have been kept poor by austerity. As Prabhat Patnaik argues, this income squeeze is the core mechanism of how powerful countries maintain their advantage today.
 
-Nkrumah's warning has proven prophetic: "The essence of neo-colonialism is that the state which is subject to it is, in theory, independent and has all the outward trappings of international sovereignty. In reality its economic system and thus its political policy is directed from outside."
+Nkrumah's warning proved prophetic: a country can look independent while its economy — and therefore its politics — is controlled from the outside.
 
 The struggle for genuine sovereignty continues. Perhaps the next generation will find the path you could not.`,
   },
