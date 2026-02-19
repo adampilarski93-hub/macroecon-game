@@ -20,6 +20,31 @@ import type { NarrativeNode } from './types';
  * - Rosa Luxemburg: capitalism's need to expand into new markets,
  *   the mass strike, reform vs. revolution, militarism and imperialism,
  *   ongoing dispossession ('primitive accumulation'), democracy from below
+ *
+ * Research from Agrarian South: Journal of Political Economy (open access):
+ * - Moyo, Jha & Yeros, "The Classical Agrarian Question" (2013), 2(1)
+ * - Prabhat Patnaik, "The Peasant Question and Contemporary Capitalism" (2012), 1(1)
+ * - Utsa Patnaik, "First World Import Dependence on Developing Countries" (2015), 4(1)
+ * - Costantino, "Land Grabbing in Latin America" (2014), 3(1)
+ * - Tsikata, "Gender, Land Tenure and Agrarian Production in Sub-Saharan Africa" (2016), 5(1)
+ * - Amin, "The Agrarian Question a Century after October 1917" (2017), 6(2)
+ * - Sit Tsui et al., "Re-organizing Peasant Labour for Resilience in China" (2017), 6(1)
+ * - Shivji, "The Concept of 'Working People'" (2017), 6(1)
+ * - Moyo, "Debating the African Land Question with Archie Mafeje" (2018), 7(2)
+ * - Santos Baca, "Food Consumption Pattern of the Free Market: Mexico Under NAFTA" (2019), 8(1-2)
+ * - Mazwi et al., "Political Economy of Command Agriculture in Zimbabwe" (2019), 8(1-2)
+ * - Yeros & Jha, "Late Neo-colonialism: Monopoly Capitalism in Permanent Crisis" (2020), 9(1)
+ * - Prabhat Patnaik, "Neoliberalism and Fascism" (2020), 9(1)
+ * - Ossome, "Pedagogies of Feminist Resistance: Agrarian Movements in Africa" (2021), 10(1)
+ * - Prabhat Patnaik, "Engels and the Worker-Peasant Alliance" (2021), 10(1)
+ * - Hernández, "The Evolution of Cuban Agrarian Relations" (2014), 3(2)
+ * - Harriss-White, "Capitalism and the Common Man: Peasants and Petty Production" (2012), 1(2)
+ * - Kumar, "India's Rice Export: What is in it for Farmers?" (2018-19) — Samir Amin Prize
+ * - Utsa Patnaik, "On Political Economy and Fallacies" (2022), 11(3)
+ * - Jha, "Growing Restiveness of the Peasantry in Contemporary India" (2024), 13(1)
+ * - Prasad, "Adivasi Women, Agrarian Change and Forms of Labour" (2016), 5(1)
+ * - Rios & Maciel, "Brazilian Black Feminism in Rural and Urban Spaces" (2021), 10(1)
+ * - Special issues: Pathways to Ecological Transition (2023); Tribute to Samir Amin (2020)
  */
 
 export const narrativeNodes: NarrativeNode[] = [
@@ -37,6 +62,8 @@ export const narrativeNodes: NarrativeNode[] = [
 This poverty wasn't an accident. As the historian Utsa Patnaik has shown, colonial powers got rich by draining wealth from countries like yours for centuries. They used a clever trick: they took your country's own tax money and used it to "buy" your exports, making it look like normal trade when it was really just taking. The roads, rails, and schools they built were designed to serve the colonial system, not your people. Your country wasn't simply left behind — it was actively made poor so that others could get rich.
 
 Your predecessor borrowed heavily from Western banks in the 1990s. Those debts have ballooned. Now, 40% of your government's money goes to paying off loans instead of building schools or hospitals. Roads are falling apart. The only major hospital needs backup generators because the power grid keeps failing. Half your population is under 25, and youth unemployment is over 40%. As the economist Prabhat Patnaik explains, this isn't just a money problem — it's a system designed so that powerful countries get cheap resources and labor from countries like yours, and debt is the tool they use to keep that system running.
+
+As Sam Moyo, Praveen Jha, and Paris Yeros argued in their landmark study of the "classical agrarian question" (Agrarian South, 2013), the central challenge for countries like yours hasn't changed since independence: how do you transform an economy built to serve colonial extraction into one that serves your own people? The old colonial economy left you exporting cheap raw materials and importing expensive manufactured goods. Breaking that pattern is the key to everything.
 
 Two groups want to meet with you this week. The first is from China, offering to build infrastructure through their Belt and Road program. The second is from the International Monetary Fund (IMF), offering a financial rescue package. Your finance minister has also sketched out a plan to develop using your own resources — slower and harder, but you'd owe nothing to anyone.
 
@@ -160,9 +187,9 @@ Prabhat Patnaik's work helps explain why the reaction is so hostile. He argues t
 
 Your development team presents three strategies. The first focuses on farming: redistribute land to small farmers, grow more food at home, and stop depending on expensive food imports. As researcher Max Ajl argues, no country has ever built a strong economy without first making sure its people can feed themselves. Utsa Patnaik's research backs this up — she's shown that colonial wealth extraction started with taking control of farming, so real independence has to start with taking it back.
 
-The second strategy: take back the mines. Right now, foreign companies dig up your cobalt and copper and ship the profits overseas. Nationalize the mining sector, keep the profits at home, and invest them in hospitals, schools, and roads. This is what Bolivia did with lithium and what Nkrumah tried with gold. As the Patnaiks argue, the only way to stop wealth from flowing out is for the state to step in and keep it in the country.
+The second strategy: take back the mines. Right now, foreign companies dig up your cobalt and copper and ship the profits overseas. Nationalize the mining sector, keep the profits at home, and invest them in hospitals, schools, and roads. This is what Bolivia did with lithium and what Nkrumah tried with gold. As Yeros and Jha argue in their study of "late neo-colonialism" (Agrarian South, 2020), today's monopoly capitalism keeps the old colonial extraction going through corporate control of resources — and only state action can reverse it.
 
-The third is the long game: pour money into education and healthcare, build a skilled population, and wait for the results. This echoes how East Asian countries started their rise — but your people are hungry now and patience has limits.
+The third is the long game: pour money into education and healthcare, build a skilled population, and wait for the results. Gladys Hernández's study of Cuban agrarian reform (Agrarian South, 2014) shows how Cuba combined education and agriculture to build self-reliance, even under harsh external pressure. But your people are hungry now and patience has limits.
 
 None of these paths is easy. All require sacrifice. But as China's Deng Xiaoping said when launching his reforms: "We are crossing the river by feeling the stones."`,
     choices: [
@@ -304,9 +331,9 @@ As Roland Boer writes about China's development strategy, the key is doing thing
     id: 'imf_austerity',
     phase: 3,
     title: 'The Austerity Shock',
-    narrative: `The IMF program hits like a hurricane. Government workers — who haven't had a raise in years — see their pay cut by 15%. Removing fuel subsidies doubles transport costs overnight. Cheap imported food floods in, destroying local farmers. As economist Ali Kadri has documented, "free trade" often destroys the ability of poorer countries to produce things for themselves.
+    narrative: `The IMF program hits like a hurricane. Government workers — who haven't had a raise in years — see their pay cut by 15%. Removing fuel subsidies doubles transport costs overnight. Cheap imported food floods in, destroying local farmers. As economist Ali Kadri has documented, "free trade" often destroys the ability of poorer countries to produce things for themselves. Andrea Santos Baca's study of Mexico under NAFTA (Agrarian South, 2019) shows exactly what happens: when Mexico opened its markets to cheap American corn, millions of Mexican farmers were ruined, diets got worse, and the country lost the ability to feed itself.
 
-Utsa Patnaik's research on what happens when countries remove food subsidies is playing out in real time. As food gets more expensive, the poorest 40% of people can no longer afford to eat properly. Hospitals report a spike in child malnutrition and anemia in pregnant women. The IMF's official poverty statistics — which Patnaik has shown use misleading methods that undercount the poor — will call the impact "modest." The hospitals tell a very different story.
+Utsa Patnaik's research on what happens when countries remove food subsidies is playing out in real time. As food gets more expensive, the poorest 40% of people can no longer afford to eat properly. Hospitals report a spike in child malnutrition and anemia in pregnant women. The IMF's official poverty statistics — which Patnaik has shown use misleading methods that undercount the poor — will call the impact "modest." The hospitals tell a very different story. Archana Prasad's research on women workers in India (Agrarian South, 2016) found the same pattern: when governments cut spending and deregulated markets, it was women and indigenous communities who suffered first and worst.
 
 The state mining company is sold off at a bargain price. A Canadian mining corporation buys 70% of it for $400 million — roughly one year's worth of cobalt revenue that used to go to the government. Your finance minister points out the bitter irony: the IMF loan is now being used to pay off older debts to Western banks, while the mining wealth that could have funded development is flowing to shareholders in Toronto. This is what Prabhat Patnaik calls "income deflation" made visible: Azania's people are squeezed, its assets sold cheap, and the wealth that could build the country flows abroad instead.
 
@@ -412,7 +439,7 @@ Eric Toussaint's research points to a bold third option: a debt audit. Your coun
     title: 'Land Reform',
     narrative: `Your land reform program is the biggest project since independence. You take unused estate land and give it to small farmers, set up farming cooperatives backed by the state, and invest in irrigation. The World Bank warns you're "distorting markets." The old landowners threaten to sue. But as Max Ajl argues, without land reform, the rural majority stays trapped in poverty, and without being able to feed itself, your country stays dependent on expensive food imports.
 
-Utsa Patnaik's decades of research provide both a warning and a roadmap. She's shown how colonial rulers forced farmers to grow cash crops for export instead of food for their own people — leaving populations hungry even as farm output grew on paper. Her research also showed that the Green Revolution's bigger harvests often came at the cost of nutrition and farmer independence — more tons of fewer crops while hunger continued. Taking her analysis seriously, your cooperatives grow food crops first and cash crops second, making sure Azania feeds itself before selling to the world. You set up a public food distribution system guaranteeing affordable basic grains — the kind of safety net Patnaik says is essential for any country serious about ending real poverty, not just poverty as measured by misleading World Bank statistics.
+Utsa Patnaik's decades of research provide both a warning and a roadmap. She's shown how colonial rulers forced farmers to grow cash crops for export instead of food for their own people — leaving populations hungry even as farm output grew on paper. Dzodzi Tsikata's study of gender and land tenure in Sub-Saharan Africa (Agrarian South, 2016) adds a crucial layer: women do most of the farming in countries like yours, but they often don't have secure rights to the land they work. Your reform program must address this — giving women equal land rights isn't just fair, it's how you get the best results. Her research also showed that the Green Revolution's bigger harvests often came at the cost of nutrition and farmer independence — more tons of fewer crops while hunger continued. Taking her analysis seriously, your cooperatives grow food crops first and cash crops second, making sure Azania feeds itself before selling to the world. You set up a public food distribution system guaranteeing affordable basic grains — the kind of safety net Patnaik says is essential for any country serious about ending real poverty, not just poverty as measured by misleading World Bank statistics.
 
 The first harvest beats expectations by 20%. Cooperative farms produce more per acre than the old estates. Food imports drop by a third. For the first time in a generation, rural communities see a future. Nutrition among the poorest improves for the first time in a decade.
 
@@ -889,9 +916,9 @@ A visiting Western economist asks, "Why not just export the raw materials and bu
     title: 'Value-Added Agriculture',
     narrative: `Your farming cooperatives have evolved into something impressive. Azanian organic coffee is selling in premium shops across Europe and East Asia. Processed cocoa brings three times the price of raw beans. A cooperative-owned cashew processing plant is now the biggest employer in the northern province.
 
-Instead of selling cheap raw materials and buying expensive finished products, you're selling processed goods and keeping more of the money. The Patnaiks explain why this matters: throughout history, the trade system has been rigged so that processed goods from wealthy countries cost more than raw materials from poorer ones. By roasting your own coffee and processing your own cocoa, you're breaking that old pattern.
+Instead of selling cheap raw materials and buying expensive finished products, you're selling processed goods and keeping more of the money. Utsa Patnaik's research on how wealthy nations depend on cheap agricultural imports from the Global South (Agrarian South, 2015) shows exactly the pattern you're breaking: for centuries, the world economy was set up so that your farmers grew cheap crops for rich countries to eat while your own people went hungry. By processing and branding your own goods, you're flipping that script. Manish Kumar's study of India's rice exports (Agrarian South, 2018) shows the same lesson — exporting raw rice barely helped Indian farmers, but adding value before export made all the difference.
 
-But success brings new problems. European import rules are complicated and keep changing — Prabhat Patnaik would note that "free trade" deals are designed to be free for wealthy countries' exports while creating endless obstacles for goods from developing nations. Your "organic" certification depends on Western agencies that charge fees your small cooperatives can barely afford. And the biggest buyers are huge multinational traders with enormous bargaining power.`,
+But success brings new problems. European import rules are complicated and keep changing — as Prabhat Patnaik has argued, "free trade" deals are designed to be free for wealthy countries' exports while creating endless obstacles for goods from developing nations. Your "organic" certification depends on Western agencies that charge fees your small cooperatives can barely afford. And the biggest buyers are huge multinational traders with enormous bargaining power.`,
     choices: [
       {
         id: 'export_brand',
@@ -914,9 +941,9 @@ But success brings new problems. European import rules are complicated and keep 
     id: 'agro_china_assist',
     phase: 4,
     title: 'Chinese Agricultural Expertise',
-    narrative: `Fifty Chinese farming experts arrive and work alongside your farmers in the south. Their new rice varieties triple crop yields. Their drip irrigation systems turn dry land productive. The training is hands-on and practical — Benabdallah has documented this as one of the most successful parts of China-Africa cooperation, where real skills transfer better than Western "capacity building" programs that often just produce consultant reports.
+    narrative: `Fifty Chinese farming experts arrive and work alongside your farmers in the south. Their new rice varieties triple crop yields. Their drip irrigation systems turn dry land productive. The training is hands-on and practical — Benabdallah has documented this as one of the most successful parts of China-Africa cooperation, where real skills transfer better than Western "capacity building" programs that often just produce consultant reports. A study by Sit Tsui and colleagues on how China rebuilt its own rural economy (Agrarian South, 2017) shows what's possible: Chinese villages used peasant cooperatives and local resilience strategies to lift themselves out of poverty, and now some of those same techniques are being shared with your farmers.
 
-But the Chinese mission also introduces Chinese seed companies that compete with local varieties. Depending on imported seeds would repeat the "Green Revolution" trap that Ajl warns about — bigger harvests that come at the cost of farmer independence. Your agricultural scientists are worried.
+But the Chinese mission also introduces Chinese seed companies that compete with local varieties. Depending on imported seeds would repeat the "Green Revolution" trap that Ajl warns about — bigger harvests that come at the cost of farmer independence. Your agricultural scientists are worried. Freedom Mazwi's study of state-led farming in Zimbabwe (Agrarian South, 2019) offers a cautionary tale: when the government partnered with foreign companies for "command agriculture," the state gained production but lost control over the long term.
 
 The farming program's success has created demand. Other sectors want similar partnerships: your mining engineers want Chinese training, your tech sector wants access to Chinese AI research, your transport ministry wants logistics help.`,
     choices: [
@@ -1317,9 +1344,9 @@ Every successful developing country has followed this path. The difference is yo
   { id: 'cooperative_industry', phase: 5, title: 'The Cooperative Economy',
     narrative: `Your worker-cooperative factories are unlike anything in the developing world. Workers own the companies they run. Profits are shared. Managers are elected. Investment decisions are made together.
 
-The model has downsides — democratic decision-making is slower than top-down management. But it has strengths others lack: workers who own their factory don't sabotage it, steal from it, or leave for small pay differences. Quality is higher because pride is higher. Innovation comes from the shop floor because workers have a real stake.
+The model has downsides — democratic decision-making is slower than top-down management. But it has strengths others lack: workers who own their factory don't sabotage it, steal from it, or leave for small pay differences. Quality is higher because pride is higher. Innovation comes from the shop floor because workers have a real stake. Barbara Harriss-White's study of peasants and petty producers in Africa and South Asia (Agrarian South, 2012) showed that small-scale cooperative producers can outperform large capitalist firms when they have the right support — because their survival depends on cooperation, not on squeezing workers.
 
-The World Bank calls it "interesting but not scalable." The International Labour Organization calls it "a model for dignified development." China's development bank studies it with curiosity.`,
+The World Bank calls it "interesting but not scalable." The International Labour Organization calls it "a model for dignified development." China's development bank studies it with curiosity. Issa Shivji's concept of "working people" (Agrarian South, 2017) — a category broader than "workers" that includes peasants, informal traders, and cooperative producers — fits your model perfectly. Azania is proving that the old division between "workers" and "peasants" can be overcome.`,
     choices: [
       { id: 'coop_scale', text: 'Scale the cooperative model and make it the foundation of your national economy', consequence: 'You enshrine cooperative ownership in economic policy and provide institutional support for expansion.', effects: { sovereignty: 12, publicSupport: 12, economicStrength: 8, humanDevelopment: 8 }, nextNode: 'democratic_deepening' },
       { id: 'coop_export', text: 'Export the cooperative model — help other countries set up worker-owned enterprises', consequence: 'You create an international cooperative development institute in your capital.', effects: { internationalStanding: 10, sovereignty: 8, publicSupport: 8, economicStrength: 3 }, nextNode: 'continental_leadership' },
@@ -1396,7 +1423,7 @@ The challenge: make your development achievements strong enough to survive any e
 
 The climate crisis, which nearly derailed your development, has become an opportunity. Green technology adapted for African conditions is your fastest-growing export. Climate funding — available on better terms than development loans — pays for infrastructure. Your moral authority as a climate-vulnerable nation leading on solutions gives you international standing your economy alone couldn't provide.
 
-As Ajl argues, real climate justice means challenging the economic structures that caused the crisis. Your approach does exactly that: resilient local food systems instead of dependence on global markets, clean energy instead of imported fossil fuels, and climate finance claimed as a right, not a favor.`,
+As Ajl argues, real climate justice means challenging the economic structures that caused the crisis. The Agrarian South journal dedicated its 2023 special issue to "Pathways to Ecological Transition," exploring how Global South nations can build sustainable economies without following the destructive path of industrialized countries. Samir Amin — whose ideas shaped the journal's founding vision and whose legacy inspired the journal's young scholars' prize — called this "delinking": not isolation, but the refusal to let your development be dictated by a global system built for someone else's benefit. Your approach does exactly that: resilient local food systems instead of dependence on global markets, clean energy instead of imported fossil fuels, and climate finance claimed as a right, not a favor.`,
     choices: [
       { id: 'climate_lead', text: 'Leverage climate leadership into broader sovereign development', consequence: 'You make Azania the center of African climate innovation and sovereign development.', effects: { sovereignty: 10, internationalStanding: 12, economicStrength: 8, publicSupport: 10, humanDevelopment: 8 }, nextNode: 'global_recession_test' },
       { id: 'climate_community', text: 'Root climate resilience in community ownership — every village manages its own solar grid and water system', consequence: 'You decentralize climate infrastructure to the community level.', effects: { publicSupport: 12, sovereignty: 8, humanDevelopment: 10, infrastructure: 5 }, nextNode: 'democratic_deepening' },
@@ -1467,11 +1494,11 @@ But BRICS has its own internal politics. China's economic weight dominates. Indi
     title: 'The Capital Offensive',
     narrative: `Just when things seem stable, a wave of foreign capital arrives — uninvited. Multinational corporations, hedge funds, and private equity firms are scouting Azania for investment opportunities. They see your growing economy, your trained workforce, and your resources. They want in.
 
-Rosa Luxemburg explained this pattern over a century ago in her book "The Accumulation of Capital." She argued that capitalism can't survive on its own — it constantly needs to expand into new markets, new lands, and new populations to keep growing. When a country like Azania develops successfully, it becomes exactly the kind of fresh market that global capital hungers for. The corporations aren't coming because they want to help you — they're coming because they need somewhere new to invest their money and extract profits.
+Rosa Luxemburg explained this pattern over a century ago in her book "The Accumulation of Capital." She argued that capitalism can't survive on its own — it constantly needs to expand into new markets, new lands, and new populations to keep growing. Samir Amin's essay on "The Agrarian Question a Century after October 1917" (Agrarian South, 2017) traced this same pattern into the present day: global capitalism uses agriculture and natural resources in the Global South as a permanent frontier for expansion. When a country like Azania develops successfully, it becomes exactly the kind of fresh market that global capital hungers for. The corporations aren't coming because they want to help you — they're coming because they need somewhere new to invest their money and extract profits.
 
 The offers are tempting: a tech giant wants to build a data center, a mining conglomerate offers a premium for new concessions, a real estate developer proposes luxury tourism resorts on your coast. Each deal would bring jobs and revenue. But each would also create a new channel for wealth to flow out of the country.
 
-Your finance minister sees opportunity. Your sovereignty minister sees danger. Luxemburg would see the inevitable logic of a system that cannot stop expanding.`,
+Your finance minister sees opportunity. Your sovereignty minister sees danger. Prabhat Patnaik's fundamental insight — that the peasant question isn't some leftover problem from the past, but the central crisis of contemporary capitalism (Agrarian South, 2012) — makes this clear: every acre grabbed by foreign investors, every resource concession signed away, is another step backward from the self-determination you've fought to build.`,
     choices: [
       { id: 'cap_resist', text: 'Set strict limits — foreign capital is welcome only under Azanian control and ownership rules', consequence: 'You create a Foreign Investment Review Board with the power to reject or modify any deal.', effects: { sovereignty: 12, publicSupport: 8, economicStrength: -3, internationalStanding: -5 }, nextNode: 'peoples_constitution' },
       { id: 'cap_selective', text: 'Accept investments that transfer technology, reject those that just extract', consequence: 'You approve the data center with local hiring mandates but reject the mining and tourism deals.', effects: { sovereignty: 5, economicStrength: 8, humanDevelopment: 5, internationalStanding: 3 }, nextNode: 'generational_test' },
@@ -1485,11 +1512,11 @@ Your finance minister sees opportunity. Your sovereignty minister sees danger. L
     title: 'The Workers Speak',
     narrative: `Your development program has created something powerful: a large, organized working class. Factory workers, farm cooperative members, miners, teachers, and healthcare workers — they have jobs, they have skills, and now they want a bigger say in how the country is run.
 
-Rosa Luxemburg saw this coming too. She wrote extensively about what she called "the mass strike" — not just a work stoppage for higher wages, but a moment when working people realize their collective power and start demanding more than just economic improvements. They want real democracy, real participation in decisions, real ownership of the country's direction. Luxemburg argued that this kind of popular energy is the most powerful force for change — more powerful than any government program or policy paper.
+Rosa Luxemburg saw this coming too. She wrote extensively about what she called "the mass strike" — not just a work stoppage for higher wages, but a moment when working people realize their collective power and start demanding more than just economic improvements. They want real democracy, real participation in decisions, real ownership of the country's direction. Luxemburg argued that this kind of popular energy is the most powerful force for change — more powerful than any government program or policy paper. Prabhat Patnaik's essay on the worker-peasant alliance (Agrarian South, 2021) argues the same point: real transformation happens when factory workers and small farmers realize they share the same struggle and join forces. That's exactly what's happening in Azania now. Praveen Jha's study of peasant restiveness in India (Agrarian South, 2024) shows what occurs when this energy is ignored: decades of frustration, farmer suicides, and explosive protests.
 
 The unions present a manifesto: minimum ownership stakes for workers in all major industries, mandatory worker representation on corporate boards, a shorter work week, and a national minimum wage tied to the cost of living. Business leaders warn of "instability." International investors threaten to pull out.
 
-But the workers' demands aren't radical — they're asking for what many European countries already have. The question is whether your developing economy can support these standards, or whether trying will scare away the investment you need.`,
+But the workers' demands aren't radical — they're asking for what many European countries already have. Lyn Ossome's research on agrarian movements in Africa (Agrarian South, 2021) shows that the strongest movements are the ones led from the ground up, especially when women take leadership roles. The question is whether your developing economy can support these standards, or whether trying will scare away the investment you need.`,
     choices: [
       { id: 'labor_embrace', text: 'Embrace the movement — worker power is the strongest foundation for sovereignty', consequence: 'You pass a comprehensive Labor Rights Act meeting most of the unions\' demands.', effects: { publicSupport: 15, sovereignty: 10, humanDevelopment: 8, economicStrength: -5 }, nextNode: 'peoples_constitution' },
       { id: 'labor_negotiate', text: 'Negotiate a phased approach — worker rights expanding as the economy grows', consequence: 'You agree to a 10-year roadmap with milestones tied to economic growth targets.', effects: { publicSupport: 5, sovereignty: 5, economicStrength: 5, humanDevelopment: 5 }, nextNode: 'generational_test' },
@@ -1521,9 +1548,9 @@ Nkrumah faced this same dilemma. He was eventually overthrown in a military coup
     title: 'The Land Grabbers',
     narrative: `International agribusiness corporations are circling. They want to lease large tracts of farmland for export crops — soybeans, palm oil, biofuels. They promise jobs and revenue. They offer 99-year leases at prices that seem generous.
 
-Luxemburg described this process as "primitive accumulation" — the ongoing violence of separating people from their land and resources. It's not something that happened once in history; it keeps happening whenever capitalism needs new territory to exploit. These land deals would take fertile ground away from the small farmers and cooperatives your reforms created, and turn it into plantations producing food for export while your own people's food security is undermined.
+Luxemburg described this process as "primitive accumulation" — the ongoing violence of separating people from their land and resources. It's not something that happened once in history; it keeps happening whenever capitalism needs new territory to exploit. Agostina Costantino's study of land grabbing in Latin America (Agrarian South, 2014) confirms this pattern: when corporations grab land for export crops, the result is always the same — small farmers are pushed off their land, food security collapses, and the profits flow overseas. Sam Moyo's detailed study of the African land question (Agrarian South, 2018) shows the exact same thing happening across the continent. These land deals would take fertile ground away from the small farmers and cooperatives your reforms created.
 
-Your agricultural minister is alarmed. The communities where these leases are proposed are organizing resistance. Farmers who received land through your reform program refuse to give it back — they've tasted food sovereignty and won't surrender it.
+Your agricultural minister is alarmed. The communities where these leases are proposed are organizing resistance. Farmers who received land through your reform program refuse to give it back — they've tasted food sovereignty and won't surrender it. Flavia Rios and Regimeire Maciel's study of Black feminist organizing in rural Brazil (Agrarian South, 2021) shows how the strongest resistance to land grabs comes when women and communities of color organize together — and that's exactly what's happening in Azania's southern provinces.
 
 But the corporations have powerful backers. Your trade agreements with the EU include "investment protection" clauses that could be used to force the deals through. And some of your own officials, seeing the revenue potential, are quietly supportive.`,
     choices: [
@@ -1541,9 +1568,9 @@ But the corporations have powerful backers. Your trade agreements with the EU in
 
 Rosa Luxemburg was passionate about this. She famously wrote: "Freedom only for the supporters of the government, only for the members of one party — however numerous they may be — is no freedom at all. Freedom is always the freedom of the one who thinks differently." She believed that socialism without democracy was empty, and that real change had to come from the active participation of millions of people, not from decisions handed down from above.
 
-Your development programs have been effective, but they've been top-down — designed by experts, implemented by bureaucrats. Communities receive services but don't shape them. Workers benefit from reforms but didn't design them. The risk is that everything you've built depends on you personally — and when you leave power, it could be reversed.
+Your development programs have been effective, but they've been top-down — designed by experts, implemented by bureaucrats. Communities receive services but don't shape them. Workers benefit from reforms but didn't design them. Lyn Ossome's research on feminist resistance in African agrarian movements (Agrarian South, 2021) reveals a key lesson: the most durable social transformations happen when marginalized groups — women, youth, small farmers — don't just benefit from change but lead it. The risk is that everything you've built depends on you personally — and when you leave power, it could be reversed.
 
-The question is how to root your achievements in popular power so they outlast any single leader.`,
+Utsa Patnaik's essay on political economy and its fallacies (Agrarian South, 2022) drives this home: the mainstream economics taught in universities around the world systematically hides the reality of exploitation and dispossession. If your people understand these ideas — if economic literacy becomes part of everyday life — then no future government can easily trick them into giving up what they've built. The question is how to root your achievements in popular power so they outlast any single leader.`,
     choices: [
       { id: 'demo_participatory', text: 'Create participatory budgeting — let communities decide how development money is spent', consequence: 'You give local assemblies direct control over 30% of the national development budget.', effects: { publicSupport: 12, sovereignty: 8, humanDevelopment: 8, economicStrength: -3 }, nextNode: 'peoples_constitution' },
       { id: 'demo_workers_councils', text: 'Establish workers\' councils in every major industry with real decision-making power', consequence: 'You mandate elected worker representatives with veto power on major corporate decisions.', effects: { publicSupport: 10, sovereignty: 10, humanDevelopment: 5, economicStrength: 3 }, nextNode: 'peoples_constitution' },
@@ -1623,9 +1650,9 @@ The crisis is also an opportunity. As Luxemburg observed, capitalism's crises ex
     title: 'The Backlash',
     narrative: `The old elite — landowners, compradors, and politicians tied to foreign interests — are organizing. Funded by international business lobbies and supported by sympathetic foreign media, they launch a campaign to reverse your reforms. They call it "modernization" and "opening up," but what they really want is a return to the old system where wealth flowed outward and they got their cut.
 
-Luxemburg spent her life studying the tension between reform and reaction. She knew that every step toward economic justice would be met with fierce resistance from those who benefited from inequality. The question isn't whether the backlash comes — it always does — but whether the reforms are rooted deeply enough to survive it.
+Luxemburg spent her life studying the tension between reform and reaction. She knew that every step toward economic justice would be met with fierce resistance from those who benefited from inequality. The question isn't whether the backlash comes — it always does — but whether the reforms are rooted deeply enough to survive it. Prabhat Patnaik's study of the relationship between neoliberalism and fascism (Agrarian South, 2020) describes this dynamic with chilling precision: when neoliberal policies are threatened by popular resistance, the ruling class often turns to authoritarian politics — funding extreme nationalist movements, spreading fear about "instability," and using both legal and illegal means to crush reform.
 
-Their weapons are sophisticated: social media campaigns, legal challenges to your land reform, financial speculation against your currency, and political candidates promising "investor confidence" to an anxious middle class.`,
+Their weapons are sophisticated: social media campaigns, legal challenges to your land reform, financial speculation against your currency, and political candidates promising "investor confidence" to an anxious middle class. Yeros and Jha's analysis of "late neo-colonialism" (Agrarian South, 2020) calls this the permanent crisis of monopoly capitalism — the system can't tolerate alternatives, because every successful example of sovereign development proves the old system wasn't inevitable.`,
     choices: [
       { id: 'counter_mobilize', text: 'Mobilize the people — your reforms have millions of beneficiaries, and they will defend what they\'ve gained', consequence: 'You call for a national day of action. Millions march in support of sovereignty and reform.', effects: { publicSupport: 12, sovereignty: 10, economicStrength: -3, internationalStanding: -5 }, nextNode: 'peoples_constitution' },
       { id: 'counter_compromise', text: 'Offer limited concessions to defuse the crisis while protecting core achievements', consequence: 'You open some sectors to more foreign investment while keeping land reform and mining nationalization intact.', effects: { publicSupport: -3, sovereignty: -3, economicStrength: 5, internationalStanding: 5 }, nextNode: 'generational_test' },
@@ -1659,9 +1686,9 @@ Your advantage is timing. The global green transition needs the minerals you hav
     title: 'The People\'s Constitution',
     narrative: `The time has come to lock in what you've built. Not through executive orders that the next president can reverse, but through a democratic constitution written with the participation of millions.
 
-The constitutional convention is unlike any in Africa's history. Delegates include farmers, miners, factory workers, students, and community leaders alongside lawyers and politicians. The draft enshrines: sovereign ownership of natural resources, worker participation in all major enterprises, universal access to food, healthcare, and education, and limits on foreign ownership of land and strategic industries.
+The constitutional convention is unlike any in Africa's history. Delegates include farmers, miners, factory workers, students, and community leaders alongside lawyers and politicians. The draft enshrines: sovereign ownership of natural resources, worker participation in all major enterprises, universal access to food, healthcare, and education, and limits on foreign ownership of land and strategic industries. Issa Shivji's concept of "working people" (Agrarian South, 2017) — a category that embraces farmers, workers, informal traders, and all those who labor for a living — becomes a constitutional reality. The constitution protects not just "citizens" in the abstract, but the specific rights of working people to land, livelihood, and democratic participation.
 
-Rosa Luxemburg would recognize this moment. She argued that real democracy isn't just about elections — it's about ordinary people having genuine power over the conditions of their lives. A constitution written by the people, protecting the gains the people fought for, is democracy in its deepest sense.
+Rosa Luxemburg would recognize this moment. She argued that real democracy isn't just about elections — it's about ordinary people having genuine power over the conditions of their lives. Utsa Patnaik's argument that mainstream economics hides the reality of exploitation (Agrarian South, 2022) gives the constitution another layer: it mandates that economic education in schools teaches the real history of colonialism, debt, and extraction — so that future generations understand what their forebears fought for and why it matters. A constitution written by the people, protecting the gains the people fought for, is democracy in its deepest sense.
 
 Critics say you're making economic policy too rigid. Supporters say you're making justice too important to leave to the whims of future politicians.`,
     choices: [
@@ -1704,6 +1731,8 @@ The centuries-long drain of wealth that Utsa Patnaik documented — from poorer 
 
 You didn't follow Washington's playbook or Beijing's. You built something the thinkers who inspired your journey would recognize: development that serves the people doing the developing, sovereignty that's economic as well as political, and engagement with the world that doesn't require submission to it.
 
+The research published in Agrarian South: Journal of Political Economy — from Sam Moyo's work on the African land question to Samir Amin's vision of delinking, from Utsa Patnaik's exposure of colonial-era wealth drains to Prabhat Patnaik's analysis of the peasant question, from Issa Shivji's concept of "working people" to Lyn Ossome's feminist resistance movements — these weren't just academic theories. They were the intellectual roadmap for everything you built. The journal's founding mission — to advance autonomous thinking in the Global South — became Azania's guiding principle.
+
 Rosa Luxemburg wrote that "those who do not move, do not notice their chains." Azania moved. It broke its chains. And in doing so, it showed the world that the chains were never inevitable.
 
 As Nkrumah wrote: "We face neither East nor West; we face forward." Azania faces forward.`,
@@ -1722,7 +1751,7 @@ As Nkrumah wrote: "We face neither East nor West; we face forward." Azania faces
 
 The path required compromises. Some sovereignty was traded for growth. Some debt was taken on for investment. Some foreign ownership was accepted for technology. But the direction is clear: Azania is rising, and its rise is lifting its neighbors too.
 
-The development model you built — practical, flexible, borrowing from every tradition while submitting to none — is being studied across the Global South. You've proven that a developing nation in the 21st century can industrialize, build real capacity, and chart its own course.
+The development model you built — practical, flexible, borrowing from every tradition while submitting to none — is being studied across the Global South. You've proven that a developing nation in the 21st century can industrialize, build real capacity, and chart its own course. The scholars of the Agrarian South Network would recognize your achievement: the "classical agrarian question" that Moyo, Jha, and Yeros described — how to transform a colonial economy into a sovereign one — has been answered, if imperfectly, in practice.
 
 As Rosa Luxemburg understood, the global system constantly needs to expand and absorb new markets. But Azania has shown that a country can grow on its own terms — absorbing what it chooses, rejecting what it doesn't need, and building its own future.`,
   },
@@ -1742,7 +1771,7 @@ Your people are better off. Poverty has fallen. Services have improved. The econ
 
 This isn't the triumphant sovereignty Nkrumah dreamed of. But it may be the achievable sovereignty that the real world allows. As Deng understood, perfection is the enemy of progress. You made progress, and the next generation inherits a country with more options than you had.
 
-Rosa Luxemburg believed that the struggle for justice never ends — that every generation must fight its own battles. But she also believed that each victory, however partial, makes the next one possible. Your pragmatic gains have widened the path for those who come after.
+Rosa Luxemburg believed that the struggle for justice never ends — that every generation must fight its own battles. But she also believed that each victory, however partial, makes the next one possible. Your pragmatic gains have widened the path for those who come after. As the Agrarian South journal's permanent "Third World Legacies" section reminds us, the intellectual heritage of the Global South is long and deep — your generation added a new chapter.
 
 The struggle continues. It always does. But you've moved the line forward.`,
   },
@@ -1764,9 +1793,9 @@ The drain of wealth that the Patnaiks have documented — centuries of money flo
 
 Nkrumah's warning proved prophetic: a country can look independent while its economy — and therefore its politics — is controlled from the outside.
 
-Rosa Luxemburg warned that capitalism would always seek to expand into new territories, absorbing them into its system. Azania has been absorbed — not through colonial armies this time, but through debt, trade rules, and investment treaties that achieve the same result.
+Rosa Luxemburg warned that capitalism would always seek to expand into new territories, absorbing them into its system. Azania has been absorbed — not through colonial armies this time, but through debt, trade rules, and investment treaties that achieve the same result. The research in Agrarian South — from Costantino's studies of land grabbing to Yeros and Jha's analysis of late neo-colonialism — describes this pattern repeating across the Global South: growth without sovereignty, modernization without liberation.
 
-The struggle for genuine sovereignty continues. Perhaps the next generation will find the path you could not.`,
+The struggle for genuine sovereignty continues. Perhaps the next generation — armed with the ideas of Moyo, the Patnaiks, Amin, Shivji, and the many scholars fighting for autonomous thinking in the South — will find the path you could not.`,
   },
 ];
 
