@@ -4,6 +4,16 @@ import { useGameStore } from '../state/gameStore';
 import { IconScenarioEconomy, IconScenarioStagflation, IconLoading } from '../components/Icons';
 import { getScenarioObjectives } from '../scenarios';
 
+function IconSovereignty() {
+  return (
+    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="2.5" />
+      <path d="M28 8v40M8 28h40" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" />
+      <path d="M28 16l6 8h-4v8h4l-6 8-6-8h4v-8h-4l6-8z" fill="currentColor" opacity="0.85" />
+    </svg>
+  );
+}
+
 const scenarioIcons: Record<string, () => JSX.Element> = {
   'tutorial': IconScenarioEconomy,
   'emerging-debt-crisis': IconScenarioEconomy,
@@ -165,6 +175,35 @@ export function ScenarioSelect() {
         {!useCustomTurns && (
           <p className="turn-selector-hint">Each scenario has a default turn count. Enable this to override it.</p>
         )}
+      </section>
+
+      {/* Narrative mode — featured card */}
+      <section className="narrative-featured">
+        <article className="scenario-card narrative-card">
+          <div className="card-icon narrative-card-icon" aria-hidden>
+            <IconSovereignty />
+          </div>
+          <div className="narrative-card-badge">Narrative Mode</div>
+          <h2>Sovereignty Path</h2>
+          <div className="card-meta">
+            <span className="difficulty hard">hard</span>
+            <span className="turns-badge">branching decisions</span>
+          </div>
+          <p>
+            Lead a Global South nation through a series of consequential decisions. Accept a loan
+            from China or the IMF — or chart your own course. Each choice reshapes the next.
+            Build your country into a politically and economically sovereign state.
+          </p>
+          <ul className="card-objectives">
+            <li>Achieve political sovereignty</li>
+            <li>Build economic strength</li>
+            <li>Maintain public support</li>
+            <li>Control debt burden</li>
+          </ul>
+          <button type="button" onClick={() => navigate('/sovereignty')}>
+            Begin the Sovereignty Path
+          </button>
+        </article>
       </section>
 
       {loading && !scenarios.length ? (
