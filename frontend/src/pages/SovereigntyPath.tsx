@@ -120,7 +120,10 @@ export function SovereigntyPath() {
     finished: false,
   });
 
-  const node = getNode(game.currentNodeId);
+  const EARLY_END_IDS = ['collapse_support', 'collapse_debt', 'collapse_sovereignty'];
+  const earlyEndNode = EARLY_END_IDS.includes(game.currentNodeId);
+
+  const node = earlyEndNode ? null : getNode(game.currentNodeId);
 
   useEffect(() => {
     if (narrativeRef.current) {
@@ -129,7 +132,7 @@ export function SovereigntyPath() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [game.currentNodeId]);
 
-  if (!node) {
+  if (!node && !earlyEndNode) {
     return (
       <div className="page narr-page">
         <p>Error: node not found ({game.currentNodeId})</p>
@@ -151,7 +154,7 @@ export function SovereigntyPath() {
         stats: newStats,
         history: [
           ...prev.history,
-          { nodeId: prev.currentNodeId, choiceId: choice.id, title: node.title },
+          { nodeId: prev.currentNodeId, choiceId: choice.id, title: node?.title ?? 'Unknown' },
         ],
         turn: prev.turn + 1,
         finished: false,
@@ -160,13 +163,8 @@ export function SovereigntyPath() {
     }, 400);
   };
 
-  const isEnding = node.isEnding || false;
-  const evaluation = isEnding ? evaluateEnding(game.stats) : null;
-
-  const earlyEndNode =
-    game.currentNodeId === 'collapse_support' ||
-    game.currentNodeId === 'collapse_debt' ||
-    game.currentNodeId === 'collapse_sovereignty';
+  const isEnding = node?.isEnding || false;
+  const evaluation = (isEnding || earlyEndNode) ? evaluateEnding(game.stats) : null;
 
   const earlyEndText: Record<string, { title: string; text: string }> = {
     collapse_support: {
@@ -201,7 +199,7 @@ export function SovereigntyPath() {
         </div>
         <div className="narr-header-right">
           <span className="turn-badge">Decision {game.turn}</span>
-          {node.phase && <span className="narr-phase-badge">Phase {node.phase}</span>}
+          {node?.phase && <span className="narr-phase-badge">Phase {node.phase}</span>}
         </div>
       </header>
 
@@ -258,7 +256,7 @@ export function SovereigntyPath() {
                 Try again
               </button>
             </div>
-          ) : isEnding ? (
+          ) : isEnding && node ? (
             <div className="narr-ending">
               <h2 className={`narr-ending-title ${evaluation?.won ? 'outcome-win' : 'outcome-lose'}`}>
                 {node.endingTitle}
@@ -301,7 +299,7 @@ export function SovereigntyPath() {
                 Play again
               </button>
             </div>
-          ) : (
+          ) : node ? (
             <>
               <h2 className="narr-title">{node.title}</h2>
               <div className="narr-narrative-text">
@@ -325,7 +323,7 @@ export function SovereigntyPath() {
                 })}
               </div>
             </>
-          )}
+          ) : null}
         </main>
       </div>
     </div>
