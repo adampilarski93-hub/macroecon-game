@@ -1,8 +1,31 @@
 /**
- * Creates a minimal decision tree stub for scenarios that don't yet have full content.
- * Each stub has a start node with choices leading to outcome nodes and endings.
+ * Creates a decision tree for scenarios. Supports one or two layers of decisions.
+ * With midNodes: start (1 decision) → mid (1 decision) → outcome → ending = 2 decisions
+ * Without midNodes: start (1 decision) → outcome → ending = 1 decision
  */
 import type { GenericNarrativeNode } from '../scenario-types';
+
+export interface StubOutcome {
+  id: string;
+  title: string;
+  narrative: string;
+  endingType: 'victory' | 'partial_victory' | 'defeat';
+  endingNarrative: string;
+}
+
+export interface StubMidNode {
+  id: string;
+  title: string;
+  narrative: string;
+  phase: number;
+  choices: Array<{
+    id: string;
+    text: string;
+    consequence: string;
+    effects: Record<string, number>;
+    nextNode: string;
+  }>;
+}
 
 export function createStubTree(config: {
   startTitle: string;
@@ -14,13 +37,8 @@ export function createStubTree(config: {
     effects: Record<string, number>;
     nextNode: string;
   }>;
-  outcomes: Array<{
-    id: string;
-    title: string;
-    narrative: string;
-    endingType: 'victory' | 'partial_victory' | 'defeat';
-    endingNarrative: string;
-  }>;
+  midNodes?: StubMidNode[];
+  outcomes: StubOutcome[];
 }): { nodes: GenericNarrativeNode[]; getNode: (id: string) => GenericNarrativeNode | undefined } {
   const nodes: GenericNarrativeNode[] = [
     {
@@ -33,9 +51,19 @@ export function createStubTree(config: {
         minStats: undefined,
       })),
     },
+    ...(config.midNodes ?? []).map((m) => ({
+      id: m.id,
+      phase: m.phase,
+      title: m.title,
+      narrative: m.narrative,
+      choices: m.choices.map((c) => ({
+        ...c,
+        minStats: undefined as Partial<Record<string, number>> | undefined,
+      })),
+    })),
     ...config.outcomes.map((o) => ({
       id: o.id,
-      phase: 2,
+      phase: (config.midNodes?.length ? 4 : 2),
       title: o.title,
       narrative: o.narrative,
       choices: [
@@ -50,7 +78,7 @@ export function createStubTree(config: {
     })),
     ...config.outcomes.map((o) => ({
       id: `ending_${o.id}`,
-      phase: 3,
+      phase: (config.midNodes?.length ? 5 : 3),
       title: o.title,
       narrative: '',
       choices: [],
