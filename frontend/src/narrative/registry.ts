@@ -210,9 +210,10 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig> 
       const savings = stats.savings ?? 50;
       const health = stats.health ?? 50;
       const dignity = stats.dignity ?? 50;
+      const solidarity = stats.solidarity ?? 50;
       const score = Math.round(
         savings * 0.25 + health * 0.25 + dignity * 0.25 +
-        (stats.solidarity ?? 50) * 0.15 + (stats.legalStatus ?? 50) * 0.1,
+        solidarity * 0.15 + (stats.legalStatus ?? 50) * 0.1,
       );
       const won = health >= 35 && dignity >= 40 && (savings >= 45 || solidarity >= 55);
       return {
