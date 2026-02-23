@@ -210,7 +210,49 @@ header p {
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
 }
-.scenario-card button {
+.scenario-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.scenario-card .scenario-btn-primary,
+.scenario-card .scenario-btn-narrative {
+  flex: 1;
+  min-width: 120px;
+  border: none;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.scenario-card .scenario-btn-primary {
+  background: linear-gradient(135deg, var(--accent) 0%, #0d9488 100%);
+  color: #0c1222;
+}
+.scenario-card .scenario-btn-narrative {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+.scenario-card .scenario-btn-primary:hover:not(:disabled),
+.scenario-card .scenario-btn-narrative:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.3);
+}
+.scenario-card .scenario-btn-primary:active:not(:disabled),
+.scenario-card .scenario-btn-narrative:active {
+  transform: scale(0.98);
+}
+.scenario-card .scenario-btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+/* Legacy: single button (narrative card) */
+.scenario-card button:not(.scenario-btn-primary):not(.scenario-btn-narrative) {
   background: linear-gradient(135deg, var(--accent) 0%, #0d9488 100%);
   color: #0c1222;
   border: none;
@@ -222,14 +264,14 @@ header p {
   font-size: 0.95rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.scenario-card button:hover:not(:disabled) {
+.scenario-card button:not(.scenario-btn-primary):not(.scenario-btn-narrative):hover:not(:disabled) {
   transform: scale(1.02);
   box-shadow: 0 0 20px rgba(20, 184, 166, 0.4);
 }
-.scenario-card button:active:not(:disabled) {
+.scenario-card button:not(.scenario-btn-primary):not(.scenario-btn-narrative):active:not(:disabled) {
   transform: scale(0.98);
 }
-.scenario-card button:disabled {
+.scenario-card button:not(.scenario-btn-primary):not(.scenario-btn-narrative):disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
@@ -1767,6 +1809,14 @@ header p {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+.narr-mode-badge {
+  background: rgba(20, 184, 166, 0.15);
+  color: var(--accent);
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 .narr-phase-badge {
   background: rgba(245, 158, 11, 0.15);

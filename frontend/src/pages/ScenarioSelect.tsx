@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../state/gameStore';
 import { IconScenarioEconomy, IconScenarioStagflation, IconLoading } from '../components/Icons';
 import { getScenarioObjectives } from '../scenarios';
+import { hasDecisionTreeMode } from '../narrative/registry';
 
 function IconSovereignty() {
   return (
@@ -238,13 +239,25 @@ export function ScenarioSelect() {
                     ))}
                   </ul>
                 )}
-                <button
-                  type="button"
-                  onClick={() => handleSelect(s.id)}
-                  disabled={loading}
-                >
-                  Start scenario
-                </button>
+                <div className="scenario-card-actions">
+                  <button
+                    type="button"
+                    className="scenario-btn-primary"
+                    onClick={() => handleSelect(s.id)}
+                    disabled={loading}
+                  >
+                    Policy Controls
+                  </button>
+                  {hasDecisionTreeMode(s.id) && (
+                    <button
+                      type="button"
+                      className="scenario-btn-narrative"
+                      onClick={() => navigate(`/narrative/${s.id}`)}
+                    >
+                      Decision Tree
+                    </button>
+                  )}
+                </div>
               </article>
             );
           })}
