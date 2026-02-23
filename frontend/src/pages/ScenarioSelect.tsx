@@ -213,7 +213,7 @@ export function ScenarioSelect() {
           <h2>Gulf Migrant</h2>
           <div className="card-meta">
             <span className="difficulty hard">hard</span>
-            <span className="turns-badge">20 decisions</span>
+            <span className="turns-badge">branching decisions</span>
           </div>
           <p>
             You are a migrant construction worker in a wealthy Gulf state, building a megacity for
@@ -254,6 +254,9 @@ export function ScenarioSelect() {
                     <span className="turns-badge">
                       {useCustomTurns ? sliderValue : obj.maxTurns} turns
                     </span>
+                  )}
+                  {hasDecisionTreeMode(s.id) && (
+                    <span className="turns-badge">branching decisions</span>
                   )}
                 </div>
                 <p>{s.description}</p>

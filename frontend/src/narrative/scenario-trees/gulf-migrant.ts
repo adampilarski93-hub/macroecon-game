@@ -84,8 +84,26 @@ const blocks: DecisionBlock[] = [
     title: 'The Strike',
     narrative: `Workers on another site have stopped. They want their passports back and their pay in full. Research on guest worker resistance shows that despite structural barriers, workers do organise — and that solidarity across borders can challenge the logic of disposability. Your crew is watching. Do you join, or stay at work?`,
     choices: [
-      { id: 'join', text: 'Join the strike', consequence: 'You stand with them.', effects: { solidarity: 15, legalStatus: -12, dignity: 12 } },
-      { id: 'stay', text: 'Stay at work', consequence: 'You keep working.', effects: { savings: 8, solidarity: -8 } },
+      { id: 'join', text: 'Join the strike', consequence: 'You stand with them.', effects: { solidarity: 15, legalStatus: -12, dignity: 12 }, nextBlock: 9 },
+      { id: 'stay', text: 'Stay at work', consequence: 'You keep working.', effects: { savings: 8, solidarity: -8 }, nextBlock: 10 },
+    ],
+  },
+  {
+    phase: 2,
+    title: 'The Crackdown',
+    narrative: `The company has reacted. More guards, fewer visitors, warnings about "troublemakers." Some scholars argue that Gulf capital relies on a segmented, controlled workforce — and that any collective action is met with discipline. You are on a list. Do you lie low and hope it blows over, or continue to organise in secret?`,
+    choices: [
+      { id: 'low', text: 'Lie low', consequence: 'You retreat.', effects: { legalStatus: 5, solidarity: -8 }, nextBlock: 11 },
+      { id: 'secret', text: 'Continue organising in secret', consequence: 'You persist.', effects: { solidarity: 12, legalStatus: -12 }, nextBlock: 11 },
+    ],
+  },
+  {
+    phase: 2,
+    title: 'The Price of Silence',
+    narrative: `You stayed at work. The strike was broken. Some workers were deported. Your crew does not look at you the same way. Research on solidarity suggests that the cost of not standing together can be isolation. Do you try to rebuild trust, or focus on your own survival?`,
+    choices: [
+      { id: 'rebuild', text: 'Try to rebuild trust', consequence: 'You reach out.', effects: { solidarity: 8, dignity: 5 }, nextBlock: 11 },
+      { id: 'survive', text: 'Focus on survival', consequence: 'You keep your head down.', effects: { savings: 5, solidarity: -5 }, nextBlock: 11 },
     ],
   },
   {
@@ -162,11 +180,11 @@ const blocks: DecisionBlock[] = [
   },
   {
     phase: 4,
-    title: 'The Crackdown',
-    narrative: `After the strike, the company has tightened control. More surveillance, fewer visitors, warnings about "troublemakers." Some scholars argue that Gulf capital relies on a segmented, controlled workforce — and that any collective action is met with discipline. Do you lie low, or continue to organise in secret?`,
+    title: 'New Arrivals',
+    narrative: `New workers have arrived to replace those who left — deported, injured, or gone home. They do not know what happened. Do you welcome them and share what you have learned, or keep to yourself and focus on your own survival?`,
     choices: [
-      { id: 'low', text: 'Lie low', consequence: 'You retreat.', effects: { legalStatus: 5, solidarity: -8 } },
-      { id: 'secret', text: 'Continue organising in secret', consequence: 'You persist.', effects: { solidarity: 12, legalStatus: -12 } },
+      { id: 'share', text: 'Share what you know', consequence: 'You reach out.', effects: { solidarity: 10, dignity: 5 } },
+      { id: 'keep', text: 'Keep to yourself', consequence: 'You focus on survival.', effects: { savings: 5, solidarity: -5 } },
     ],
   },
   {

@@ -1,19 +1,26 @@
 /**
- * Creates a long-form decision tree with exactly N decision points.
- * Each decision leads to the next; the final decision routes to endings.
+ * Creates a long-form decision tree. Supports both linear chains and branching.
+ * - Linear: each decision leads to the next; final decision routes to endings.
+ * - Branching: choices can specify nextBlock or endingIndex to create different paths.
  */
 import type { GenericNarrativeNode, GenericNarrativeChoice } from './scenario-types';
+
+export interface DecisionChoice {
+  id: string;
+  text: string;
+  consequence: string;
+  effects: Record<string, number>;
+  /** If set, go to this block index instead of the next. Enables branching. */
+  nextBlock?: number;
+  /** If set, go directly to this ending. For terminal blocks. */
+  endingIndex?: number;
+}
 
 export interface DecisionBlock {
   phase: number;
   title: string;
   narrative: string;
-  choices: Array<{
-    id: string;
-    text: string;
-    consequence: string;
-    effects: Record<string, number>;
-  }>;
+  choices: DecisionChoice[];
 }
 
 export interface LongFormEnding {
@@ -31,19 +38,26 @@ export function createLongFormTree(
   const nodes: GenericNarrativeNode[] = [];
   const numDecisions = blocks.length;
 
+  const blockId = (idx: number) => (idx === 0 ? 'start' : `dec_${idx}`);
+
   for (let i = 0; i < numDecisions; i++) {
     const block = blocks[i];
-    const nodeId = i === 0 ? 'start' : `dec_${i}`;
+    const nodeId = blockId(i);
     const isLast = i === numDecisions - 1;
 
     const choices: GenericNarrativeChoice[] = block.choices.map((c, choiceIdx) => {
       let nextNode: string;
-      if (isLast) {
+      if (c.endingIndex !== undefined) {
+        const ending = endings[c.endingIndex];
+        nextNode = `outcome_${ending.id}`;
+      } else if (c.nextBlock !== undefined) {
+        nextNode = blockId(c.nextBlock);
+      } else if (isLast) {
         const endingIdx = routeLastToEndings(choiceIdx);
         const ending = endings[endingIdx];
         nextNode = `outcome_${ending.id}`;
       } else {
-        nextNode = i === 0 ? `dec_1` : `dec_${i + 1}`;
+        nextNode = blockId(i + 1);
       }
       return {
         id: `${nodeId}_${c.id}`,

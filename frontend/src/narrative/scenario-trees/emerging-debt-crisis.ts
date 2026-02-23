@@ -31,8 +31,8 @@ Some analysts argue that international debt often functions as a tool of control
     title: 'The IMF Offer',
     narrative: `The IMF has formalized their offer: a credit line with conditions. The strings attached include spending cuts, wage freezes, and commitments to privatize state assets. Critics argue that such institutions act primarily in the interests of creditors, and that conditionality has historically dismantled developmental capacity in many countries. The money would ease the immediate squeeze, but the reforms would constrain your policy choices for years. Do you engage seriously with the negotiation, or keep them at arm's length and pursue alternatives?`,
     choices: [
-      { id: 'engage', text: 'Engage seriously with the IMF', consequence: 'You open negotiations.', effects: { debtBurden: -5, sovereignty: -8, internationalStanding: 5 } },
-      { id: 'arm_length', text: 'Keep the IMF at arm\'s length', consequence: 'You pursue alternatives.', effects: { sovereignty: 8, debtBurden: 3, internationalStanding: -5 } },
+      { id: 'engage', text: 'Engage seriously with the IMF', consequence: 'You open negotiations.', effects: { debtBurden: -5, sovereignty: -8, internationalStanding: 5 }, nextBlock: 20 },
+      { id: 'arm_length', text: 'Keep the IMF at arm\'s length', consequence: 'You pursue alternatives.', effects: { sovereignty: 8, debtBurden: 3, internationalStanding: -5 }, nextBlock: 21 },
     ],
   },
   {
@@ -187,6 +187,24 @@ Some analysts argue that international debt often functions as a tool of control
       { id: 'continue', text: 'Handover that continues your strategy', consequence: 'You lock in your approach.', effects: { debtBurden: -5, economicStrength: 3, publicSupport: 2 } },
       { id: 'pivot_room', text: 'Give successor room to pivot', consequence: 'You leave options open.', effects: { publicSupport: 8, sovereignty: 5 } },
       { id: 'mixed', text: 'A balanced handover', consequence: 'You split the difference.', effects: { debtBurden: -2, publicSupport: 5, economicStrength: 5 } },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'The IMF Negotiation',
+    narrative: `The negotiation has begun. The IMF team presents their terms: fiscal targets, structural benchmarks, a timetable. Your team pushes back on the wage freeze and asset sales. Some analysts argue that conditionality is designed to transfer control, not just money — that the real goal is to lock in policies that serve creditor interests. Do you hold firm on key red lines, or accept most terms to secure the tranche quickly?`,
+    choices: [
+      { id: 'hold_firm', text: 'Hold firm on red lines', consequence: 'You push back.', effects: { sovereignty: 5, debtBurden: 3 }, nextBlock: 3 },
+      { id: 'accept', text: 'Accept most terms', consequence: 'You secure the tranche.', effects: { debtBurden: -8, sovereignty: -10 }, nextBlock: 3 },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'Pursuing Alternatives',
+    narrative: `You have turned from the IMF. Now you must find other financing. Regional development banks, bilateral partners, and domestic bond issuance are options. Each has different conditions and costs. Some scholars argue that building alternatives to Bretton Woods institutions is essential for sovereignty — but it takes time and political capital. Do you prioritize regional banks and South-South cooperation, or pursue bilateral deals with the fastest disbursement?`,
+    choices: [
+      { id: 'regional', text: 'Prioritize regional banks', consequence: 'You build alternatives.', effects: { sovereignty: 10, debtBurden: 5 }, nextBlock: 3 },
+      { id: 'bilateral', text: 'Pursue bilateral deals', consequence: 'You seek quick disbursement.', effects: { debtBurden: -5, sovereignty: -5 }, nextBlock: 3 },
     ],
   },
 ];

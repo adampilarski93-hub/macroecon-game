@@ -12,8 +12,8 @@ const blocks: DecisionBlock[] = [
 
 Some argue that treating labour purely as a market commodity destroys the social fabric — and that society inevitably pushes back through regulation and welfare. Historical studies suggest that financial crises require political intervention; markets do not self-correct. The central bank wants to hike rates aggressively. Your labour minister warns that will deepen the recession. What do you do first?`,
     choices: [
-      { id: 'fight_inflation', text: 'Prioritize fighting inflation', consequence: 'You back rate hikes.', effects: { priceStability: 12, economicStrength: -10, publicSupport: -8 } },
-      { id: 'protect_jobs', text: 'Prioritize jobs', consequence: 'You resist tightening.', effects: { economicStrength: 5, publicSupport: 8, priceStability: -10 } },
+      { id: 'fight_inflation', text: 'Prioritize fighting inflation', consequence: 'You back rate hikes.', effects: { priceStability: 12, economicStrength: -10, publicSupport: -8 }, nextBlock: 20 },
+      { id: 'protect_jobs', text: 'Prioritize jobs', consequence: 'You resist tightening.', effects: { economicStrength: 5, publicSupport: 8, priceStability: -10 }, nextBlock: 21 },
       { id: 'supply', text: 'Focus on supply', consequence: 'You invest in bottlenecks.', effects: { priceStability: 5, economicStrength: 5, publicSupport: 3 } },
     ],
   },
@@ -187,6 +187,24 @@ Some argue that treating labour purely as a market commodity destroys the social
       { id: 'growth_legacy', text: 'A growth-oriented handover', consequence: 'You prioritize expansion.', effects: { economicStrength: 8, publicSupport: 8 } },
       { id: 'stability_legacy', text: 'A stability-oriented handover', consequence: 'You prioritize prices.', effects: { priceStability: 10, economicStrength: 2 } },
       { id: 'balanced_legacy', text: 'A balanced handover', consequence: 'You split the difference.', effects: { economicStrength: 5, priceStability: 5, publicSupport: 5 } },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'The Inflation Fight',
+    narrative: `You have signalled that inflation is the priority. The central bank is pleased; markets are watching. But unemployment will rise as rates bite. Some argue that rate hikes hit workers first while the financial sector continues to extract returns. Do you publicly align with the bank to build credibility, or keep some distance to preserve political room to ease later?`,
+    choices: [
+      { id: 'align', text: 'Publicly align with the bank', consequence: 'You share the message.', effects: { priceStability: 5, publicSupport: -5 }, nextBlock: 1 },
+      { id: 'distance', text: 'Keep some distance', consequence: 'You preserve options.', effects: { publicSupport: 3, priceStability: -2 }, nextBlock: 1 },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'The Jobs Priority',
+    narrative: `You have signalled that jobs come first. The central bank is uneasy; they warn that inflation could spiral. But your labour minister is relieved. Some argue that when markets squeeze too hard, society pushes back — and that crushing demand to fight inflation can do more harm than good. Do you seek a compromise with the bank, or dig in and resist rate hikes?`,
+    choices: [
+      { id: 'compromise', text: 'Seek a compromise', consequence: 'You look for middle ground.', effects: { economicStrength: 3, publicSupport: 5 }, nextBlock: 1 },
+      { id: 'resist', text: 'Dig in and resist', consequence: 'You hold the line.', effects: { publicSupport: 8, priceStability: -8 }, nextBlock: 1 },
     ],
   },
 ];
