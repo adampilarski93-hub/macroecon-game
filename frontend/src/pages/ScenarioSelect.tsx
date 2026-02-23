@@ -178,7 +178,7 @@ export function ScenarioSelect() {
         )}
       </section>
 
-      {/* Narrative mode — featured card */}
+      {/* Narrative mode — featured cards */}
       <section className="narrative-featured">
         <article className="scenario-card narrative-card">
           <div className="card-icon narrative-card-icon" aria-hidden>
@@ -203,6 +203,31 @@ export function ScenarioSelect() {
           </ul>
           <button type="button" onClick={() => navigate('/sovereignty')}>
             Begin the Sovereignty Path
+          </button>
+        </article>
+        <article className="scenario-card narrative-card">
+          <div className="card-icon narrative-card-icon" aria-hidden>
+            <IconSovereignty />
+          </div>
+          <div className="narrative-card-badge">Narrative Mode</div>
+          <h2>Gulf Migrant</h2>
+          <div className="card-meta">
+            <span className="difficulty hard">hard</span>
+            <span className="turns-badge">20 decisions</span>
+          </div>
+          <p>
+            You are a migrant construction worker in a wealthy Gulf state, building a megacity for
+            the world. Economic forces beyond your control pull you in different directions. Each
+            decision — work, debt, solidarity, survival — has ramifications.
+          </p>
+          <ul className="card-objectives">
+            <li>Send remittances home</li>
+            <li>Protect your health</li>
+            <li>Build solidarity</li>
+            <li>Keep your dignity</li>
+          </ul>
+          <button type="button" onClick={() => navigate('/narrative/gulf-migrant')}>
+            Begin Gulf Migrant
           </button>
         </article>
       </section>

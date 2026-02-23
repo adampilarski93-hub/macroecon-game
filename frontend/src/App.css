@@ -1723,9 +1723,12 @@ header p {
   color: var(--text);
 }
 
-/* ========== Narrative Featured Card (Scenario Select) ========== */
+/* ========== Narrative Featured Cards (Scenario Select) ========== */
 .narrative-featured {
   margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
 }
 .narrative-card {
   border: 1px solid rgba(245, 158, 11, 0.35) !important;

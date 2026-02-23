@@ -7,6 +7,7 @@ import { getNode as getIndependenceNode } from './scenario-trees/independence-un
 import { getNode as getCommodityNode } from './scenario-trees/commodity-pressure';
 import { getNode as getRisingNode } from './scenario-trees/rising-industrializer';
 import { getNode as getSanctionsNode } from './scenario-trees/sanctions-isolation';
+import { getNode as getGulfMigrantNode } from './scenario-trees/gulf-migrant';
 
 const COMMON_STAT_COLORS: Record<string, string> = {
   economicStrength: '#22c55e',
@@ -17,7 +18,14 @@ const COMMON_STAT_COLORS: Record<string, string> = {
   sovereignty: '#f59e0b',
   externalBalance: '#a855f7',
   internationalStanding: '#8b5cf6',
+  savings: '#22c55e',
+  health: '#14b8a6',
+  legalStatus: '#3b82f6',
+  solidarity: '#ec4899',
+  dignity: '#f59e0b',
 };
+
+type EvaluateEndingFn = ScenarioNarrativeConfig['evaluateEnding'];
 
 function makeConfig(
   scenarioId: string,
@@ -29,11 +37,31 @@ function makeConfig(
   getNode: (id: string) => ReturnType<typeof getEmergingNode>,
   earlyEndNodeIds: string[] = [],
   earlyEndText: Record<string, { title: string; text: string }> = {},
+  customEvaluateEnding?: EvaluateEndingFn,
 ): ScenarioNarrativeConfig {
   const statColors: Record<string, string> = {};
   for (const k of statOrder) {
     statColors[k] = COMMON_STAT_COLORS[k] ?? '#94a3b8';
   }
+
+  const defaultEvaluateEnding: EvaluateEndingFn = (stats) => {
+    const debt = stats.debtBurden ?? 50;
+    const support = stats.publicSupport ?? 50;
+    const economic = stats.economicStrength ?? 50;
+    const score = Math.round(
+      (100 - debt) * 0.25 + support * 0.25 + economic * 0.25 +
+      (stats.priceStability ?? 50) * 0.1 + (stats.employment ?? 50) * 0.1 +
+      (stats.sovereignty ?? 50) * 0.05,
+    );
+    const won = support >= 40 && debt <= 70;
+    return {
+      won,
+      score: Math.min(100, Math.max(0, score)),
+      summary: won
+        ? `You achieved your objectives. ${countryName} is on a sustainable path.`
+        : `You fell short of your goals. The struggle continues.`,
+    };
+  };
 
   return {
     scenarioId,
@@ -47,24 +75,7 @@ function makeConfig(
     earlyEndText,
     getNode,
     checkEarlyEnd: () => null,
-    evaluateEnding: (stats) => {
-      const debt = stats.debtBurden ?? 50;
-      const support = stats.publicSupport ?? 50;
-      const economic = stats.economicStrength ?? 50;
-      const score = Math.round(
-        (100 - debt) * 0.25 + support * 0.25 + economic * 0.25 +
-        (stats.priceStability ?? 50) * 0.1 + (stats.employment ?? 50) * 0.1 +
-        (stats.sovereignty ?? 50) * 0.05,
-      );
-      const won = support >= 40 && debt <= 70;
-      return {
-        won,
-        score: Math.min(100, Math.max(0, score)),
-        summary: won
-          ? `You achieved your objectives. ${countryName} is on a sustainable path.`
-          : `You fell short of your goals. The struggle continues.`,
-      };
-    },
+    evaluateEnding: customEvaluateEnding ?? defaultEvaluateEnding,
   };
 }
 
@@ -178,6 +189,40 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig> 
     },
     { economicStrength: 40, publicSupport: 38, sovereignty: 45, internationalStanding: 30 },
     getSanctionsNode,
+  ),
+  'gulf-migrant': makeConfig(
+    'gulf-migrant',
+    'Gulf Migrant',
+    'Emirate of Zahra',
+    ['savings', 'health', 'legalStatus', 'solidarity', 'dignity'],
+    {
+      savings: 'Savings / Remittances',
+      health: 'Health',
+      legalStatus: 'Legal Standing',
+      solidarity: 'Solidarity',
+      dignity: 'Dignity',
+    },
+    { savings: 40, health: 55, legalStatus: 35, solidarity: 40, dignity: 45 },
+    getGulfMigrantNode,
+    [],
+    {},
+    (stats) => {
+      const savings = stats.savings ?? 50;
+      const health = stats.health ?? 50;
+      const dignity = stats.dignity ?? 50;
+      const score = Math.round(
+        savings * 0.25 + health * 0.25 + dignity * 0.25 +
+        (stats.solidarity ?? 50) * 0.15 + (stats.legalStatus ?? 50) * 0.1,
+      );
+      const won = health >= 35 && dignity >= 40 && (savings >= 45 || solidarity >= 55);
+      return {
+        won,
+        score: Math.min(100, Math.max(0, score)),
+        summary: won
+          ? `You survived with dignity. You built the megacity — and you left with more than you came with.`
+          : `The system took its toll. You leave with what you could save. The struggle continues.`,
+      };
+    },
   ),
 };
 
