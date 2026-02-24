@@ -73,6 +73,60 @@ export function ScenarioSelect() {
         <p>Choose a scenario and lead your country's economy.</p>
       </header>
       {error && <div className="error">{error}</div>}
+
+      {/* Featured Tutorial — First thing players see */}
+      {!loading && scenarios.length > 0 && (
+        <section className="tutorial-featured">
+          {(() => {
+            const tutorial = scenarios.find(s => s.id === 'tutorial');
+            if (!tutorial) return null;
+            const TutorialIcon = scenarioIcons['tutorial'] ?? IconScenarioEconomy;
+            return (
+              <article className="scenario-card tutorial-card">
+                <div className="tutorial-badge">Start Here</div>
+                <div className="card-icon tutorial-icon" aria-hidden>
+                  <TutorialIcon />
+                </div>
+                <h2>Learn to Play</h2>
+                <div className="card-meta">
+                  <span className="difficulty easy">beginner</span>
+                  <span className="turns-badge">20 decisions</span>
+                </div>
+                <p>
+                  New to Macro Planner? Start with the interactive tutorial. You'll learn how the
+                  indicators work, how choices affect your economy, and how to balance growth, debt,
+                  and public support. This is the best way to understand the game before taking on
+                  harder scenarios.
+                </p>
+                <ul className="card-objectives">
+                  <li>Learn the core mechanics</li>
+                  <li>Understand national indicators</li>
+                  <li>Practice balancing trade-offs</li>
+                  <li>Prepare for harder modes</li>
+                </ul>
+                <div className="scenario-card-actions tutorial-actions">
+                  <button
+                    type="button"
+                    className="scenario-btn-narrative"
+                    onClick={() => navigate('/narrative/tutorial')}
+                  >
+                    Easy Mode — Learn the Basics
+                  </button>
+                  <button
+                    type="button"
+                    className="scenario-btn-primary"
+                    onClick={() => handleSelect('tutorial')}
+                    disabled={loading}
+                  >
+                    Hard Mode — Full Simulation
+                  </button>
+                </div>
+              </article>
+            );
+          })()}
+        </section>
+      )}
+
       <section className="mode-toggle">
         <span>Mode:</span>
         <button
@@ -290,7 +344,7 @@ export function ScenarioSelect() {
         </div>
       ) : (
         <div className="scenario-grid">
-          {scenarios.map((s) => {
+          {scenarios.filter(s => s.id !== 'tutorial').map((s) => {
             const Icon = scenarioIcons[s.id] ?? IconScenarioEconomy;
             const obj = getScenarioObjectives(s.id);
             return (
@@ -325,7 +379,7 @@ export function ScenarioSelect() {
                     onClick={() => handleSelect(s.id)}
                     disabled={loading}
                   >
-                    Policy Controls
+                    Hard Mode
                   </button>
                   {hasDecisionTreeMode(s.id) && (
                     <button
@@ -333,7 +387,7 @@ export function ScenarioSelect() {
                       className="scenario-btn-narrative"
                       onClick={() => navigate(`/narrative/${s.id}`)}
                     >
-                      Decision Tree
+                      Easy Mode
                     </button>
                   )}
                 </div>

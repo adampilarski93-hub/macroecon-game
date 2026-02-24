@@ -352,7 +352,7 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
 
         <div className="advance-turn-bar">
           <button type="submit" className="advance-turn-btn" disabled={loading || gameOver}>
-            {gameOver ? 'Game Over' : loading ? 'Advancing...' : '\u25B6  Advance Turn'}
+            {gameOver ? 'Game Over' : loading ? 'Advancing...' : '\u25B6  Next Turn'}
           </button>
         </div>
       </form>
