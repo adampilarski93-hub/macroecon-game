@@ -1,274 +1,136 @@
-import type { DecisionBlock, LongFormEnding } from '../long-form-tree';
-import { createLongFormTree } from '../long-form-tree';
+import type { DecisionBlock, LongFormEnding, ScenarioArc } from '../long-form-tree';
+import { createArcBasedTree } from '../long-form-tree';
 
 /**
- * Emerging Debt Crisis — Republic of Meridia (20 decisions)
+ * Emerging Debt Crisis — Republic of Meridia
+ * Refactored into Dynamic Narrative Paths (Hudson vs Tooze vs Kadri)
  */
-const blocks: DecisionBlock[] = [
-  {
-    phase: 1,
-    title: 'The Debt Trap',
-    narrative: `You've just been appointed finance minister of the Republic of Meridia. The economy is in trouble: public debt stands at 65% of GDP and rising, the current account is in deficit, and global interest rates are climbing. Your borrowing costs are set to balloon.
 
-Some analysts argue that international debt often functions as a tool of control — creditors use it to impose policies that serve their interests. Historical studies of financial crises suggest these moments require political choices, not just market discipline: who bears the cost is always decided by power. Your predecessor left you with a choice: austerity to please creditors, or stimulus to protect jobs and growth. The IMF has offered a stabilization program. What do you do first?`,
-    choices: [
-      { id: 'austerity', text: 'Announce austerity', consequence: 'You signal fiscal discipline.', effects: { debtBurden: -8, publicSupport: -12, economicStrength: -5 } },
-      { id: 'growth', text: 'Prioritize growth', consequence: 'You bet on expansion.', effects: { debtBurden: 5, publicSupport: 5, economicStrength: 8 } },
-      { id: 'restructure', text: 'Seek debt restructuring', consequence: 'You open talks with creditors.', effects: { debtBurden: -15, sovereignty: -5, publicSupport: 5 }, nextBlock: 22 },
-      { id: 'default', text: 'Declare a moratorium', consequence: 'Stop all debt payments immediately.', effects: { debtBurden: -30, sovereignty: 15, internationalStanding: -25, publicSupport: 10 }, nextBlock: 25, minStats: { sovereignty: 60 } },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'First Reactions',
-    narrative: `Markets have reacted to your announcement — bond yields have moved, the currency has shifted. The IMF is watching closely. Your cabinet is divided: the finance ministry backs your approach, but the labour and social affairs ministers are nervous. Credibility with markets matters, but so does public support. Do you hold a press conference to explain your strategy and build confidence, or work behind the scenes to build consensus among your coalition first?`,
-    choices: [
-      { id: 'press', text: 'Hold a press conference', consequence: 'You go public.', effects: { publicSupport: 5, economicStrength: -2 } },
-      { id: 'behind', text: 'Work behind the scenes', consequence: 'You build quietly.', effects: { publicSupport: -3, economicStrength: 3 } },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'The IMF Offer',
-    narrative: `The IMF has formalized their offer: a credit line with conditions. The strings attached include spending cuts, wage freezes, and commitments to privatize state assets. Critics argue that such institutions act primarily in the interests of creditors, and that conditionality has historically dismantled developmental capacity in many countries. The money would ease the immediate squeeze, but the reforms would constrain your policy choices for years. Do you engage seriously with the negotiation, or keep them at arm's length and pursue alternatives?`,
-    choices: [
-      { id: 'engage', text: 'Engage seriously with the IMF', consequence: 'You open negotiations.', effects: { debtBurden: -5, sovereignty: -8, internationalStanding: 5 }, nextBlock: 20 },
-      { id: 'arm_length', text: 'Keep the IMF at arm\'s length', consequence: 'You pursue alternatives.', effects: { sovereignty: 8, debtBurden: 3, internationalStanding: -5 }, nextBlock: 21 },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'Restructuring Negotiations',
-    narrative: `You have initiated restructuring talks. Creditors are wary, but they recognize that Meridia cannot pay its current obligations. The negotiation is a power struggle: they want you to commit to structural reforms in exchange for debt relief. You can push for a "clean" restructuring without policy strings, or you can offer some concessions to speed up the process and lower interest rates immediately.`,
-    choices: [
-      { id: 'clean', text: 'Push for clean restructuring', consequence: 'You protect sovereignty but risk a stalemate.', effects: { sovereignty: 10, debtBurden: -5, internationalStanding: -5 }, nextBlock: 1 },
-      { id: 'concessions', text: 'Offer policy concessions', consequence: 'Faster relief, but less control.', effects: { debtBurden: -12, sovereignty: -8, internationalStanding: 5 }, nextBlock: 1 },
-    ],
-  },
-  {
-    phase: 2,
-    title: 'Bond Market Pressure',
-    narrative: `Bond yields have spiked. The central bank is nervous. Foreign investors are selling. Experience from past crises suggests that moments like these require political intervention — markets do not self-correct when confidence collapses. You could use reserves to support bond prices and calm the sell-off, or you could let the market find its level and accept the volatility. The first option costs reserves; the second might trigger a deeper crisis. What do you do?`,
-    choices: [
-      { id: 'intervene', text: 'Intervene to support bonds', consequence: 'You use reserves.', effects: { debtBurden: -3, economicStrength: 2 } },
-      { id: 'let_market', text: 'Let the market find its level', consequence: 'You hold back.', effects: { debtBurden: 5, sovereignty: 5 } },
-    ],
-  },
-  {
-    phase: 2,
-    title: 'Social Unrest',
-    narrative: `Protests have spread to the capital. Unions are mobilizing. Hospital workers and teachers have joined the demonstrations. Some argue that when markets push too hard on society — cutting wages, slashing services — society pushes back. This is the "double movement" of social protection. Your security advisors warn that the unrest could escalate. Do you offer concessions to calm the streets, or maintain your course and argue that stability requires patience?`,
-    choices: [
-      { id: 'concessions', text: 'Offer concessions', consequence: 'You soften the package.', effects: { publicSupport: 10, debtBurden: 5, economicStrength: 3 } },
-      { id: 'maintain', text: 'Maintain your course', consequence: 'You hold the line.', effects: { debtBurden: -8, publicSupport: -15, economicStrength: -5 } },
-    ],
-  },
-  {
-    phase: 2,
-    title: 'Currency Volatility',
-    narrative: `The currency has swung 10% in a week. Exporters are cheering — their goods are suddenly cheaper abroad. But importers are panicking: fuel, medicines, and machinery all cost more. The central bank is under pressure to act. You have two main tools: impose capital controls to stem speculative flows and keep money from fleeing, or rely on rate hikes to make domestic assets more attractive. Capital controls preserve policy space but risk alienating investors. Rate hikes may cool the outflow but will squeeze growth. Which do you choose?`,
-    choices: [
-      { id: 'capital_controls', text: 'Impose capital controls', consequence: 'You restrict flows.', effects: { sovereignty: 8, economicStrength: -3, priceStability: 5 } },
-      { id: 'rate_hikes', text: 'Rely on rate hikes', consequence: 'The central bank acts.', effects: { economicStrength: -5, priceStability: 8, debtBurden: 3 } },
-    ],
-  },
-  {
-    phase: 2,
-    title: 'Quarterly Results',
-    narrative: `The first quarter under your leadership has ended. The numbers are in: GDP has contracted 2%, debt service has risen as a share of revenue, and unemployment has ticked up. Your critics say the plan is failing. Your supporters say it needs more time — that the worst of the adjustment is still ahead. Revising the forecast and adjusting policy would signal flexibility but might undermine credibility. Insisting the plan needs more time could preserve confidence but risks being wrong. What do you do?`,
-    choices: [
-      { id: 'revise', text: 'Revise and adjust', consequence: 'You pivot.', effects: { publicSupport: 5, economicStrength: 3, debtBurden: 2 } },
-      { id: 'insist', text: 'Insist the plan needs time', consequence: 'You stay the course.', effects: { debtBurden: -5, publicSupport: -8 } },
-    ],
-  },
-  {
-    phase: 3,
-    title: 'Coalition Strain',
-    narrative: `Your coalition partner is threatening to withdraw. They represent the regions hit hardest by austerity: the industrial north and the rural south. The budget vote is in two weeks. If they defect, you may not have the votes. Compromising on the fiscal targets would keep the coalition together but would mean softening the deficit reduction — and possibly losing IMF support. Pushing for a full vote could pass the budget as-is but might collapse the government. How do you proceed?`,
-    choices: [
-      { id: 'compromise', text: 'Compromise on targets', consequence: 'You soften the budget.', effects: { publicSupport: 8, debtBurden: 8, economicStrength: 4 } },
-      { id: 'push', text: 'Push for full vote', consequence: 'You risk the coalition.', effects: { debtBurden: -10, publicSupport: -10 } },
-    ],
-  },
-  {
-    phase: 3,
-    title: 'Export Opportunity',
-    narrative: `The weaker currency has boosted exports. A major trade deal is on the table — a regional bloc that would reduce tariffs and harmonize standards. Your trade minister says it could unlock billions in new export revenue. But your industry minister warns that opening too fast could hurt domestic firms that are not yet competitive. Fast-tracking the deal would signal confidence and attract investment. Negotiating slowly would protect domestic industry but might delay the growth gains. Which path do you take?`,
-    choices: [
-      { id: 'fast_track', text: 'Fast-track the deal', consequence: 'You prioritize growth.', effects: { economicStrength: 12, sovereignty: -5, publicSupport: 5 } },
-      { id: 'negotiate', text: 'Negotiate slowly', consequence: 'You protect industry.', effects: { economicStrength: 5, sovereignty: 8, publicSupport: 3 } },
-    ],
-  },
-  {
-    phase: 3,
-    title: 'The Debt Deflation Trap',
-    narrative: `Your debt service ratio has hit 18% — nearly one in five dollars of government revenue goes to creditors. Some analysts warn of "debt deflation": when debt grows faster than the economy's ability to pay, it crushes demand and transfers wealth to creditors. The more you tighten to pay debt, the more the economy shrinks, and the harder it becomes to pay. The alternative is to accept higher debt for now, protect demand, and bet that growth will eventually bring the ratio down. Do you prioritize debt reduction at any cost, or accept higher debt for now to protect demand?`,
-    choices: [
-      { id: 'debt_first', text: 'Prioritize debt reduction', consequence: 'You tighten further.', effects: { debtBurden: -12, publicSupport: -12, economicStrength: -8 } },
-      { id: 'protect_demand', text: 'Protect demand', consequence: 'You ease slightly.', effects: { debtBurden: 5, publicSupport: 10, economicStrength: 8 } },
-    ],
-  },
-  {
-    phase: 3,
-    title: 'Banking Sector Stress',
-    narrative: `Two mid-sized banks have requested liquidity support. They hold deposits from thousands of households and businesses. The financial sector is under strain: non-performing loans have risen as the economy has slowed. Providing emergency lending would keep them afloat but could encourage moral hazard — other weak banks might expect the same. Letting them fail would signal that you will not bail out recklessness, but could trigger a broader panic and deposit runs. How do you respond?`,
-    choices: [
-      { id: 'support', text: 'Provide emergency lending', consequence: 'You backstop the banks.', effects: { economicStrength: 5, debtBurden: 5 } },
-      { id: 'let_fail', text: 'Let weak banks fail', consequence: 'You allow consolidation.', effects: { economicStrength: -8, debtBurden: -5, publicSupport: -10 } },
-    ],
-  },
-  {
-    phase: 4,
-    title: 'Mid-Term Review',
-    narrative: `You're halfway through your term. Debt has moved but not decisively — it is down from the peak but still high. Growth is weak. The IMF program is on track for the next tranche, but the conditions are biting. You could request a program review to argue for eased conditions — perhaps the targets were too ambitious. Or you could accelerate reforms to finish the program early and escape the conditionality sooner. The first risks losing IMF support; the second risks more social pain. What do you do?`,
-    choices: [
-      { id: 'ease', text: 'Request eased conditions', consequence: 'You seek flexibility.', effects: { publicSupport: 8, sovereignty: -3, debtBurden: 3 } },
-      { id: 'accelerate', text: 'Accelerate reforms', consequence: 'You push harder.', effects: { debtBurden: -10, publicSupport: -10, economicStrength: 2 } },
-    ],
-  },
-  {
-    phase: 4,
-    title: 'Election Pressure',
-    narrative: `Local elections are in six months. Your party is trailing in the polls — the opposition has capitalized on the pain of austerity. Your political advisors urge you to announce a "growth package": targeted infrastructure spending, tax cuts for small business, or one-time relief for households. It would signal that you care about ordinary people. But it would also add to the deficit and could undermine the credibility you have built with markets. Do you announce a growth package to win support, or stay the course and risk defeat?`,
-    choices: [
-      { id: 'growth_package', text: 'Announce a growth package', consequence: 'You stimulate.', effects: { publicSupport: 15, debtBurden: 10, economicStrength: 10 } },
-      { id: 'stay_course', text: 'Stay the course', consequence: 'You resist pressure.', effects: { debtBurden: -8, publicSupport: -12 } },
-    ],
-  },
-  {
-    phase: 4,
-    title: 'Restructuring Talks',
-    narrative: `Creditors have agreed to preliminary restructuring talks. Throughout history, there is a long tradition of debt relief — when debts become unpayable, societies have often cancelled or restructured them to prevent collapse. The question is how much to ask for. Demanding a haircut — a reduction in the principal owed — would give you more fiscal space but would anger creditors and may make future borrowing harder. Accepting only a maturity extension would ease the cash flow without the same confrontation. What do you push for?`,
-    choices: [
-      { id: 'haircut', text: 'Demand a haircut', consequence: 'You push for relief.', effects: { debtBurden: -15, sovereignty: 5, internationalStanding: -10 } },
-      { id: 'extension', text: 'Accept extension only', consequence: 'You take the softer option.', effects: { debtBurden: -8, internationalStanding: 3 } },
-    ],
-  },
-  {
-    phase: 4,
-    title: 'Infrastructure Choice',
-    narrative: `A major infrastructure project is shovel-ready: a new port expansion that would boost exports, or a rail link that would connect remote regions. The contractors are ready to break ground. It would boost growth and create jobs — and the debt could be justified if the investment pays off. But it would also add to the deficit. Your finance ministry says wait until debt is lower. Your planning ministry says the opportunity will not last. Do you greenlight it, or postpone until debt is lower?`,
-    choices: [
-      { id: 'greenlight', text: 'Greenlight the project', consequence: 'You invest.', effects: { economicStrength: 12, debtBurden: 8, publicSupport: 10 } },
-      { id: 'postpone', text: 'Postpone', consequence: 'You wait.', effects: { debtBurden: -5, economicStrength: -5, publicSupport: -5 } },
-    ],
-  },
-  {
-    phase: 5,
-    title: 'Year Two Begins',
-    narrative: `Your second year in office. The economy has stabilized — the worst of the crisis has passed. But it has not recovered: growth is still weak, unemployment remains elevated. You have a choice. Declaring victory and easing policy would signal that the worst is over and could unlock private investment. But it might also invite complacency and let debt creep back up. Pushing for one more round of consolidation would lock in the gains but could prolong the pain. Which way do you lean?`,
-    choices: [
-      { id: 'ease', text: 'Ease policy', consequence: 'You pivot to growth.', effects: { publicSupport: 12, economicStrength: 10, debtBurden: 5 } },
-      { id: 'consolidate', text: 'One more round of consolidation', consequence: 'You tighten again.', effects: { debtBurden: -12, publicSupport: -10, economicStrength: -5 } },
-    ],
-  },
-  {
-    phase: 5,
-    title: 'International Summit',
-    narrative: `A G20 finance ministers' summit approaches. It is a rare chance to speak to the world's most powerful economies. Some countries have been lobbying for debt relief for developing nations and reform of global financial architecture. You could use the platform to make a public case — to argue that the system is stacked against countries like yours and that debt relief is not charity but justice. Or you could keep a low profile and avoid rocking the boat. How do you approach it?`,
-    choices: [
-      { id: 'lobby', text: 'Lobby for debt relief', consequence: 'You go public.', effects: { sovereignty: 8, internationalStanding: 5, publicSupport: 5 } },
-      { id: 'low_profile', text: 'Keep a low profile', consequence: 'You avoid attention.', effects: { internationalStanding: -3 } },
-    ],
-  },
-  {
-    phase: 5,
-    title: 'Tax Reform',
-    narrative: `Your tax reform bill is before parliament. It would raise revenue from the wealthy — higher top rates, a wealth tax, closing loopholes — and use the proceeds to fund social spending and deficit reduction. The opposition has offered to support a watered-down version: fewer tax increases, more spending cuts. Compromising would get you a partial win and show you can govern. Pushing the full version would signal that you believe in redistribution — but you might lose the vote entirely. What do you do?`,
-    choices: [
-      { id: 'compromise', text: 'Compromise to pass it', consequence: 'You get a partial win.', effects: { debtBurden: -5, publicSupport: 5, economicStrength: 2 } },
-      { id: 'full', text: 'Push the full version', consequence: 'You risk defeat.', effects: { debtBurden: -10, publicSupport: 10, economicStrength: 5 } },
-    ],
-  },
-  {
-    phase: 5,
-    title: 'Central Bank Independence',
-    narrative: `The central bank wants to cut rates. Inflation has eased, and they argue that growth needs support. You have been pressuring them to hold — you worried that cutting too soon would undermine credibility and invite another spike. But the economy is weak, and the political cost of high rates is mounting. Backing off and letting them cut would ease the squeeze and could boost growth. Insisting they hold would preserve the anti-inflation signal but might prolong the recession. What do you do?`,
-    choices: [
-      { id: 'back_off', text: 'Let them cut', consequence: 'Rates fall.', effects: { economicStrength: 8, publicSupport: 8, priceStability: -5 } },
-      { id: 'insist', text: 'Insist they hold', consequence: 'Rates stay.', effects: { priceStability: 8, economicStrength: -3, publicSupport: -3 } },
-    ],
-  },
-  {
-    phase: 5,
-    title: 'The Final Quarter',
-    narrative: `Your term enters its final phase. Debt has moved. Growth has shifted. The question now is what legacy you leave. Do you prepare a handover that locks in your strategy — that makes it clear the next government should continue on the same path? Or do you leave room for your successor to pivot — to acknowledge that circumstances may change and that flexibility is valuable? The first option gives continuity; the second gives options. What do you choose?`,
-    choices: [
-      { id: 'continue', text: 'Handover that continues your strategy', consequence: 'You lock in your approach.', effects: { debtBurden: -5, economicStrength: 3, publicSupport: 2 } },
-      { id: 'pivot_room', text: 'Give successor room to pivot', consequence: 'You leave options open.', effects: { publicSupport: 8, sovereignty: 5 } },
-      { id: 'mixed', text: 'A balanced handover', consequence: 'You split the difference.', effects: { debtBurden: -2, publicSupport: 5, economicStrength: 5 } },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'The IMF Negotiation',
-    narrative: `The negotiation has begun. The IMF team presents their terms: fiscal targets, structural benchmarks, a timetable. Your team pushes back on the wage freeze and asset sales. Some analysts argue that conditionality is designed to transfer control, not just money — that the real goal is to lock in policies that serve creditor interests. Do you hold firm on key red lines, or accept most terms to secure the tranche quickly?`,
-    choices: [
-      { id: 'hold_firm', text: 'Hold firm on red lines', consequence: 'You push back.', effects: { sovereignty: 5, debtBurden: 3 }, nextBlock: 23 },
-      { id: 'accept', text: 'Accept most terms', consequence: 'You secure the tranche.', effects: { debtBurden: -8, sovereignty: -10 }, nextBlock: 23 },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'Pursuing Alternatives',
-    narrative: `You have turned from the IMF. Now you must find other financing. Regional development banks, bilateral partners, and domestic bond issuance are options. Each has different conditions and costs. Some scholars argue that building alternatives to Bretton Woods institutions is essential for sovereignty — but it takes time and political capital. Do you prioritize regional banks and South-South cooperation, or pursue bilateral deals with the fastest disbursement?`,
-    choices: [
-      { id: 'regional', text: 'Prioritize regional banks', consequence: 'You build alternatives.', effects: { sovereignty: 10, debtBurden: 5 }, nextBlock: 24 },
-      { id: 'bilateral', text: 'Pursue bilateral deals', consequence: 'You seek quick disbursement.', effects: { debtBurden: -5, sovereignty: -5 }, nextBlock: 24 },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'Negotiating Red Lines',
-    narrative: `Your stance on the IMF red lines has sparked a debate within the cabinet. Some argue that flexibility is needed to avoid a default, while others insist that the red lines are essential for the country's long-term development. The IMF has come back with a slightly modified proposal. Do you accept the new terms, or continue to push for more concessions?`,
-    choices: [
-      { id: 'accept_modified', text: 'Accept modified terms', consequence: 'A middle ground is found.', effects: { debtBurden: -4, sovereignty: -5, internationalStanding: 3 }, nextBlock: 3 },
-      { id: 'push_further', text: 'Push for more concessions', consequence: 'You hold your ground.', effects: { sovereignty: 8, debtBurden: 5, internationalStanding: -3 }, nextBlock: 3 },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'Alternative Financing Success',
-    narrative: `Your search for alternative financing has yielded results. A group of regional partners has agreed to provide a stabilization loan with fewer policy strings than the IMF. However, the interest rates are slightly higher, and the total amount is smaller. This will require you to be even more disciplined with your domestic budget. Do you accept the regional loan, or try to combine it with a smaller IMF package?`,
-    choices: [
-      { id: 'accept_regional', text: 'Accept regional loan', consequence: 'Sovereign financing secured.', effects: { sovereignty: 12, debtBurden: 8, internationalStanding: 5 }, nextBlock: 3 },
-      { id: 'combine', text: 'Combine with IMF', consequence: 'A complex hybrid approach.', effects: { debtBurden: -2, sovereignty: -5, internationalStanding: 8 }, nextBlock: 3 },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'Moratorium Fallout',
-    narrative: `The moratorium has sent shockwaves through the international financial system. Creditors are furious, and some have already filed lawsuits in foreign courts. However, the immediate pressure on your budget has vanished. You now have a window of opportunity to redirect those funds. Do you invest in a national development bank to support local industry, or use the funds for an emergency social safety net?`,
-    choices: [
-      { id: 'dev_bank', text: 'National Development Bank', consequence: 'Long-term industrial strategy.', effects: { economicStrength: 15, sovereignty: 10, internationalStanding: -5 }, nextBlock: 1 },
-      { id: 'safety_net', text: 'Emergency Safety Net', consequence: 'Protect the most vulnerable.', effects: { publicSupport: 20, economicStrength: 5, debtBurden: -5 }, nextBlock: 1 },
-    ],
-  },
-];
+const introArc: ScenarioArc = {
+  id: 'start',
+  blocks: [
+    {
+      phase: 1,
+      title: 'The Debt Trap',
+      narrative: `You've just been appointed finance minister of the Republic of Meridia. The economy is in trouble: public debt stands at 65% of GDP and rising. Your borrowing costs are set to balloon.
+
+Some analysts argue that international debt often functions as a tool of control — creditors use it to impose policies that serve their interests. How do you frame your initial response?`,
+      choices: [
+        { id: 'hudson', text: 'Challenge the "Creditor Cartel"', consequence: 'Frame debt as a mechanism of extraction.', effects: { sovereignty: 5, debtBurden: 2 }, nextArc: 'hudson' },
+        { id: 'tooze', text: 'Manage the "Polycrisis"', consequence: 'Frame this as a complex political challenge.', effects: { internationalStanding: 5, economicStrength: -2 }, nextArc: 'tooze' },
+        { id: 'kadri', text: 'Prioritize Sovereign Development', consequence: 'Frame debt as an obstacle to industrialization.', effects: { economicStrength: 5, sovereignty: 2 }, nextArc: 'kadri' },
+      ],
+    },
+  ],
+};
+
+const hudsonArc: ScenarioArc = {
+  id: 'hudson',
+  blocks: [
+    {
+      phase: 2,
+      title: 'The Debt Jubilee',
+      narrative: `Michael Hudson argues that unpayable debts should be cancelled to prevent social collapse. You propose a partial "Debt Jubilee" for domestic borrowers and demand a haircut from international creditors. The IMF is furious, calling it a "violation of market norms." Do you hold firm?`,
+      choices: [
+        { id: 'hold_firm', text: 'Hold firm on Jubilee', consequence: 'Prioritize the social fabric over creditors.', effects: { publicSupport: 15, debtBurden: -15, internationalStanding: -10 } },
+        { id: 'compromise', text: 'Compromise on terms', consequence: 'Seek a middle ground with the IMF.', effects: { debtBurden: -5, internationalStanding: 5 } },
+      ],
+    },
+    {
+      phase: 3,
+      title: 'Public Banking',
+      narrative: `To bypass the "FIRE sector parasitism" Hudson warns about, you propose a state-owned development bank to fund productive industry directly. Private banks claim this is "unfair competition." How do you respond?`,
+      choices: [
+        { id: 'nationalize', text: 'Nationalize key banks', consequence: 'Take full control of credit.', effects: { sovereignty: 10, economicStrength: 8, publicSupport: -5 }, minStats: { sovereignty: 60 } },
+        { id: 'pbanking', text: 'Launch the Public Bank', consequence: 'Compete with the private sector.', effects: { economicStrength: 5, sovereignty: 5 } },
+      ],
+    },
+    {
+      phase: 4,
+      title: 'Resisting Debt Deflation',
+      narrative: `Debt deflation is crushing demand. Hudson suggests that the only way out is to prioritize the productive economy over the rentier class. Do you implement a steep wealth tax to fund a basic goods guarantee?`,
+      choices: [
+        { id: 'wealth_tax', text: 'Implement Wealth Tax', consequence: 'Tax the rentiers to fund the people.', effects: { publicSupport: 12, economicStrength: 5, debtBurden: -5 } },
+        { id: 'stimulus', text: 'Standard Stimulus', consequence: 'Use traditional deficit spending.', effects: { economicStrength: 8, debtBurden: 10 } },
+      ],
+    },
+  ],
+};
+
+const toozeArc: ScenarioArc = {
+  id: 'tooze',
+  blocks: [
+    {
+      phase: 2,
+      title: 'Polycrisis Management',
+      narrative: `Adam Tooze describes our era as a "polycrisis" where financial, climate, and geopolitical shocks interact. A sudden commodity price spike hits Meridia. Do you use political swap lines with major powers to stabilize the currency, or implement emergency price controls?`,
+      choices: [
+        { id: 'swap_lines', text: 'Activate Swap Lines', consequence: 'Leverage geopolitical relationships.', effects: { internationalStanding: 10, priceStability: 8, sovereignty: -5 } },
+        { id: 'price_controls', text: 'Emergency Price Controls', consequence: 'Direct state intervention.', effects: { publicSupport: 10, priceStability: 5, economicStrength: -3 } },
+      ],
+    },
+    {
+      phase: 3,
+      title: 'The Death of Ordoliberalism',
+      narrative: `Austerity is failing, just as Tooze documented in "Crashed." The "market self-correction" isn't happening. Do you pivot to a massive "Green Industrial Plan" funded by central bank money printing, or stick to the fiscal rules to preserve credibility?`,
+      choices: [
+        { id: 'green_plan', text: 'Green Industrial Plan', consequence: 'Massive state-led investment.', effects: { economicStrength: 12, publicSupport: 8, debtBurden: 15 } },
+        { id: 'fiscal_rules', text: 'Preserve Fiscal Rules', consequence: 'Maintain market confidence.', effects: { internationalStanding: 10, debtBurden: -5, economicStrength: -5 } },
+      ],
+    },
+    {
+      phase: 4,
+      title: 'Political Intervention',
+      narrative: `A major bank is on the verge of collapse. Tooze argues that such moments are purely political. Do you bail out the bank with strict conditions on executive pay and lending, or let it fail to "teach the market a lesson"?`,
+      choices: [
+        { id: 'bailout', text: 'Conditional Bailout', consequence: 'Stabilize the system but punish the owners.', effects: { economicStrength: 5, debtBurden: 8, publicSupport: 5 } },
+        { id: 'fail', text: 'Let it Fail', consequence: 'Risk a systemic crash.', effects: { economicStrength: -15, debtBurden: -5, publicSupport: -10 } },
+      ],
+    },
+  ],
+};
+
+const kadriArc: ScenarioArc = {
+  id: 'kadri',
+  blocks: [
+    {
+      phase: 2,
+      title: 'Resisting Deindustrialization',
+      narrative: `Ali Kadri warns that imperialist debt traps are designed to deindustrialize the periphery. You notice foreign firms are buying up your strategic assets at fire-sale prices. Do you block these sales and nationalize the resources?`,
+      choices: [
+        { id: 'block_sales', text: 'Block Asset Sales', consequence: 'Protect national productive capacity.', effects: { sovereignty: 12, economicStrength: 5, internationalStanding: -8 } },
+        { id: 'negotiate', text: 'Negotiate Partnerships', consequence: 'Allow investment with state oversight.', effects: { economicStanding: 8, internationalStanding: 5, sovereignty: -3 } },
+      ],
+    },
+    {
+      phase: 3,
+      title: 'The Comprador Challenge',
+      narrative: `Local elites — what Samir Amin called the "comprador bourgeoisie" — are moving their capital out of the country to avoid your new taxes. Do you implement strict capital controls to keep Meridia's wealth at home?`,
+      choices: [
+        { id: 'cap_controls', text: 'Impose Capital Controls', consequence: 'Stop the drain of national wealth.', effects: { sovereignty: 10, debtBurden: -5, economicStrength: -5 } },
+        { id: 'incentives', text: 'Offer Tax Incentives', consequence: 'Try to lure the capital back.', effects: { economicStrength: 5, publicSupport: -8 } },
+      ],
+    },
+    {
+      phase: 4,
+      title: 'Sovereign Industrialization',
+      narrative: `Kadri argues that development is a class struggle. You propose a "People's Development Plan" that prioritizes local manufacturing over imports. This will raise prices in the short term but build long-term strength. Do you proceed?`,
+      choices: [
+        { id: 'proceed', text: 'Launch the Plan', consequence: 'Build sovereign industry.', effects: { economicStrength: 15, sovereignty: 10, priceStability: -10 } },
+        { id: 'delay', text: 'Delay for Stability', consequence: 'Prioritize current consumption.', effects: { priceStability: 5, publicSupport: 5, economicStrength: -5 } },
+      ],
+    },
+  ],
+};
 
 const endings: LongFormEnding[] = [
-  {
-    id: 'victory',
-    endingType: 'victory',
-    title: 'Sustainable Path',
-    endingNarrative: `You've navigated the debt crisis. Debt has stabilized. Growth has returned. Public support has held. You proved that political choices matter — and that there are alternatives to pure austerity or pure stimulus. Meridia is on a sustainable path.`,
-  },
-  {
-    id: 'partial',
-    endingType: 'partial_victory',
-    title: 'Mixed Legacy',
-    endingNarrative: `Your term ends with mixed results. Debt has moved in the right direction, but growth and support have been uneven. You avoided catastrophe. The next government will inherit both gains and challenges.`,
-  },
-  {
-    id: 'defeat',
-    endingType: 'defeat',
-    title: 'Crisis Deepens',
-    endingNarrative: `The crisis has deepened. Debt remains high. Growth has stalled. Public trust has eroded. The choices made in moments like these shape decades — the next government will inherit a harder task. The struggle continues.`,
-  },
+  { id: 'victory', endingType: 'victory', title: 'Sustainable Path', endingNarrative: `You've navigated the debt crisis. By choosing a distinct theoretical path and sticking to it, you proved that political choices matter. Meridia is on a sustainable, sovereign path.` },
+  { id: 'partial', endingType: 'partial_victory', title: 'Mixed Legacy', endingNarrative: `Your term ends with mixed results. You avoided catastrophe, but the underlying structural issues remain. The next government will inherit both your gains and your compromises.` },
+  { id: 'defeat', endingType: 'defeat', title: 'Crisis Deepens', endingNarrative: `The crisis has deepened. Your choices failed to break the cycle of debt and dependency. The struggle for Meridia's future continues under even harder conditions.` },
 ];
 
-const { getNode } = createLongFormTree(
-  blocks,
+const { getNode } = createArcBasedTree(
+  [introArc, hudsonArc, toozeArc, kadriArc],
   endings,
   (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
 );

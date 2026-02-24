@@ -31,7 +31,7 @@ What do you do first?`,
   {
     phase: 1,
     title: 'The First Week',
-    narrative: `Your laptop is returned. Your Slack is deactivated. The Citrini Research memo — the one that went viral — called it "Ghost GDP": output that shows up in national accounts but never circulates through the real economy. A GPU cluster in North Dakota now does the work of 10,000 white-collar workers in midtown. Machines don't buy coffee, rent apartments, or pay for daycare.
+    narrative: `Your laptop is returned. Your Slack is deactivated. Some analysts have called it "Ghost GDP": output that shows up in national accounts but never circulates through the real economy. A GPU cluster in North Dakota now does the work of 10,000 white-collar workers in midtown. Machines don't buy coffee, rent apartments, or pay for daycare.
 
 Your savings will last six months if you're careful. Rent in your city has not fallen. The job boards are full of postings that want "AI-assisted" candidates — people who can prompt and review, not build. The salaries are half what you had.
 
@@ -73,7 +73,7 @@ Do you take it, or walk away?`,
     title: 'The Mutual Aid Group',
     narrative: `Someone from your old company started a Slack for the "alumni." It's not official — just displaced workers sharing leads, venting, and sometimes pooling resources. A few have formed a mutual aid fund: small grants for people who can't make rent. They're calling it "solidarity, not charity."
 
-The Citrini memo noted that when high earners lose jobs, the consumption hit is lagged but deep — savings buffers let you maintain the appearance of normalcy for a few quarters. Then the behavioral shift kicks in. You're not there yet, but you see it coming.
+Analysts suggest that when high earners lose jobs, the consumption hit is lagged but deep — savings buffers let you maintain the appearance of normalcy for a few quarters. Then the behavioral shift kicks in. You're not there yet, but you see it coming.
 
 Do you contribute to the fund, take from it, or stay on the sidelines?`,
     choices: [
@@ -101,7 +101,7 @@ What do you do?`,
     title: 'The Recruiter',
     narrative: `A recruiter reaches out. The role is at a "AI-native" startup — they've never had human PMs; they're hiring their first. The pitch: you'll "bridge the gap" between the models and the business. The salary is $90,000, with equity that might be worth something if they don't get acquired by a hyperscaler and shut down.
 
-The recruiter says the market is "recalibrating." That's one word for it. The Citrini memo called it a negative feedback loop with no natural brake: AI gets better, companies need fewer workers, displaced workers spend less, margin pressure pushes firms to invest more in AI.
+The recruiter says the market is "recalibrating." That's one word for it. Some describe it as a negative feedback loop with no natural brake: AI gets better, companies need fewer workers, displaced workers spend less, margin pressure pushes firms to invest more in AI.
 
 Do you pursue it, or pass?`,
     choices: [
@@ -141,7 +141,7 @@ Do you join, or stay away?`,
     title: 'The Offer',
     narrative: `You have an offer. It's not what you wanted — $75,000, "AI-augmented" role, no remote option. But it's a paycheck. The hiring manager says they're "building for the future." You'll be one of the humans "in the loop," at least for now.
 
-The Citrini memo noted that for every new role AI created — prompt engineers, safety researchers — it rendered dozens obsolete. The new roles paid a fraction of the old ones. You can take this and rebuild, or hold out for something better. The market has not been kind to those who hold out.
+Analysts suggest that for every new role AI created — prompt engineers, safety researchers — it rendered dozens obsolete. The new roles paid a fraction of the old ones. You can take this and rebuild, or hold out for something better. The market has not been kind to those who hold out.
 
 What do you do?`,
     choices: [
@@ -179,7 +179,7 @@ What do you do?`,
   {
     phase: 3,
     title: 'The Policy Debate',
-    narrative: `Congress is finally holding hearings. UBI, retraining, a jobs guarantee — the proposals are on the table. The government's response has lagged, as it always does. The Citrini memo warned that lack of a comprehensive plan could accelerate a deflationary spiral. You could add your voice: write to your representative, join a campaign, testify if they invite displaced workers.
+    narrative: `Congress is finally holding hearings. UBI, retraining, a jobs guarantee — the proposals are on the table. The government's response has lagged, as it always does. Some warn that lack of a comprehensive plan could accelerate a deflationary spiral. You could add your voice: write to your representative, join a campaign, testify if they invite displaced workers.
 
 Or you could focus entirely on your own survival. Policy moves slowly. Rent is due now.
 
@@ -250,7 +250,7 @@ const endings: LongFormEnding[] = [
     id: 'defeat',
     endingType: 'defeat',
     title: 'The Spiral',
-    endingNarrative: `The spiral won. The savings ran out. The jobs didn't come. The system that replaced you with machines had no plan for what came next. You're not alone — millions have walked this path. The Citrini memo was right: when human intelligence is repriced to zero, the feedback loop has no natural brake. But the fight for dignity, for solidarity, for a different future — that continues.`,
+    endingNarrative: `The spiral won. The savings ran out. The jobs didn't come. The system that replaced you with machines had no plan for what came next. You're not alone — millions have walked this path. Some were right: when human intelligence is repriced to zero, the feedback loop has no natural brake. But the fight for dignity, for solidarity, for a different future — that continues.`,
   },
 ];
 
