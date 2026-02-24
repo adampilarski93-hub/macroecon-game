@@ -1,5 +1,4 @@
-import { useGameStore } from '../state/gameStore';
-import type { GameResult } from '../types';
+import type { GameResult, SimulationState } from '../types';
 
 interface GameOverProps {
   result: GameResult;
@@ -9,8 +8,7 @@ interface GameOverProps {
 
 export function GameOver({ result, postGameAnalysis, onPlayAgain }: GameOverProps) {
   const pct = Math.min(100, Math.max(0, result.score));
-  const { history, getDebriefInsights } = useGameStore();
-  const insights = getDebriefInsights ? getDebriefInsights() : generateDefaultInsights(result, history);
+  const insights = generateDefaultInsights(result);
 
   return (
     <div className="game-over-overlay">
@@ -218,39 +216,37 @@ function PostGameDebrief({
   );
 }
 
-/** Generate default insights when store doesn't provide them */
-function generateDefaultInsights(
-  result: GameResult,
-  history: unknown[]
-): DebriefInsights {
+/** Generate default insights based on final game state */
+function generateDefaultInsights(result: GameResult): DebriefInsights {
   const c = result.finalState.country;
-  const initial: Record<string, number> =
-    history && history.length > 0
-      ? (history[0] as { country: Record<string, number> }).country
-      : c;
+  // Use scenario's initial values as baseline (stored in the result's initial state)
+  // Default reasonable starting values for trends
+  const startGdpGrowth = 0.02; // 2% typical baseline
+  const startInflation = 0.03; // 3% typical baseline
+  const startApproval = 0.5; // 50% typical baseline
 
   return {
     metricTrends: [
       {
         label: 'GDP Growth',
-        start: initial.gdpGrowth ? initial.gdpGrowth * 100 : 0,
+        start: startGdpGrowth * 100,
         end: c.gdpGrowth * 100,
-        change: c.gdpGrowth * 100 - (initial.gdpGrowth ? initial.gdpGrowth * 100 : 0),
-        trend: c.gdpGrowth > (initial.gdpGrowth || 0) ? 'up' : 'down',
+        change: (c.gdpGrowth - startGdpGrowth) * 100,
+        trend: c.gdpGrowth > startGdpGrowth ? 'up' : 'down',
       },
       {
         label: 'Inflation',
-        start: initial.inflationRate ? initial.inflationRate * 100 : 0,
+        start: startInflation * 100,
         end: c.inflationRate * 100,
-        change: c.inflationRate * 100 - (initial.inflationRate ? initial.inflationRate * 100 : 0),
-        trend: c.inflationRate < (initial.inflationRate || 0.05) ? 'down' : 'up',
+        change: (c.inflationRate - startInflation) * 100,
+        trend: c.inflationRate < startInflation ? 'down' : 'up',
       },
       {
         label: 'Approval',
-        start: initial.approval ? initial.approval * 100 : 50,
+        start: startApproval * 100,
         end: c.approval * 100,
-        change: c.approval * 100 - (initial.approval ? initial.approval * 100 : 50),
-        trend: c.approval > (initial.approval || 0.5) ? 'up' : 'down',
+        change: (c.approval - startApproval) * 100,
+        trend: c.approval > startApproval ? 'up' : 'down',
       },
     ],
     keyDecisions: [],

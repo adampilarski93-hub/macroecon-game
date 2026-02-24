@@ -116,7 +116,23 @@ export function Dashboard({ state, history }: DashboardProps) {
   if (dangerCount >= 2) overallHealth = 'danger';
   else if (dangerCount >= 1 || warningCount >= 2) overallHealth = 'warning';
 
-  const kpis = [
+  // Define KPI type with proper health typing
+interface KpiItem {
+  key: string;
+  label: string;
+  value: string;
+  delta?: string;
+  positive?: boolean;
+  icon: () => JSX.Element;
+  className: string;
+  health: HealthStatus;
+  progressValue: number;
+  rawValue?: number;
+  warn?: boolean;
+  approvalPct?: number;
+}
+
+const kpis: KpiItem[] = [
     {
       key: 'gdp',
       label: 'GDP',
@@ -125,7 +141,7 @@ export function Dashboard({ state, history }: DashboardProps) {
       positive: c.gdpGrowth >= 0,
       icon: IconGDP,
       className: 'kpi-gdp',
-      health: c.gdpGrowth >= 0 ? 'good' : 'warning',
+      health: (c.gdpGrowth >= 0 ? 'good' : 'warning') as HealthStatus,
       progressValue: Math.min(100, Math.max(0, 50 + c.gdpGrowth * 200)),
     },
     {
