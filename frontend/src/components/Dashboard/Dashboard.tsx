@@ -91,6 +91,8 @@ export function Dashboard({ state, history }: DashboardProps) {
     unemployment: s.country.unemploymentRate * 100,
     debtToGdp: s.country.debtToGdp * 100,
     approval: s.country.approval * 100,
+    wageShare: (s.country.wageShare ?? 0.5) * 100,
+    fragility: (s.country.financialFragility ?? 0.1) * 100,
   }));
 
   useEffect(() => {
@@ -201,11 +203,20 @@ const kpis: KpiItem[] = [
     },
   ];
 
+  const wageShare = c.wageShare ?? 0.5;
+  const termsOfTrade = c.termsOfTrade ?? 1.0;
+  const fragility = c.financialFragility ?? 0.1;
+  const profitRate = c.profitRate ?? 0.1;
+  const workerSup = c.workerSupport ?? c.approval;
+  const eliteSup = c.eliteSupport ?? c.approval;
+
   const chartConfig = [
     { key: 'gdp', label: 'GDP', color: 'var(--color-gdp)' },
     { key: 'inflation', label: 'Inflation %', color: 'var(--color-inflation)' },
     { key: 'debtToGdp', label: 'Debt/GDP %', color: 'var(--color-debt)' },
     { key: 'approval', label: 'Approval %', color: 'var(--color-approval)' },
+    { key: 'wageShare', label: 'Wage share %', color: '#3b82f6' },
+    { key: 'fragility', label: 'Fragility %', color: '#f97316' },
   ];
 
   return (
@@ -279,6 +290,50 @@ const kpis: KpiItem[] = [
             </div>
           );
         })}
+      </div>
+
+      {/* Secondary KPIs: distribution, fragility, class dynamics */}
+      <div className="kpi-secondary-grid">
+        <div className="kpi-secondary">
+          <span className="kpi-secondary-label">Wage share</span>
+          <span className="kpi-secondary-value">{(wageShare * 100).toFixed(0)}%</span>
+          <div className="kpi-progress-bar"><div className="kpi-progress-fill" style={{ width: `${wageShare * 100}%`, background: wageShare > 0.5 ? '#22c55e' : wageShare > 0.35 ? '#f59e0b' : '#ef4444' }} /></div>
+          <span className="kpi-secondary-hint">Labor's share of GDP (Piketty/Kalecki)</span>
+        </div>
+        <div className="kpi-secondary">
+          <span className="kpi-secondary-label">Terms of trade</span>
+          <span className="kpi-secondary-value">{termsOfTrade.toFixed(2)}</span>
+          <div className="kpi-progress-bar"><div className="kpi-progress-fill" style={{ width: `${Math.min(100, termsOfTrade * 100)}%`, background: termsOfTrade >= 0.95 ? '#22c55e' : termsOfTrade >= 0.8 ? '#f59e0b' : '#ef4444' }} /></div>
+          <span className="kpi-secondary-hint">Export/import price ratio (Prebisch-Singer)</span>
+        </div>
+        <div className="kpi-secondary">
+          <span className="kpi-secondary-label">Financial fragility</span>
+          <span className="kpi-secondary-value">{(fragility * 100).toFixed(0)}%</span>
+          <div className="kpi-progress-bar"><div className="kpi-progress-fill" style={{ width: `${fragility * 100}%`, background: fragility < 0.3 ? '#22c55e' : fragility < 0.6 ? '#f59e0b' : '#ef4444' }} /></div>
+          <span className="kpi-secondary-hint">{fragility > 0.6 ? 'Crisis risk! Regulate finance.' : 'Minsky cycle indicator'}</span>
+        </div>
+        <div className="kpi-secondary">
+          <span className="kpi-secondary-label">Profit rate</span>
+          <span className="kpi-secondary-value">{(profitRate * 100).toFixed(1)}%</span>
+          <div className="kpi-progress-bar"><div className="kpi-progress-fill" style={{ width: `${Math.min(100, profitRate * 200)}%`, background: 'var(--accent)' }} /></div>
+          <span className="kpi-secondary-hint">Return on capital (Marxian)</span>
+        </div>
+        <div className="kpi-secondary kpi-class-support">
+          <span className="kpi-secondary-label">Class support</span>
+          <div className="class-support-bars">
+            <div className="class-bar">
+              <span className="class-bar-label">Workers</span>
+              <div className="kpi-progress-bar"><div className="kpi-progress-fill" style={{ width: `${workerSup * 100}%`, background: '#3b82f6' }} /></div>
+              <span className="class-bar-value">{(workerSup * 100).toFixed(0)}%</span>
+            </div>
+            <div className="class-bar">
+              <span className="class-bar-label">Elites</span>
+              <div className="kpi-progress-bar"><div className="kpi-progress-fill" style={{ width: `${eliteSup * 100}%`, background: '#a855f7' }} /></div>
+              <span className="class-bar-value">{(eliteSup * 100).toFixed(0)}%</span>
+            </div>
+          </div>
+          <span className="kpi-secondary-hint">Who supports you? (Kalecki class dynamics)</span>
+        </div>
       </div>
 
       {/* Separate mini-charts so each metric has its own Y-axis */}

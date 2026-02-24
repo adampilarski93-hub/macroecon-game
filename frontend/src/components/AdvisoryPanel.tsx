@@ -12,7 +12,19 @@ const SCHOOL_COLORS: Record<string, string> = {
   Marxian: 'var(--color-inflation)',
   'Post-Keynesian': 'var(--color-unemployment)',
   Structuralist: 'var(--color-trade)',
+  General: 'var(--accent)',
 };
+
+const TOPIC_LABELS: Record<string, string> = {
+  outlook: 'Economic outlook',
+  growth: 'Growth',
+  unemployment: 'Employment',
+  trade: 'Trade & external',
+  inflation: 'Tackling inflation',
+  debt: 'Addressing public debt',
+};
+
+const TOPIC_ORDER = ['outlook', 'growth', 'unemployment', 'trade', 'inflation', 'debt'];
 
 export function AdvisoryPanel({ items, llmAdvisoryText }: AdvisoryPanelProps) {
   const hasContent = items.length > 0 || !!llmAdvisoryText;
@@ -25,16 +37,17 @@ export function AdvisoryPanel({ items, llmAdvisoryText }: AdvisoryPanelProps) {
           Policy advice
         </h2>
         <p className="muted">
-          No advice this turn. When inflation or debt gets too high, advice from different economic traditions will appear here.
+          No advice available yet. Advance a turn to see analysis from different economic traditions.
         </p>
       </div>
     );
   }
 
-  const byTopic = {
-    inflation: items.filter((a) => a.topic === 'inflation'),
-    debt: items.filter((a) => a.topic === 'debt'),
-  };
+  const byTopic: Record<string, AdvisoryItem[]> = {};
+  for (const item of items) {
+    if (!byTopic[item.topic]) byTopic[item.topic] = [];
+    byTopic[item.topic].push(item);
+  }
 
   return (
     <div className="advisory-panel">
@@ -43,7 +56,6 @@ export function AdvisoryPanel({ items, llmAdvisoryText }: AdvisoryPanelProps) {
         Policy advice
       </h2>
 
-      {/* LLM personalised advice (shown first if available) */}
       {llmAdvisoryText && (
         <div className="llm-advisory">
           <span className="llm-advisory-badge">AI analysis</span>
@@ -53,50 +65,34 @@ export function AdvisoryPanel({ items, llmAdvisoryText }: AdvisoryPanelProps) {
 
       {items.length > 0 && (
         <p className="advisory-intro">
-          Advice from different economic schools of thought:
+          Analysis from different economic schools of thought:
         </p>
       )}
 
-      {byTopic.inflation.length > 0 && (
-        <section className="advisory-topic">
-          <h3>Tackling inflation</h3>
-          <ul className="advisory-list">
-            {byTopic.inflation.map((a, i) => (
-              <li key={`inf-${a.school}-${i}`} className="advisory-card">
-                <span className="advisory-school" style={{ color: SCHOOL_COLORS[a.school] ?? 'var(--accent)' }}>
-                  {a.school}
-                </span>
-                <h4>{a.title}</h4>
-                <details>
-                  <summary>What to do & why</summary>
-                  <p className="advisory-instruction"><strong>What to do:</strong> {a.instruction}</p>
-                  <p className="advisory-explanation"><strong>Why it helps:</strong> {a.explanation}</p>
-                </details>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-      {byTopic.debt.length > 0 && (
-        <section className="advisory-topic">
-          <h3>Addressing public debt</h3>
-          <ul className="advisory-list">
-            {byTopic.debt.map((a, i) => (
-              <li key={`debt-${a.school}-${i}`} className="advisory-card">
-                <span className="advisory-school" style={{ color: SCHOOL_COLORS[a.school] ?? 'var(--accent)' }}>
-                  {a.school}
-                </span>
-                <h4>{a.title}</h4>
-                <details>
-                  <summary>What to do & why</summary>
-                  <p className="advisory-instruction"><strong>What to do:</strong> {a.instruction}</p>
-                  <p className="advisory-explanation"><strong>Why it helps:</strong> {a.explanation}</p>
-                </details>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {TOPIC_ORDER.map((topic) => {
+        const topicItems = byTopic[topic];
+        if (!topicItems || topicItems.length === 0) return null;
+        return (
+          <section key={topic} className="advisory-topic">
+            <h3>{TOPIC_LABELS[topic] ?? topic}</h3>
+            <ul className="advisory-list">
+              {topicItems.map((a, i) => (
+                <li key={`${topic}-${a.school}-${i}`} className="advisory-card">
+                  <span className="advisory-school" style={{ color: SCHOOL_COLORS[a.school] ?? 'var(--accent)' }}>
+                    {a.school}
+                  </span>
+                  <h4>{a.title}</h4>
+                  <details>
+                    <summary>What to do & why</summary>
+                    <p className="advisory-instruction"><strong>What to do:</strong> {a.instruction}</p>
+                    <p className="advisory-explanation"><strong>Why it helps:</strong> {a.explanation}</p>
+                  </details>
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })}
     </div>
   );
 }

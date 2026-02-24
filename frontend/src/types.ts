@@ -31,6 +31,12 @@ export interface CountryState {
   inflationExpectations: number;
   institutionQuality: number;
   approval: number;
+  workerSupport: number;
+  eliteSupport: number;
+  wageShare: number;
+  termsOfTrade: number;
+  financialFragility: number;
+  profitRate: number;
 }
 
 export interface GlobalState {
@@ -112,7 +118,7 @@ export interface ScenarioSummary {
   difficulty: string;
 }
 
-export type AdvisoryTopic = 'inflation' | 'debt';
+export type AdvisoryTopic = 'inflation' | 'debt' | 'growth' | 'unemployment' | 'trade' | 'outlook';
 
 export interface AdvisoryItem {
   school: string;

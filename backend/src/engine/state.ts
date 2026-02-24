@@ -47,6 +47,17 @@ export interface CountryState {
   institutionQuality: number;
   /** Citizen satisfaction / approval (0–1) */
   approval: number;
+  /** Class-based approval sub-components */
+  workerSupport: number;
+  eliteSupport: number;
+  /** Labor's share of GDP (0–1). Piketty/Kalecki distribution metric. */
+  wageShare: number;
+  /** Terms of trade index: export prices / import prices. Prebisch-Singer. */
+  termsOfTrade: number;
+  /** Financial fragility index (0–1). Minsky cycle. */
+  financialFragility: number;
+  /** Profit rate: (GDP - wages) / capitalStock. Marxian. */
+  profitRate: number;
 }
 
 export interface GlobalState {

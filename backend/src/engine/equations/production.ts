@@ -3,23 +3,48 @@ import type { CountryState, SectorId } from '../state.js';
 const SECTOR_IDS: SectorId[] = ['agriculture', 'manufacturing', 'services'];
 const CAPITAL_SHARE = 0.33;
 
-/**
- * Cobb-Douglas output per sector: Y_s = A_s * K^alpha * L^(1-alpha).
- * Uses existing sector labor shares and capital to compute output.
- */
-export function computeSectorOutputs(country: CountryState): Record<SectorId, number> {
+export function computeSectorOutputs(
+  country: CountryState,
+  planningIntensity: number = 0,
+  infrastructureShare: number = 0,
+  publicBankingStrength: number = 0,
+  tariffRate: number = 0.1,
+): Record<SectorId, number> {
   const outputs: Record<SectorId, number> = {} as Record<SectorId, number>;
   const totalEmployed = country.employed;
   if (totalEmployed <= 0) {
     for (const id of SECTOR_IDS) outputs[id] = 0;
     return outputs;
   }
+
+  const govQuality = Math.max(0.3, Math.min(1, country.institutionQuality));
+
+  const planEffect = planningIntensity <= 0.5
+    ? 1 + planningIntensity * 0.08 * govQuality
+    : 1 + 0.04 * govQuality - (planningIntensity - 0.5) * 0.06;
+
+  const infraBoost = 1 + 0.06 * Math.min(1, infrastructureShare) * govQuality;
+  const creditAccess = 1 + 0.02 * Math.min(1, publicBankingStrength);
+
   for (const id of SECTOR_IDS) {
     const s = country.sectors[id];
     const L = s.laborShare * totalEmployed;
     const K = s.capitalStock;
     const A = s.tfp;
-    const Y = A * Math.pow(K, CAPITAL_SHARE) * Math.pow(L, 1 - CAPITAL_SHARE);
+
+    let sectorMod = 1.0;
+    if (id === 'manufacturing') {
+      sectorMod += tariffRate * 0.12 * govQuality;
+    }
+    if (id === 'agriculture') {
+      sectorMod += infrastructureShare * 0.04;
+    }
+    if (id === 'services') {
+      sectorMod *= 1 - 0.03 * Math.max(0, planningIntensity - 0.6);
+    }
+
+    const totalTFP = A * planEffect * infraBoost * creditAccess * sectorMod;
+    const Y = totalTFP * Math.pow(K, CAPITAL_SHARE) * Math.pow(L, 1 - CAPITAL_SHARE);
     outputs[id] = Math.max(0, Y);
   }
   return outputs;

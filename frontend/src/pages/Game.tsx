@@ -35,6 +35,7 @@ export function Game() {
     postGameAnalysis,
     autoPlaying,
     autoPlayLog,
+    causalExplanation,
     startAutoPlay,
     stopAutoPlay,
   } = useGameStore();
@@ -121,7 +122,7 @@ export function Game() {
       )}
 
       {/* Turn briefing */}
-      <TurnBriefing text={turnBriefing} loading={briefingLoading} />
+      <TurnBriefing text={turnBriefing} loading={briefingLoading} causalExplanation={causalExplanation} />
 
       <main className="game-main">
         <section className="dashboard-section">

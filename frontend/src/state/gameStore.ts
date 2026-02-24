@@ -14,6 +14,7 @@ import type {
 import { scenarios as localScenarios, createInitialState, getScenarioObjectives } from '../scenarios';
 import { step as engineStep } from '../engine/step';
 import { getAdvisory } from '../engine/advisor';
+import { generateCausalExplanation } from '../engine/explainer';
 import {
   loadLLMConfig,
   saveLLMConfig,
@@ -39,11 +40,19 @@ function checkGoal(state: SimulationState, goal: ObjectiveGoal): boolean {
 function computeScore(history: SimulationState[], goals: ObjectiveGoal[]): number {
   if (history.length === 0) return 0;
   const last = history[history.length - 1];
+  const c = last.country;
   const goalsMet = goals.filter((g) => checkGoal(last, g)).length;
-  const goalScore = goals.length > 0 ? (goalsMet / goals.length) * 60 : 30;
-  const approvalScore = last.country.approval * 20;
-  const growthScore = Math.min(20, Math.max(0, (last.country.gdpGrowth + 0.05) * 200));
-  return Math.round(goalScore + approvalScore + growthScore);
+  const goalScore = goals.length > 0 ? (goalsMet / goals.length) * 50 : 25;
+  const approvalScore = c.approval * 15;
+  // Sustainability composite: reward stability over raw growth
+  const growthPart = Math.min(5, Math.max(0, (c.gdpGrowth + 0.02) * 100));
+  const inflPart = Math.max(0, 5 - c.inflationRate * 50);
+  const unempPart = Math.max(0, 5 - c.unemploymentRate * 50);
+  const debtPart = Math.max(0, 5 * (1 - Math.max(0, c.debtToGdp - 0.4)));
+  const tradePart = Math.min(5, Math.max(0, (c.currentAccount + 30) * 0.1));
+  const wageSharePart = Math.min(5, (c.wageShare ?? 0.5) * 10);
+  const sustainabilityScore = growthPart + inflPart + unempPart + debtPart + tradePart + wageSharePart;
+  return Math.round(Math.min(100, goalScore + approvalScore + sustainabilityScore));
 }
 
 /* ── types ── */
@@ -72,6 +81,7 @@ interface GameState {
   postGameAnalysis: string | null;
   autoPlaying: boolean;
   autoPlayLog: string[];
+  causalExplanation: { headline: string; details: string[] } | null;
 
   /* actions */
   fetchScenarios: () => Promise<void>;
@@ -130,6 +140,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   postGameAnalysis: null,
   autoPlaying: false,
   autoPlayLog: [],
+  causalExplanation: null,
 
   fetchScenarios: async () => {
     set({ loading: true, error: null });
@@ -247,11 +258,19 @@ export const useGameStore = create<GameState>((set, get) => ({
     const advisory = getAdvisory(next as import('../engine/state').SimulationState);
     const newHistory = [...get().history, next];
 
+    // Generate causal explanation (template-based, no LLM needed)
+    const causal = generateCausalExplanation(
+      s as import('../engine/state').SimulationState,
+      next as import('../engine/state').SimulationState,
+      actions as import('../engine/state').PolicyActions,
+    );
+
     set({
       state: next,
       history: newHistory,
       advisory,
       loading: false,
+      causalExplanation: causal,
     });
 
     // Generate turn briefing (async, doesn't block)
@@ -325,6 +344,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       advisory,
       turnBriefing: null,
       llmAdvisoryText: null,
+      causalExplanation: null,
     });
   },
 
@@ -426,6 +446,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       error: null,
       autoPlaying: false,
       autoPlayLog: [],
+      causalExplanation: null,
     });
   },
 }));

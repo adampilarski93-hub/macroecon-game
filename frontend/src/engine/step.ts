@@ -15,8 +15,8 @@ import {
   nextDebt,
   publicBankingRevenue,
 } from './equations/government';
-import { exchangeRateChange } from './equations/external';
-import { approval } from './equations/approval';
+import { exchangeRateChange, nextTermsOfTrade } from './equations/external';
+import { approvalBreakdown } from './equations/approval';
 
 /* ───────── Helpers ───────── */
 
@@ -760,21 +760,59 @@ export function step(
     - 0.005 * Math.max(0, planningIntensity - 0.7); // heavy planning can erode institutions
   const newInstitutionQuality = clamp(country.institutionQuality + instImprovement, 0.1, 1.0);
 
-  /* ── Approval ── */
-  const newApproval = approval(
-    {
-      ...countryWithPolicy,
-      gdp: y,
-      gdpGrowth,
-      unemploymentRate,
-      inflationRate: nextInf,
-      institutionQuality: newInstitutionQuality,
-    } as CountryState,
+  /* ── Terms of trade (Prebisch-Singer) ── */
+  const prevToT = country.termsOfTrade ?? 1.0;
+  const newTermsOfTrade = nextTermsOfTrade(prevToT, scenario.scenarioId, tariffRate, capitalControlStrength, global.commodityPriceIndex);
+
+  /* ── Wage share (Kaleckian distribution) ── */
+  const prevWageShare = country.wageShare ?? 0.5;
+  const wageShareDrift =
+    0.02 * socialSpendingShare
+    + 0.015 * incomesPolicyStrength
+    + 0.01 * planningIntensity
+    + 0.01 * basicGoodsGuarantee
+    - 0.02 * Math.max(0, gdpGrowth - 0.03)  // fast growth without redistribution favors capital
+    - 0.015 * (1 - financialRegulationStrength) * Math.max(0, gdpGrowth)
+    - 0.01 * Math.max(0, 0.3 - taxRate);  // low taxes favor capital
+  const newWageShare = clamp(prevWageShare + wageShareDrift, 0.2, 0.75);
+
+  /* ── Profit rate (Marxian) ── */
+  const totalCapital = Object.values(country.sectors).reduce((sum, s) => sum + s.capitalStock, 0);
+  const wages = y * newWageShare;
+  const newProfitRate = totalCapital > 0 ? (y - wages) / totalCapital : 0.1;
+
+  /* ── Financial fragility (Minsky) ── */
+  const prevFragility = country.financialFragility ?? 0.1;
+  const fragilityChange =
+    0.03 * (1 - financialRegulationStrength) * Math.max(0, gdpGrowth)
+    + 0.02 * (1 - financialRegulationStrength)
+    - 0.04 * financialRegulationStrength
+    - 0.02 * publicBankingStrength;
+  let newFragility = clamp(prevFragility + fragilityChange, 0, 1);
+
+  /* ── Approval (class-based) ── */
+  const approvalInput = {
+    ...countryWithPolicy,
+    gdp: y,
+    gdpGrowth,
+    unemploymentRate,
+    inflationRate: nextInf,
+    institutionQuality: newInstitutionQuality,
+    wageShare: newWageShare,
+    termsOfTrade: newTermsOfTrade,
+    financialFragility: newFragility,
+    profitRate: newProfitRate,
+    workerSupport: 0.5,
+    eliteSupport: 0.5,
+  } as CountryState;
+  const approvalResult = approvalBreakdown(
+    approvalInput,
     socialSpendingShare,
     basicGoodsGuarantee,
     multiYearAgendaStrength,
+    taxRate,
+    financialRegulationStrength,
     planningIntensity,
-    priceControlStrength,
   );
 
   /* ── Reserves ── */
@@ -801,15 +839,50 @@ export function step(
     currentAccount,
     fxReserves: Math.max(0, country.fxReserves + reserveChange),
     institutionQuality: newInstitutionQuality,
-    approval: newApproval,
+    approval: approvalResult.overall,
+    workerSupport: approvalResult.workerSupport,
+    eliteSupport: approvalResult.eliteSupport,
+    wageShare: newWageShare,
+    termsOfTrade: newTermsOfTrade,
+    financialFragility: newFragility,
+    profitRate: newProfitRate,
   };
+
+  /* ── Financial crisis from Minsky fragility ── */
+  if (newFragility > 0.7 && prevFragility <= 0.7) {
+    newCountry.gdpGrowth = Math.min(newCountry.gdpGrowth, -0.025);
+    newCountry.approval = Math.max(0, newCountry.approval - 0.1);
+    newFragility = 0.3;
+    newCountry.financialFragility = newFragility;
+  }
 
   /* ── Dynamic events ── */
   const events = [...state.events];
   const nextTurn = state.turn + 1;
   const rng = _rng ?? turnRng(state.turn);
 
-  const newGlobal = generateDynamicEvents(state, newCountry, actions, nextTurn, events, global, rng);
+  let newGlobal = generateDynamicEvents(state, newCountry, actions, nextTurn, events, global, rng);
+
+  /* ── Commodity price cycling (endogenous global) ── */
+  const cyclePhase = Math.sin(state.turn * 0.4) * 0.03;
+  const commodityDrift = cyclePhase + (rng() - 0.5) * 0.04;
+  newGlobal = { ...newGlobal, commodityPriceIndex: clamp(newGlobal.commodityPriceIndex + commodityDrift, 0.5, 2.0) };
+
+  /* ── South-South cooperation (endogenous global) ── */
+  const isDeveloping = ['independence-underdevelopment', 'commodity-pressure', 'rising-industrializer'].includes(scenario.scenarioId);
+  if (isDeveloping && capitalControlStrength > 0.3 && planningIntensity > 0.3) {
+    const ssBoost = 0.01 * (capitalControlStrength + planningIntensity - 0.6);
+    newGlobal = { ...newGlobal, exportDemandMultiplier: newGlobal.exportDemandMultiplier + ssBoost };
+    if (!hasEvent(events, 'south-south-coop') && capitalControlStrength > 0.5 && planningIntensity > 0.5 && state.turn > 4) {
+      push(events, {
+        id: 'south-south-coop',
+        turn: nextTurn,
+        type: 'milestone',
+        title: 'South-South Cooperation Strengthens',
+        description: 'Your independent economic policies are attracting trade partners from the Global South. Alternative trade networks reduce dependence on Western markets. BRICS, Mercosur, and ASEAN show that South-South cooperation can provide meaningful alternatives.',
+      });
+    }
+  }
 
   return {
     turn: nextTurn,

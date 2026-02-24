@@ -16,22 +16,16 @@ import {
   nextDebt,
   publicBankingRevenue,
 } from './equations/government.js';
-import { exports as computeExports, imports as computeImports, exchangeRateChange } from './equations/external.js';
-import { approval } from './equations/approval.js';
+import { exchangeRateChange, nextTermsOfTrade } from './equations/external.js';
+import { approvalBreakdown } from './equations/approval.js';
 
 const SECTOR_IDS: SectorId[] = ['agriculture', 'manufacturing', 'services'];
 
+function clamp(x: number, lo: number, hi: number): number {
+  return Math.max(lo, Math.min(hi, x));
+}
+
 function applyPolicyToCountry(country: CountryState, scenario: ScenarioParams, actions: PolicyActions): CountryState {
-  const taxRate = clamp(
-    actions.incomeTaxRate ?? 0.2,
-    scenario.minTaxRate,
-    scenario.maxTaxRate
-  );
-  const spendingShare = clamp(
-    actions.spendingShareOfGdp ?? 0.25,
-    scenario.minSpendingShare,
-    scenario.maxSpendingShare
-  );
   const policyRate = clamp(
     actions.policyRate ?? country.policyRate,
     scenario.minPolicyRate,
@@ -44,13 +38,6 @@ function applyPolicyToCountry(country: CountryState, scenario: ScenarioParams, a
   };
 }
 
-function clamp(x: number, lo: number, hi: number): number {
-  return Math.max(lo, Math.min(hi, x));
-}
-
-/**
- * One simulation step: apply policy, compute demand equilibrium, update all state.
- */
 export function step(
   state: SimulationState,
   actions: PolicyActions,
@@ -66,17 +53,20 @@ export function step(
   const policyRate = countryWithPolicy.policyRate;
   const regime = actions.exchangeRateRegime ?? 'managed';
   const socialSpendingShare = actions.socialSpendingShare ?? 0.35;
-  const profitWindfallTaxRate = Math.min(0.2, Math.max(0, actions.profitWindfallTaxRate ?? 0));
-  const priceControlStrength = Math.min(1, Math.max(0, actions.priceControlStrength ?? 0));
-  const incomesPolicyStrength = Math.min(1, Math.max(0, actions.incomesPolicyStrength ?? 0));
-  const capitalControlStrength = Math.min(1, Math.max(0, actions.capitalControlStrength ?? 0));
-  const domesticDebtShare = Math.min(1, Math.max(0, actions.domesticDebtShare ?? 0.5));
-  const basicGoodsGuarantee = Math.min(1, Math.max(0, actions.basicGoodsGuarantee ?? 0));
-  const planningIntensity = Math.min(1, Math.max(0, actions.planningIntensity ?? 0));
-  const publicBankingStrength = Math.min(1, Math.max(0, actions.publicBankingStrength ?? 0));
-  const debtRestructuringStance = Math.min(1, Math.max(0, actions.debtRestructuringStance ?? 0));
-  const multiYearAgendaStrength = Math.min(1, Math.max(0, actions.multiYearAgendaStrength ?? 0));
+  const profitWindfallTaxRate = clamp(actions.profitWindfallTaxRate ?? 0, 0, 0.2);
+  const priceControlStrength = clamp(actions.priceControlStrength ?? 0, 0, 1);
+  const incomesPolicyStrength = clamp(actions.incomesPolicyStrength ?? 0, 0, 1);
+  const capitalControlStrength = clamp(actions.capitalControlStrength ?? 0, 0, 1);
+  const domesticDebtShare = clamp(actions.domesticDebtShare ?? 0.5, 0, 1);
+  const basicGoodsGuarantee = clamp(actions.basicGoodsGuarantee ?? 0, 0, 1);
+  const planningIntensity = clamp(actions.planningIntensity ?? 0, 0, 1);
+  const publicBankingStrength = clamp(actions.publicBankingStrength ?? 0, 0, 1);
+  const debtRestructuringStance = clamp(actions.debtRestructuringStance ?? 0, 0, 1);
+  const multiYearAgendaStrength = clamp(actions.multiYearAgendaStrength ?? 0, 0, 1);
+  const infrastructureShare = clamp(actions.infrastructureShare ?? 0, 0, 1);
+  const financialRegulationStrength = clamp(actions.financialRegulationStrength ?? 0, 0, 1);
 
+  /* ── Demand equilibrium ── */
   const { y, c, i, g, x, m } = equilibriumY(
     countryWithPolicy,
     global,
@@ -85,36 +75,121 @@ export function step(
     previousGdp
   );
 
+  /* ── External sector ── */
   const currentAccount = x - m;
-  const erChange = exchangeRateChange(currentAccount, y, regime);
+  const erChange = exchangeRateChange(currentAccount, y, regime, capitalControlStrength, country.fxReserves);
   const newExchangeRate = country.exchangeRate * (1 + erChange);
 
+  /* ── Inflation ── */
   const nextInf = nextInflation(country, global, scenario, erChange, priceControlStrength, incomesPolicyStrength, basicGoodsGuarantee);
   const nextPiE = nextInflationExpectations(country.inflationExpectations, nextInf, 0.025, multiYearAgendaStrength);
 
+  /* ── Fiscal ── */
   const rev = taxRevenue(y, m, taxRate, tariffRate, profitWindfallTaxRate, planningIntensity) + publicBankingRevenue(y, publicBankingStrength);
   const exp = expenditure(y, spendingShare);
   const deficit = exp - rev;
-  let riskPremium = global.riskPremium + (country.debtToGdp > scenario.debtSustainabilityThreshold ? 0.02 : 0);
-  riskPremium *= 1 - 0.25 * capitalControlStrength;  // capital controls reduce external pressure
-  riskPremium *= 1 - 0.15 * domesticDebtShare;         // more domestic financing reduces sovereign risk
-  riskPremium *= 1 - 0.1 * publicBankingStrength;      // public/cooperative banking reduces reliance on foreign lenders
-  riskPremium += 0.025 * debtRestructuringStance;      // restructuring/default stance raises perceived risk
+
+  let riskPremium = global.riskPremium;
+  if (country.debtToGdp > scenario.debtSustainabilityThreshold) {
+    riskPremium += 0.008 * (country.debtToGdp - scenario.debtSustainabilityThreshold);
+  }
+  riskPremium *= 1 - 0.3 * domesticDebtShare;
+  riskPremium *= 1 - 0.25 * capitalControlStrength;
+  riskPremium *= 1 - 0.1 * publicBankingStrength;
+  riskPremium += 0.015 * debtRestructuringStance;
+
   const newDebt = nextDebt(country.publicDebt, deficit, policyRate, riskPremium, debtRestructuringStance);
   const debtToGdp = y > 0 ? newDebt / y : 0;
 
-  const sectorOutputs = computeSectorOutputs(country);
-  const totalOutput = aggregateGdp(sectorOutputs);
+  /* ── Production ── */
+  const sectorOutputs = computeSectorOutputs(country, planningIntensity, infrastructureShare, publicBankingStrength, tariffRate);
   const gdpGrowth = previousGdp > 0 ? (y - previousGdp) / previousGdp : 0;
 
-  const employed = country.laborForce * (1 - 0.05 - 0.3 * Math.max(0, -gdpGrowth));
+  /* ── Employment ── */
+  const planningEmploymentBonus = planningIntensity * 0.02;
+  const baseEmployment = country.laborForce * (1 - 0.05 - 0.25 * Math.max(0, -gdpGrowth) + planningEmploymentBonus);
+  const employed = Math.min(country.laborForce, Math.max(0, baseEmployment));
   const unemployed = Math.max(0, country.laborForce - employed);
   const unemploymentRate = country.laborForce > 0 ? unemployed / country.laborForce : 0.05;
+
+  /* ── Institution quality ── */
+  const instImprovement = 0.005 * socialSpendingShare
+    + 0.003 * Math.min(1, infrastructureShare)
+    + 0.002 * financialRegulationStrength
+    - 0.005 * Math.max(0, planningIntensity - 0.7);
+  const newInstitutionQuality = clamp(country.institutionQuality + instImprovement, 0.1, 1.0);
+
+  /* ── Terms of trade (Prebisch-Singer) ── */
+  const prevToT = country.termsOfTrade ?? 1.0;
+  const newTermsOfTrade = nextTermsOfTrade(prevToT, scenario.scenarioId, tariffRate, capitalControlStrength, global.commodityPriceIndex);
+
+  /* ── Wage share (Kaleckian distribution) ── */
+  const prevWageShare = country.wageShare ?? 0.5;
+  const wageShareDrift =
+    0.02 * socialSpendingShare
+    + 0.015 * incomesPolicyStrength
+    + 0.01 * planningIntensity
+    + 0.01 * basicGoodsGuarantee
+    - 0.02 * Math.max(0, gdpGrowth - 0.03)
+    - 0.015 * (1 - financialRegulationStrength) * Math.max(0, gdpGrowth)
+    - 0.01 * Math.max(0, 0.3 - taxRate);
+  const newWageShare = clamp(prevWageShare + wageShareDrift, 0.2, 0.75);
+
+  /* ── Profit rate (Marxian) ── */
+  const totalCapital = Object.values(country.sectors).reduce((sum, s) => sum + s.capitalStock, 0);
+  const wages = y * newWageShare;
+  const newProfitRate = totalCapital > 0 ? (y - wages) / totalCapital : 0.1;
+
+  /* ── Financial fragility (Minsky) ── */
+  const prevFragility = country.financialFragility ?? 0.1;
+  const fragilityChange =
+    0.03 * (1 - financialRegulationStrength) * Math.max(0, gdpGrowth)
+    + 0.02 * (1 - financialRegulationStrength)
+    - 0.04 * financialRegulationStrength
+    - 0.02 * publicBankingStrength;
+  let newFragility = clamp(prevFragility + fragilityChange, 0, 1);
+
+  /* ── Approval (class-based) ── */
+  const approvalInput = {
+    ...countryWithPolicy,
+    gdp: y,
+    gdpGrowth,
+    unemploymentRate,
+    inflationRate: nextInf,
+    institutionQuality: newInstitutionQuality,
+    wageShare: newWageShare,
+    termsOfTrade: newTermsOfTrade,
+    financialFragility: newFragility,
+    profitRate: newProfitRate,
+    workerSupport: 0.5,
+    eliteSupport: 0.5,
+  } as CountryState;
+  const approvalResult = approvalBreakdown(
+    approvalInput,
+    socialSpendingShare,
+    basicGoodsGuarantee,
+    multiYearAgendaStrength,
+    taxRate,
+    financialRegulationStrength,
+    planningIntensity,
+  );
+
+  /* ── Reserves ── */
+  const reserveChange = currentAccount * 0.1 - (regime === 'managed' ? Math.abs(erChange) * y * 0.05 : 0);
+
+  /* ── Financial crisis from Minsky fragility ── */
+  let adjustedGdpGrowth = gdpGrowth;
+  let adjustedApproval = approvalResult.overall;
+  if (newFragility > 0.7 && prevFragility <= 0.7) {
+    adjustedGdpGrowth = Math.min(gdpGrowth, -0.025);
+    adjustedApproval = Math.max(0, adjustedApproval - 0.1);
+    newFragility = 0.3;
+  }
 
   const newCountry: CountryState = {
     ...countryWithPolicy,
     gdp: y,
-    gdpGrowth,
+    gdpGrowth: adjustedGdpGrowth,
     sectors: { ...country.sectors },
     employed,
     unemployed,
@@ -130,124 +205,100 @@ export function step(
     exports: x,
     imports: m,
     currentAccount,
-    fxReserves: country.fxReserves + currentAccount * 0.1,
-    approval:     approval(
-      {
-        ...countryWithPolicy,
-        gdp: y,
-        gdpGrowth,
-        unemploymentRate,
-        inflationRate: nextInf,
-      },
-      socialSpendingShare,
-      basicGoodsGuarantee,
-      multiYearAgendaStrength
-    ),
+    fxReserves: Math.max(0, country.fxReserves + reserveChange),
+    institutionQuality: newInstitutionQuality,
+    approval: adjustedApproval,
+    workerSupport: approvalResult.workerSupport,
+    eliteSupport: approvalResult.eliteSupport,
+    wageShare: newWageShare,
+    termsOfTrade: newTermsOfTrade,
+    financialFragility: newFragility,
+    profitRate: newProfitRate,
   };
 
+  /* ── Events ── */
   const events = [...state.events];
+  const nextTurn = state.turn + 1;
+
   if (newCountry.debtToGdp > scenario.debtSustainabilityThreshold) {
     events.push({
       id: `debt-warning-${state.turn}`,
-      turn: state.turn + 1,
+      turn: nextTurn,
       type: 'warning',
-      title: 'High debt',
-      description: `The government owes ${(newCountry.debtToGdp * 100).toFixed(1)}% of what the economy produces in a year. Check the Policy advice panel for ideas from different economic schools on what to do.`,
+      title: 'High Government Debt',
+      description: `Debt is ${(newCountry.debtToGdp * 100).toFixed(0)}% of GDP. Whether this is a problem depends on context: can you grow faster than your interest rate? Is debt in your own currency?`,
     });
   }
   if (newCountry.inflationRate > 0.1) {
     events.push({
       id: `inflation-warning-${state.turn}`,
-      turn: state.turn + 1,
+      turn: nextTurn,
       type: 'warning',
-      title: 'High inflation',
-      description: `Prices are rising at ${(newCountry.inflationRate * 100).toFixed(1)}% per year. Check the Policy advice panel for ideas from different economic schools on what to do.`,
+      title: 'High Inflation',
+      description: `Prices rising at ${(newCountry.inflationRate * 100).toFixed(1)}%/year. The right response depends on the cause: rate hikes fight demand inflation but worsen cost-push recessions.`,
+    });
+  }
+  if (newFragility > 0.7 && prevFragility <= 0.7) {
+    events.push({
+      id: 'financial-crisis',
+      turn: nextTurn,
+      type: 'shock',
+      title: 'Financial Crisis',
+      description: 'Financial fragility crossed the critical threshold. A Minsky moment: years of deregulation and rising leverage have produced a crash. Stronger financial regulation and public banking could have prevented this.',
     });
   }
 
-  // Geopolitical outcomes: one-time events when the player's choices trigger reactions from other countries.
-  const nextTurn = state.turn + 1;
+  /* ── Geopolitical events ── */
   let newGlobal: GlobalState = { ...global };
-
   const sid = scenario.scenarioId;
 
   if (sid === 'independence-underdevelopment' && !state.events.some((e) => e.id === 'geo-sanctions-nationalize')) {
     const nationalizing = (planningIntensity > 0.5 && publicBankingStrength > 0.4) || (profitWindfallTaxRate > 0.12 && planningIntensity > 0.4);
     if (nationalizing) {
-      events.push({
-        id: 'geo-sanctions-nationalize',
-        turn: nextTurn,
-        type: 'warning',
-        title: 'Sanctions imposed',
-        description: 'Your government took more control of the economy (for example by nationalizing resources or banks). A powerful country that used to have influence over you does not like this. It has put sanctions on you. That means trade and borrowing from abroad get harder.',
-      });
+      events.push({ id: 'geo-sanctions-nationalize', turn: nextTurn, type: 'warning', title: 'Sanctions After Nationalization', description: 'Nationalization angered powerful foreign interests. Sanctions imposed.' });
       newGlobal = { ...newGlobal, sanctionsActive: true, riskPremium: newGlobal.riskPremium + 0.035, exportDemandMultiplier: newGlobal.exportDemandMultiplier * 0.82 };
     }
   }
-
   if (sid === 'rust-belt' && !state.events.some((e) => e.id === 'geo-retaliation-protectionism')) {
-    const veryProtectionist = (tariffRate > 0.2 && capitalControlStrength > 0.6) || tariffRate > 0.25;
-    if (veryProtectionist) {
-      events.push({
-        id: 'geo-retaliation-protectionism',
-        turn: nextTurn,
-        type: 'warning',
-        title: 'Trading partners push back',
-        description: 'You raised tariffs and limited foreign money flows. Other countries say your policies are unfair. They are threatening to tax your exports more. Selling abroad could get harder.',
-      });
+    if ((tariffRate > 0.2 && capitalControlStrength > 0.6) || tariffRate > 0.25) {
+      events.push({ id: 'geo-retaliation-protectionism', turn: nextTurn, type: 'warning', title: 'Trading Partners Retaliate', description: 'Trade barriers prompted retaliatory tariffs.' });
       newGlobal = { ...newGlobal, exportDemandMultiplier: newGlobal.exportDemandMultiplier * 0.88 };
     }
   }
-
-  if (sid === 'commodity-pressure' && !state.events.some((e) => e.id === 'geo-creditors-restructure')) {
-    if (debtRestructuringStance > 0.55) {
-      events.push({
-        id: 'geo-creditors-restructure',
-        turn: nextTurn,
-        type: 'warning',
-        title: 'Creditors and rich countries react',
-        description: 'You chose to restructure or default on debt. The countries and banks you owe money to are angry. They say you are not trustworthy. Borrowing from abroad will cost you more from now on.',
-      });
-      newGlobal = { ...newGlobal, riskPremium: newGlobal.riskPremium + 0.03 };
-    }
+  if (sid === 'commodity-pressure' && !state.events.some((e) => e.id === 'geo-creditors-restructure') && debtRestructuringStance > 0.55) {
+    events.push({ id: 'geo-creditors-restructure', turn: nextTurn, type: 'warning', title: 'Creditors React', description: 'Debt restructuring stance raised borrowing costs.' });
+    newGlobal = { ...newGlobal, riskPremium: newGlobal.riskPremium + 0.03 };
+  }
+  if (sid === 'rising-industrializer' && !state.events.some((e) => e.id === 'geo-unfair-trade') && planningIntensity > 0.55 && tariffRate > 0.18) {
+    events.push({ id: 'geo-unfair-trade', turn: nextTurn, type: 'warning', title: 'Accused of Unfair Trade', description: 'State subsidies and protection drew accusations and retaliation.' });
+    newGlobal = { ...newGlobal, exportDemandMultiplier: newGlobal.exportDemandMultiplier * 0.9 };
+  }
+  if (sid === 'sanctions-isolation' && !state.events.some((e) => e.id === 'geo-sanctions-tighten') && planningIntensity > 0.6 && priceControlStrength > 0.6) {
+    events.push({ id: 'geo-sanctions-tighten', turn: nextTurn, type: 'warning', title: 'Sanctions Intensify', description: 'Defiant policies prompted harsher sanctions.' });
+    newGlobal = { ...newGlobal, riskPremium: newGlobal.riskPremium + 0.025, exportDemandMultiplier: newGlobal.exportDemandMultiplier * 0.85 };
+  }
+  if (sid === 'emerging-debt-crisis' && !state.events.some((e) => e.id === 'geo-creditors-default') && debtRestructuringStance > 0.6) {
+    events.push({ id: 'geo-creditors-default', turn: nextTurn, type: 'warning', title: 'Creditors React to Default', description: 'Debt restructuring raised borrowing costs.' });
+    newGlobal = { ...newGlobal, riskPremium: newGlobal.riskPremium + 0.028 };
   }
 
-  if (sid === 'rising-industrializer' && !state.events.some((e) => e.id === 'geo-unfair-trade')) {
-    if (planningIntensity > 0.55 && tariffRate > 0.18) {
-      events.push({
-        id: 'geo-unfair-trade',
-        turn: nextTurn,
-        type: 'warning',
-        title: 'Other countries accuse you of unfair trade',
-        description: 'You are using a lot of state control and high tariffs. Richer countries say you are not playing fair. They may put higher taxes on your exports. Selling to them could get harder.',
-      });
-      newGlobal = { ...newGlobal, exportDemandMultiplier: newGlobal.exportDemandMultiplier * 0.9 };
-    }
-  }
+  /* ── Commodity price cycling (endogenous global) ── */
+  const rng = _rng ?? (() => {
+    let s = (state.turn * 2654435761 + 42) >>> 0;
+    s ^= s << 13; s ^= s >> 17; s ^= s << 5;
+    return (s >>> 0) / 4294967296;
+  });
+  const cyclePhase = Math.sin(state.turn * 0.4) * 0.03;
+  const commodityDrift = cyclePhase + (rng() - 0.5) * 0.04;
+  newGlobal = { ...newGlobal, commodityPriceIndex: clamp(newGlobal.commodityPriceIndex + commodityDrift, 0.5, 2.0) };
 
-  if (sid === 'sanctions-isolation' && !state.events.some((e) => e.id === 'geo-sanctions-tighten')) {
-    if (planningIntensity > 0.6 && priceControlStrength > 0.6) {
-      events.push({
-        id: 'geo-sanctions-tighten',
-        turn: nextTurn,
-        type: 'warning',
-        title: 'Sanctions get tighter',
-        description: 'You doubled down on state control of the economy. The countries that put sanctions on you have made them stricter. Trade and borrowing from abroad are even harder now.',
-      });
-      newGlobal = { ...newGlobal, riskPremium: newGlobal.riskPremium + 0.025, exportDemandMultiplier: newGlobal.exportDemandMultiplier * 0.85 };
-    }
-  }
-
-  if (sid === 'emerging-debt-crisis' && !state.events.some((e) => e.id === 'geo-creditors-default')) {
-    if (debtRestructuringStance > 0.6) {
-      events.push({
-        id: 'geo-creditors-default',
-        turn: nextTurn,
-        type: 'warning',
-        title: 'Creditors react to default or restructuring',
-        description: 'You chose to restructure or default on your debt. The countries and banks you owe say you broke your promises. They will charge you more to borrow in the future.',
-      });
-      newGlobal = { ...newGlobal, riskPremium: newGlobal.riskPremium + 0.028 };
+  /* ── South-South cooperation (endogenous global) ── */
+  const isDeveloping = ['independence-underdevelopment', 'commodity-pressure', 'rising-industrializer'].includes(sid);
+  if (isDeveloping && capitalControlStrength > 0.3 && planningIntensity > 0.3) {
+    const ssBoost = 0.01 * (capitalControlStrength + planningIntensity - 0.6);
+    newGlobal = { ...newGlobal, exportDemandMultiplier: newGlobal.exportDemandMultiplier + ssBoost };
+    if (!state.events.some((e) => e.id === 'south-south-coop') && capitalControlStrength > 0.5 && planningIntensity > 0.5 && state.turn > 4) {
+      events.push({ id: 'south-south-coop', turn: nextTurn, type: 'milestone', title: 'South-South Cooperation Strengthens', description: 'Independent economic policies attract trade partners from the Global South, reducing dependence on Western markets.' });
     }
   }
 

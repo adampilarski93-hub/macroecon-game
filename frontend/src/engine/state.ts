@@ -35,6 +35,12 @@ export interface CountryState {
   inflationExpectations: number;
   institutionQuality: number;
   approval: number;
+  workerSupport: number;
+  eliteSupport: number;
+  wageShare: number;
+  termsOfTrade: number;
+  financialFragility: number;
+  profitRate: number;
 }
 
 export interface GlobalState {

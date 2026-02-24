@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { GenericStats, GenericNarrativeChoice, GenericNarrativeNode } from '../narrative/scenario-types';
+import type { SimulationState } from '../engine/state';
 import { getScenarioNarrativeConfig } from '../narrative/registry';
+import { initSimulationForNarrative, narrativeSimStep } from '../narrative/narrative-simulation-bridge';
 
 function clampStats(stats: GenericStats): GenericStats {
   const clamped = { ...stats };
@@ -109,19 +111,22 @@ export function DecisionTreePage() {
     history: { nodeId: string; choiceId: string; title: string }[];
     turn: number;
     finished: boolean;
+    simState: SimulationState | null;
   } | null>(null);
 
   useEffect(() => {
     if (config && !game) {
+      const simState = scenarioId ? initSimulationForNarrative(scenarioId) : null;
       setGame({
         currentNodeId: 'start',
         stats: { ...config.initialStats },
         history: [],
         turn: 1,
         finished: false,
+        simState,
       });
     }
-  }, [config, game]);
+  }, [config, game, scenarioId]);
 
   useEffect(() => {
     if (!config || !scenarioId) {
@@ -159,6 +164,16 @@ export function DecisionTreePage() {
     const newStats = applyEffects(game.stats, choice.effects);
     const earlyEnd = config.checkEarlyEnd(newStats);
 
+    // Step the simulation engine alongside the narrative
+    let nextSimState = game.simState;
+    if (nextSimState) {
+      try {
+        nextSimState = narrativeSimStep(nextSimState, newStats);
+      } catch {
+        // If sim fails, continue without it
+      }
+    }
+
     setTimeout(() => {
       setGame((prev) => {
         if (!prev) return prev;
@@ -175,6 +190,7 @@ export function DecisionTreePage() {
           ],
           turn: prev.turn + 1,
           finished: false,
+          simState: nextSimState,
         };
       });
       setTransitioning(false);
@@ -229,6 +245,42 @@ export function DecisionTreePage() {
               />
             ))}
           </div>
+
+          {game.simState && (
+            <div className="narr-sim-panel">
+              <h3>Simulated Economy</h3>
+              <div className="narr-sim-grid">
+                <div className="narr-sim-item">
+                  <span className="narr-sim-label">GDP</span>
+                  <span className="narr-sim-value">{game.simState.country.gdp.toFixed(0)}</span>
+                  <span className={`narr-sim-delta ${game.simState.country.gdpGrowth >= 0 ? 'pos' : 'neg'}`}>
+                    {(game.simState.country.gdpGrowth * 100).toFixed(1)}%
+                  </span>
+                </div>
+                <div className="narr-sim-item">
+                  <span className="narr-sim-label">Inflation</span>
+                  <span className="narr-sim-value">{(game.simState.country.inflationRate * 100).toFixed(1)}%</span>
+                </div>
+                <div className="narr-sim-item">
+                  <span className="narr-sim-label">Unemployment</span>
+                  <span className="narr-sim-value">{(game.simState.country.unemploymentRate * 100).toFixed(1)}%</span>
+                </div>
+                <div className="narr-sim-item">
+                  <span className="narr-sim-label">Debt/GDP</span>
+                  <span className="narr-sim-value">{(game.simState.country.debtToGdp * 100).toFixed(0)}%</span>
+                </div>
+                <div className="narr-sim-item">
+                  <span className="narr-sim-label">Wage share</span>
+                  <span className="narr-sim-value">{((game.simState.country.wageShare ?? 0.5) * 100).toFixed(0)}%</span>
+                </div>
+                <div className="narr-sim-item">
+                  <span className="narr-sim-label">Approval</span>
+                  <span className="narr-sim-value">{(game.simState.country.approval * 100).toFixed(0)}%</span>
+                </div>
+              </div>
+              <p className="narr-sim-hint">Your narrative choices drive simulated economic outcomes</p>
+            </div>
+          )}
 
           {game.history.length > 0 && (
             <div className="narr-history-panel">

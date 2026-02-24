@@ -1,6 +1,6 @@
 import type { SimulationState, CountryState } from './state';
 
-export type AdvisoryTopic = 'inflation' | 'debt';
+export type AdvisoryTopic = 'inflation' | 'debt' | 'growth' | 'unemployment' | 'trade' | 'outlook';
 
 export interface AdvisoryItem {
   school: string;
@@ -33,11 +33,84 @@ function debtAdvisory(country: CountryState, scenarioDebtThreshold: number): Adv
   return items;
 }
 
+function growthAdvisory(country: CountryState): AdvisoryItem[] {
+  const items: AdvisoryItem[] = [];
+  if (country.gdpGrowth < -0.005) {
+    items.push({ school: 'Keynesian', topic: 'growth', title: 'Spend to stop the contraction', instruction: 'Increase government spending and infrastructure investment. Cut interest rates if inflation allows. The private sector is not spending enough, so the government must step in. Counter-cyclical fiscal policy is the fastest way out of a recession.', explanation: 'When GDP is shrinking, the economy has spare capacity. Government spending fills the gap in demand and puts people back to work. The multiplier effect means each unit of spending generates more than one unit of output.' });
+    items.push({ school: 'Marxian', topic: 'growth', title: 'Direct investment through planning', instruction: 'Use state planning and public banking to direct investment into productive sectors. The private sector will not invest during a downturn because profits are low. State-led industrialisation can sustain demand while building long-term productive capacity, as China did during the 2008 crisis.', explanation: 'Kalecki showed that profits equal investment plus the deficit minus savings. If private investment collapses, the state must replace it or the economy enters a deflationary spiral. Planning directs resources where they are needed rather than where profits are highest.' });
+    items.push({ school: 'Structuralist', topic: 'growth', title: 'Protect domestic industry and invest in supply', instruction: 'Use tariffs and capital controls to prevent capital flight during the downturn. Invest in infrastructure and import substitution. Protect strategic industries so they survive the recession and can lead recovery.', explanation: 'In developing countries, recessions are often triggered or worsened by capital outflows and import surges. Protecting domestic capacity during downturns prevents deindustrialisation and preserves the base for future growth.' });
+  } else if (country.gdpGrowth < 0.02) {
+    items.push({ school: 'Keynesian', topic: 'growth', title: 'Stimulate demand carefully', instruction: 'Growth is sluggish. Consider modest increases in infrastructure spending or social investment. These boost demand while building productive capacity. Avoid tightening fiscal policy during weak growth.', explanation: 'Low growth often reflects insufficient demand. Productive public investment raises both current spending and future capacity, improving growth without stoking inflation.' });
+    items.push({ school: 'Structuralist', topic: 'growth', title: 'Invest in productive transformation', instruction: 'Sluggish growth in developing countries often reflects structural dependence on low-value exports. Invest in manufacturing, processing, and skills to move up the value chain. Use planning and industrial policy to direct resources toward higher-productivity sectors.', explanation: 'Prebisch and the structuralists showed that countries exporting raw materials and importing manufactures face declining terms of trade. Breaking this pattern requires deliberate structural transformation.' });
+  } else {
+    items.push({ school: 'Post-Keynesian', topic: 'growth', title: 'Watch for financial fragility', instruction: 'Growth is solid, but Minsky warned that stability breeds instability. Keep financial regulation strong. Watch whether growth is driven by productive investment or by credit-fuelled speculation. Build fiscal buffers now for the next downturn.', explanation: 'During good times, borrowers and lenders take on more risk. Financial fragility builds invisibly. Strong regulation and prudent fiscal management during booms prevent the next crisis from being devastating.' });
+    items.push({ school: 'Marxian', topic: 'growth', title: 'Ask who benefits from growth', instruction: 'GDP growth means nothing if the gains flow to capital while wages stagnate. Check whether social spending, basic goods guarantees, and planning intensity are high enough to ensure growth is shared. Strong growth is an opportunity to build public capacity and reduce inequality.', explanation: 'Piketty showed that when r > g, wealth concentrates automatically. Marini demonstrated that growth in dependent economies can coexist with super-exploitation of workers. Active redistribution during growth periods is essential.' });
+  }
+  return items;
+}
+
+function unemploymentAdvisory(country: CountryState): AdvisoryItem[] {
+  const items: AdvisoryItem[] = [];
+  if (country.unemploymentRate > 0.08) {
+    items.push({ school: 'Keynesian', topic: 'unemployment', title: 'Expand demand to create jobs', instruction: 'High unemployment means the economy has idle capacity. Increase government spending, particularly on infrastructure and social services that employ people directly. Consider lowering interest rates to encourage private investment. Do not pursue austerity when unemployment is high.', explanation: 'Unemployment above 8% reflects a demand shortfall. The private sector is not hiring because there are not enough customers. Government spending creates demand, which creates jobs, which creates more demand — the multiplier at work.' });
+    items.push({ school: 'Marxian', topic: 'unemployment', title: 'Public employment and planning', instruction: 'Mass unemployment is the "reserve army of labour" that disciplines workers and suppresses wages. Counter it through direct public employment, state-led industrialisation, and planning that directs investment toward labour-intensive sectors. Guarantee basic goods so the unemployed can survive with dignity.', explanation: 'Kalecki argued that full employment is feared by capital because it gives workers bargaining power. The "natural rate of unemployment" is a political construct. State intervention to guarantee employment is both economically viable and politically transformative.' });
+  } else if (country.unemploymentRate > 0.05) {
+    items.push({ school: 'Mainstream', topic: 'unemployment', title: 'Support investment and skills', instruction: 'Moderate unemployment can be addressed through a mix of lower interest rates (if inflation allows), skills training, and modest increases in infrastructure spending. Avoid overstimulating demand, which could push inflation up.', explanation: 'When unemployment is moderate, targeted interventions work better than broad stimulus. Skills training matches workers to jobs; infrastructure creates employment while building capacity.' });
+  } else {
+    items.push({ school: 'Post-Keynesian', topic: 'unemployment', title: 'Protect full employment', instruction: 'Low unemployment is a policy achievement, not an accident. Maintain it through stable demand management. Resist calls to raise interest rates just because unemployment is low — low unemployment is the goal, not a problem. Use incomes policy to manage wage-price pressures without creating joblessness.', explanation: 'Mainstream economics treats low unemployment as inflationary. Post-Keynesians argue that incomes policy and coordination can maintain full employment without accelerating inflation. The Australian Accord (1983-1996) proved this.' });
+  }
+  return items;
+}
+
+function tradeAdvisory(country: CountryState, state: SimulationState): AdvisoryItem[] {
+  const items: AdvisoryItem[] = [];
+  const isDeveloping = ['independence-underdevelopment', 'commodity-pressure', 'rising-industrializer'].includes(state.scenario.scenarioId);
+
+  if (country.currentAccount < -30) {
+    items.push({ school: 'Structuralist', topic: 'trade', title: 'Reduce external dependence', instruction: 'Your trade deficit is large. Raise tariffs on non-essential imports, use capital controls to limit short-term capital outflows, and invest in domestic production of goods you currently import. Manage the exchange rate to prevent further deterioration.', explanation: 'Large trade deficits make you dependent on foreign capital inflows. When those flows reverse — as in the 1997 Asian crisis or 2008 — the result is a currency crash and recession. Import substitution and capital controls reduce this vulnerability.' });
+    if (isDeveloping) {
+      items.push({ school: 'Marxian', topic: 'trade', title: 'Delink from unequal exchange', instruction: 'Your current account deficit reflects value transfer to wealthier countries. Arghiri Emmanuel showed that trade between low-wage and high-wage countries systematically transfers value from the periphery. Raise tariffs, impose capital controls, develop domestic industry, and pursue South-South trade on more equal terms.', explanation: 'Samir Amin\'s "delinking" strategy means partially withdrawing from a world market that is structured to drain your surplus. South Korea, Taiwan, and China industrialised behind protective walls. Free trade between unequal partners enriches the stronger.' });
+    }
+  } else if (country.currentAccount > 30) {
+    items.push({ school: 'Keynesian', topic: 'trade', title: 'Use your surplus wisely', instruction: 'A large trade surplus means you are lending to the rest of the world. Consider whether you could boost domestic consumption and living standards instead. Accumulating reserves indefinitely is not a development strategy.', explanation: 'Persistent surpluses can suppress domestic demand. Germany\'s export obsession contributed to the eurozone crisis by draining demand from Southern Europe. Some rebalancing toward domestic consumption raises living standards.' });
+  } else {
+    items.push({ school: 'Structuralist', topic: 'trade', title: 'Build trade resilience', instruction: 'Your trade position is manageable. Use this stability to diversify exports, build processing capacity for raw materials, and develop regional trade relationships. Managed exchange rates and prudent capital controls provide insurance against future shocks.', explanation: 'Even when trade is balanced, structural vulnerabilities may lurk. Commodity dependence, concentrated export markets, and short-term foreign debt can all trigger crises when conditions change.' });
+  }
+  return items;
+}
+
+function outlookAdvisory(country: CountryState, state: SimulationState): AdvisoryItem[] {
+  const items: AdvisoryItem[] = [];
+  const risks: string[] = [];
+  if (country.inflationRate > 0.06) risks.push('elevated inflation');
+  if (country.unemploymentRate > 0.07) risks.push('high unemployment');
+  if (country.debtToGdp > 0.7) risks.push('heavy debt burden');
+  if (country.currentAccount < -25) risks.push('trade deficit');
+  if (country.approval < 0.35) risks.push('low public support');
+  if (country.gdpGrowth < -0.005) risks.push('recession');
+
+  if (risks.length === 0) {
+    items.push({ school: 'General', topic: 'outlook', title: 'Economy is broadly stable', instruction: 'No urgent crises. Use this window to invest in long-term capacity: infrastructure, education, industrial development, and social protections. Build fiscal buffers and financial resilience for the next shock.', explanation: 'Stability is an opportunity, not a destination. Countries that invest during good times weather bad times better. Minsky\'s insight — stability breeds instability — means complacency is the greatest risk right now.' });
+  } else if (risks.length <= 2) {
+    items.push({ school: 'General', topic: 'outlook', title: `Watch: ${risks.join(' and ')}`, instruction: `Your economy faces ${risks.join(' and ')}. These are manageable but require attention. Prioritise the most pressing issue while avoiding policy choices that worsen the others. Check the advice panels for each issue.`, explanation: 'Most policy challenges involve trade-offs. Fighting inflation with rate hikes can worsen unemployment. Cutting spending to reduce debt can slow growth. Finding the right balance requires understanding these interconnections.' });
+  } else {
+    items.push({ school: 'General', topic: 'outlook', title: `Multiple pressures: ${risks.join(', ')}`, instruction: `Your economy is under stress on several fronts. Triage: protect the most vulnerable (basic goods guarantee, social spending) while addressing the root cause. Consider whether a bold structural shift — debt restructuring, capital controls, planning — might resolve multiple problems at once rather than treating each separately.`, explanation: 'Adam Tooze calls the interaction of multiple crises a "polycrisis." When problems compound, incremental fixes are insufficient. Bold action — like Iceland\'s decision to let banks fail in 2008, or Argentina\'s default in 2001 — can resolve structural contradictions that piecemeal policy cannot.' });
+  }
+  return items;
+}
+
 export function getAdvisory(state: SimulationState): AdvisoryItem[] {
   const { country, scenario } = state;
   const out: AdvisoryItem[] = [];
   const debtThreshold = scenario.debtSustainabilityThreshold ?? DEBT_THRESHOLD;
+
+  out.push(...outlookAdvisory(country, state));
+  out.push(...growthAdvisory(country));
+  out.push(...unemploymentAdvisory(country));
+  out.push(...tradeAdvisory(country, state));
+
   if (country.inflationRate >= INFLATION_THRESHOLD) out.push(...inflationAdvisory(country));
   if (country.debtToGdp >= debtThreshold) out.push(...debtAdvisory(country, debtThreshold));
+
   return out;
 }
