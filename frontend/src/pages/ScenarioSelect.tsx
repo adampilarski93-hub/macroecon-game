@@ -373,14 +373,6 @@ export function ScenarioSelect() {
                   </ul>
                 )}
                 <div className="scenario-card-actions">
-                  <button
-                    type="button"
-                    className="scenario-btn-primary"
-                    onClick={() => handleSelect(s.id)}
-                    disabled={loading}
-                  >
-                    Hard Mode
-                  </button>
                   {hasDecisionTreeMode(s.id) && (
                     <button
                       type="button"
@@ -390,6 +382,14 @@ export function ScenarioSelect() {
                       Easy Mode
                     </button>
                   )}
+                  <button
+                    type="button"
+                    className="scenario-btn-primary"
+                    onClick={() => handleSelect(s.id)}
+                    disabled={loading}
+                  >
+                    Hard Mode
+                  </button>
                 </div>
               </article>
             );
