@@ -256,6 +256,31 @@ export function ScenarioSelect() {
             Begin Plurinational Path
           </button>
         </article>
+        <article className="scenario-card narrative-card">
+          <div className="card-icon narrative-card-icon" aria-hidden>
+            <IconSovereignty />
+          </div>
+          <div className="narrative-card-badge">Narrative Mode</div>
+          <h2>Reservation Governor</h2>
+          <div className="card-meta">
+            <span className="difficulty hard">hard</span>
+            <span className="turns-badge">branching decisions</span>
+          </div>
+          <p>
+            You are the tribal governor of an Indian Reservation in the Southwest United States.
+            Develop your economy and lift your people out of poverty while maintaining sovereignty
+            as an Indigenous nation. Each decision you make impacts the next.
+          </p>
+          <ul className="card-objectives">
+            <li>Strengthen tribal sovereignty</li>
+            <li>Build economic self-sufficiency</li>
+            <li>Protect cultural integrity</li>
+            <li>Balance development and tradition</li>
+          </ul>
+          <button type="button" onClick={() => navigate('/narrative/reservation-governor')}>
+            Begin Reservation Governor
+          </button>
+        </article>
       </section>
 
       {loading && !scenarios.length ? (

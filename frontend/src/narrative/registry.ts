@@ -9,6 +9,7 @@ import { getNode as getRisingNode } from './scenario-trees/rising-industrializer
 import { getNode as getSanctionsNode } from './scenario-trees/sanctions-isolation';
 import { getNode as getGulfMigrantNode } from './scenario-trees/gulf-migrant';
 import { getNode as getPlurinationalNode } from './scenario-trees/plurinational-path';
+import { getNode as getReservationGovernorNode } from './scenario-trees/reservation-governor';
 
 const COMMON_STAT_COLORS: Record<string, string> = {
   economicStrength: '#22c55e',
@@ -26,6 +27,8 @@ const COMMON_STAT_COLORS: Record<string, string> = {
   dignity: '#f59e0b',
   plurinationalUnity: '#10b981',
   laborUnity: '#f97316',
+  culturalIntegrity: '#8b5cf6',
+  fiscalHealth: '#14b8a6',
 };
 
 type EvaluateEndingFn = ScenarioNarrativeConfig['evaluateEnding'];
@@ -263,6 +266,42 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig> 
         summary: won
           ? `You built socialism in a plurinational country. Sovereignty, unity, and worker power — the struggle continues.`
           : `The old order returned. But hope persists. The fight for a sovereign, plurinational future goes on.`,
+      };
+    },
+  ),
+  'reservation-governor': makeConfig(
+    'reservation-governor',
+    'Reservation Governor',
+    'Red Mesa Nation',
+    ['sovereignty', 'economicStrength', 'publicSupport', 'culturalIntegrity', 'fiscalHealth'],
+    {
+      sovereignty: 'Sovereignty',
+      economicStrength: 'Economic Strength',
+      publicSupport: 'Public Support',
+      culturalIntegrity: 'Cultural Integrity',
+      fiscalHealth: 'Fiscal Health',
+    },
+    { sovereignty: 45, economicStrength: 35, publicSupport: 50, culturalIntegrity: 45, fiscalHealth: 40 },
+    getReservationGovernorNode,
+    [],
+    {},
+    (stats) => {
+      const sovereignty = stats.sovereignty ?? 50;
+      const economic = stats.economicStrength ?? 50;
+      const support = stats.publicSupport ?? 50;
+      const culture = stats.culturalIntegrity ?? 50;
+      const fiscal = stats.fiscalHealth ?? 50;
+      const score = Math.round(
+        sovereignty * 0.2 + economic * 0.2 + support * 0.2 +
+        culture * 0.2 + fiscal * 0.2,
+      );
+      const won = sovereignty >= 40 && (economic >= 40 || support >= 45);
+      return {
+        won,
+        score: Math.min(100, Math.max(0, score)),
+        summary: won
+          ? `You strengthened the nation. Sovereignty, economy, and culture — the work continues.`
+          : `The struggle continues. The people remember. The land remains.`,
       };
     },
   ),
