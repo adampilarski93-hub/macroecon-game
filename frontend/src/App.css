@@ -2963,3 +2963,328 @@ header p {
     font-size: 0.85rem;
   }
 }
+
+/* ========== Mobile Optimizations ========== */
+
+/* Touch-friendly improvements for mobile devices */
+@media (max-width: 768px) {
+  /* Larger touch targets for buttons */
+  button,
+  .scenario-btn-primary,
+  .scenario-btn-narrative,
+  .pill,
+  .mode-btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+
+  /* Improve card spacing on mobile */
+  .scenario-card {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Better typography scaling */
+  .scenario-select header h1 {
+    font-size: 1.75rem;
+  }
+
+  .category-title h2 {
+    font-size: 1.25rem;
+  }
+
+  /* Optimize category headers for mobile */
+  .category-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .category-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Single column scenario grid on mobile */
+  .scenario-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Better narrative card spacing */
+  .narrative-card {
+    padding: 1rem;
+  }
+
+  /* Improve turn selector on mobile */
+  .turn-selector {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .turn-slider-row {
+    gap: 0.5rem;
+  }
+
+  /* Stack mode comparison cards */
+  .mode-comparison {
+    flex-direction: column;
+  }
+
+  .mode-card {
+    width: 100%;
+  }
+
+  /* Improve guided path modal for mobile */
+  .guided-path-modal {
+    width: 95vw;
+    max-height: 90vh;
+    padding: 1.5rem;
+  }
+
+  .guided-path-options {
+    gap: 0.75rem;
+  }
+
+  .guided-option {
+    padding: 1rem;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .option-emoji {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    margin-right: 0;
+  }
+
+  /* Touch-friendly choice buttons in narrative */
+  .choice-btn {
+    padding: 1rem;
+    min-height: 48px;
+  }
+
+  /* Better spacing for stat badges */
+  .stat-badge {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  /* Optimize dashboard for mobile */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  /* Policy panel adjustments */
+  .policy-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Events list optimization */
+  .events-list {
+    max-height: 50vh;
+  }
+
+  /* Advisor section mobile layout */
+  .advisor-stats {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+/* Extra small devices (phones in portrait) */
+@media (max-width: 480px) {
+  /* Even more compact spacing */
+  .scenario-select {
+    padding: 0.75rem;
+  }
+
+  .scenario-select header {
+    padding: 1rem 0 0.5rem;
+  }
+
+  .scenario-select header h1 {
+    font-size: 1.5rem;
+  }
+
+  .scenario-select header p {
+    font-size: 0.9rem;
+  }
+
+  /* Compact category headers */
+  .category-header {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .category-title h2 {
+    font-size: 1.1rem;
+  }
+
+  .category-title p {
+    font-size: 0.8rem;
+  }
+
+  /* Single KPI column on very small screens */
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Full-width buttons */
+  .scenario-card-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .scenario-card-actions button {
+    width: 100%;
+  }
+
+  /* Compact cards */
+  .scenario-card {
+    padding: 1rem;
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Smaller turn selector */
+  .turn-selector {
+    padding: 0.75rem;
+  }
+
+  .turn-value {
+    font-size: 0.875rem;
+  }
+
+  /* Narrative mobile adjustments */
+  .narrative-main {
+    padding: 0.75rem;
+  }
+
+  .narrative-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .choices-list {
+    gap: 0.5rem;
+  }
+
+  .choice-btn {
+    padding: 0.875rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Landscape orientation optimizations */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Compact header for short screens */
+  .scenario-select header {
+    padding: 0.5rem 0;
+  }
+
+  .scenario-select header h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Side-by-side layout for landscape phones */
+  .category-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  /* More compact cards */
+  .scenario-card {
+    padding: 0.75rem;
+  }
+
+  /* Reduce vertical spacing */
+  .scenario-category {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Tablet optimizations (portrait) */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+  /* Two-column grid for tablets */
+  .scenario-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Larger touch targets on tablets */
+  button,
+  .scenario-btn-primary,
+  .scenario-btn-narrative {
+    min-height: 48px;
+  }
+
+  /* Adjusted spacing for tablet */
+  .scenario-card {
+    padding: 1.5rem;
+  }
+}
+
+/* High-DPI / Retina display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Sharper borders on high-DPI screens */
+  .scenario-card,
+  .category-header,
+  .turn-selector {
+    border-width: 0.5px;
+  }
+
+  /* Crisper shadows */
+  .scenario-card:hover,
+  .choice-btn:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Dark mode preference (system-level) */
+@media (prefers-color-scheme: dark) {
+  /* Already dark theme, but could add subtle adjustments */
+  .scenario-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Reduced motion preference for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .scenario-card:hover,
+  .choice-btn:hover {
+    transform: none;
+  }
+}
+
+/* Safe area insets for notched phones */
+@supports (padding: max(0px)) {
+  .scenario-select {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .guided-path-modal {
+    margin-top: max(2rem, env(safe-area-inset-top));
+  }
+}
