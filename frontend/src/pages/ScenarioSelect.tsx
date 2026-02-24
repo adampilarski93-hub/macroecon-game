@@ -529,6 +529,32 @@ export function ScenarioSelect() {
             Begin Reservation Governor
           </button>
         </article>
+        <article className="scenario-card narrative-card">
+          <div className="card-icon narrative-card-icon" aria-hidden>
+            <IconSovereignty />
+          </div>
+          <div className="narrative-card-badge">Narrative Mode</div>
+          <h2>AI Displaced</h2>
+          <div className="card-meta">
+            <span className="difficulty hard">hard</span>
+            <span className="turns-badge">branching decisions</span>
+          </div>
+          <p>
+            You were a tech worker at a major company — replaced by AI. Years of loyalty and hard
+            work are now irrelevant as firms cut overhead and integrate cheaper solutions. Navigate
+            unemployment, a contracting labor market, price increases, and the erosion of the
+            &quot;intelligence premium&quot; that once paid your mortgage.
+          </p>
+          <ul className="card-objectives">
+            <li>Protect your financial runway</li>
+            <li>Maintain health and dignity</li>
+            <li>Build solidarity with other displaced workers</li>
+            <li>Navigate the new labor market</li>
+          </ul>
+          <button type="button" onClick={() => navigate('/narrative/ai-displaced')}>
+            Begin AI Displaced
+          </button>
+        </article>
       </section>
 
       {loading && !scenarios.length ? (

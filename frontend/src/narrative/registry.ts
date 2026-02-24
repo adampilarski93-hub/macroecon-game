@@ -10,6 +10,7 @@ import { getNode as getSanctionsNode } from './scenario-trees/sanctions-isolatio
 import { getNode as getGulfMigrantNode } from './scenario-trees/gulf-migrant';
 import { getNode as getPlurinationalNode } from './scenario-trees/plurinational-path';
 import { getNode as getReservationGovernorNode } from './scenario-trees/reservation-governor';
+import { getNode as getAiDisplacedNode } from './scenario-trees/ai-displaced';
 
 const COMMON_STAT_COLORS: Record<string, string> = {
   economicStrength: '#22c55e',
@@ -29,6 +30,7 @@ const COMMON_STAT_COLORS: Record<string, string> = {
   laborUnity: '#f97316',
   culturalIntegrity: '#8b5cf6',
   fiscalHealth: '#14b8a6',
+  employability: '#3b82f6',
 };
 
 type EvaluateEndingFn = ScenarioNarrativeConfig['evaluateEnding'];
@@ -302,6 +304,42 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig> 
         summary: won
           ? `You strengthened the nation. Sovereignty, economy, and culture — the work continues.`
           : `The struggle continues. The people remember. The land remains.`,
+      };
+    },
+  ),
+  'ai-displaced': makeConfig(
+    'ai-displaced',
+    'AI Displaced',
+    'Silicon Valley / Tech Corridor',
+    ['savings', 'health', 'solidarity', 'dignity', 'employability'],
+    {
+      savings: 'Financial Runway',
+      health: 'Health & Wellbeing',
+      solidarity: 'Solidarity',
+      dignity: 'Dignity',
+      employability: 'Job Prospects',
+    },
+    { savings: 45, health: 55, solidarity: 35, dignity: 50, employability: 40 },
+    getAiDisplacedNode,
+    [],
+    {},
+    (stats) => {
+      const savings = stats.savings ?? 50;
+      const health = stats.health ?? 50;
+      const dignity = stats.dignity ?? 50;
+      const solidarity = stats.solidarity ?? 50;
+      const employability = stats.employability ?? 50;
+      const score = Math.round(
+        savings * 0.2 + health * 0.2 + dignity * 0.25 +
+        solidarity * 0.2 + employability * 0.15,
+      );
+      const won = health >= 35 && dignity >= 40 && (savings >= 40 || solidarity >= 50);
+      return {
+        won,
+        score: Math.min(100, Math.max(0, score)),
+        summary: won
+          ? `You made it through. Dignity intact, solidarity built. The intelligence premium was repriced — but you weren't.`
+          : `The spiral took its toll. The system replaced you with machines and had no plan for what came next. The fight continues.`,
       };
     },
   ),
