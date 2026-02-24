@@ -2294,6 +2294,393 @@ header p {
   font-variant-numeric: tabular-nums;
 }
 
+/* ========== Decision Impact Analysis ========== */
+.decision-impact-section {
+  text-align: left;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 1.25rem 0;
+}
+
+.decision-impact-section h3 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.impact-summary {
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background: rgba(20, 184, 166, 0.08);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--accent);
+}
+
+.impact-subsection {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.impact-subsection:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.impact-subsection h4 {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Decision Timeline */
+.decisions-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.decision-card {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.decision-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--surface);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.decision-header:hover {
+  background: var(--surface-hover);
+}
+
+.turn-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(20, 184, 166, 0.15);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.decision-headline {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  text-align: left;
+}
+
+.expand-icon {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.decision-details {
+  padding: 0 0.75rem 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.policy-row {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.policy-row:last-of-type {
+  border-bottom: none;
+}
+
+.policy-label {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.policy-value {
+  color: var(--text);
+  flex: 1;
+}
+
+.effects-list {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.effects-list h5 {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.effect-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.effect-item:last-child {
+  border-bottom: none;
+}
+
+.effect-metric {
+  width: 100px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.effect-change {
+  width: 60px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.effect-positive .effect-change {
+  color: #22c55e;
+}
+
+.effect-negative .effect-change {
+  color: #ef4444;
+}
+
+.effect-neutral .effect-change {
+  color: #94a3b8;
+}
+
+.effect-explanation {
+  color: var(--text);
+  font-size: 0.8rem;
+  flex: 1;
+}
+
+.educational-note {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(34, 197, 94, 0.08);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid #22c55e;
+}
+
+.note-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.note-text {
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+/* Policy Patterns */
+.patterns-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pattern-card {
+  padding: 0.75rem;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-gdp);
+}
+
+.pattern-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.pattern-category {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.pattern-turns {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--bg);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+.pattern-desc {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.pattern-impact {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.impact-label {
+  color: var(--text-muted);
+}
+
+.impact-value {
+  color: var(--text);
+}
+
+.pattern-lesson {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding: 0.5rem;
+  background: var(--bg-subtle);
+  border-radius: 4px;
+}
+
+.lesson-icon {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.lesson-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+/* Tradeoffs */
+.tradeoffs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tradeoff-card {
+  padding: 0.75rem;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-inflation);
+}
+
+.tradeoff-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.tradeoff-choice,
+.tradeoff-consequence,
+.tradeoff-alternative {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+
+.choice-label,
+.consequence-label,
+.alt-label {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  width: 80px;
+}
+
+.choice-value {
+  color: var(--color-gdp);
+  flex: 1;
+}
+
+.consequence-value {
+  color: var(--color-inflation);
+  flex: 1;
+}
+
+.alt-value {
+  color: var(--text);
+  flex: 1;
+  font-style: italic;
+}
+
+/* What-If Scenarios */
+.whatif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.whatif-card {
+  padding: 0.75rem;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-trade);
+}
+
+.whatif-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.whatif-row {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+
+.whatif-row:last-child {
+  margin-bottom: 0;
+}
+
+.whatif-label {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  width: 120px;
+}
+
+.whatif-value {
+  color: var(--text);
+  flex: 1;
+}
+
 /* ========== LLM Settings modal ========== */
 .settings-overlay {
   position: fixed;

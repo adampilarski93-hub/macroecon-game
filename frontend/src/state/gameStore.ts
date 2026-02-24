@@ -10,6 +10,7 @@ import type {
   ObjectiveGoal,
   LLMConfig,
   ChatMessage,
+  GameHistoryEntry,
 } from '../types';
 import { scenarios as localScenarios, createInitialState, getScenarioObjectives } from '../scenarios';
 import { step as engineStep } from '../engine/step';
@@ -37,9 +38,9 @@ function checkGoal(state: SimulationState, goal: ObjectiveGoal): boolean {
   return goal.compare === 'above' ? val >= goal.target : val <= goal.target;
 }
 
-function computeScore(history: SimulationState[], goals: ObjectiveGoal[]): number {
+function computeScore(history: GameHistoryEntry[], goals: ObjectiveGoal[]): number {
   if (history.length === 0) return 0;
-  const last = history[history.length - 1];
+  const last = history[history.length - 1].state;
   const c = last.country;
   const goalsMet = goals.filter((g) => checkGoal(last, g)).length;
   const goalScore = goals.length > 0 ? (goalsMet / goals.length) * 50 : 25;
@@ -61,7 +62,7 @@ interface GameState {
   sessionId: string | null;
   state: SimulationState | null;
   scenarios: ScenarioSummary[];
-  history: SimulationState[];
+  history: GameHistoryEntry[];
   advisory: AdvisoryItem[];
   loading: boolean;
   error: string | null;
@@ -177,10 +178,16 @@ export const useGameStore = create<GameState>((set, get) => ({
         set({ error: 'Unknown scenario', loading: false });
         return;
       }
+      const initialEntry: GameHistoryEntry = {
+        turn: state.turn,
+        state,
+        actions: {} as PolicyActions,
+        causalExplanation: 'Initial state',
+      };
       set({
         sessionId: 'local',
         state,
-        history: [state],
+        history: [initialEntry],
         advisory: [],
         loading: false,
         turnBriefing: null,
@@ -203,10 +210,16 @@ export const useGameStore = create<GameState>((set, get) => ({
         throw new Error(data.error || `HTTP ${r.status}`);
       }
       const data = await r.json();
+      const serverInitialEntry: GameHistoryEntry = {
+        turn: data.state.turn,
+        state: data.state,
+        actions: {} as PolicyActions,
+        causalExplanation: 'Initial state',
+      };
       set({
         sessionId: data.sessionId,
         state: data.state,
-        history: [data.state],
+        history: [serverInitialEntry],
         advisory: [],
         loading: false,
         turnBriefing: null,
@@ -256,7 +269,6 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
 
     const advisory = getAdvisory(next as import('../engine/state').SimulationState);
-    const newHistory = [...get().history, next];
 
     // Generate causal explanation (template-based, no LLM needed)
     const causal = generateCausalExplanation(
@@ -264,6 +276,15 @@ export const useGameStore = create<GameState>((set, get) => ({
       next as import('../engine/state').SimulationState,
       actions as import('../engine/state').PolicyActions,
     );
+
+    // Store history entry with actions
+    const historyEntry: GameHistoryEntry = {
+      turn: next.turn,
+      state: next,
+      actions: actions as PolicyActions,
+      causalExplanation: `${causal.headline}. ${causal.details.join(' ')}`,
+    };
+    const newHistory = [...get().history, historyEntry];
 
     set({
       state: next,
@@ -286,6 +307,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     // Check game over
     const objectives = getScenarioObjectives(next.scenario.scenarioId);
     const effectiveMaxTurns = get().customMaxTurns > 0 ? get().customMaxTurns : (objectives?.maxTurns ?? 20);
+    const initialState = get().history[0]?.state ?? next;
+
     if (objectives && next.turn >= effectiveMaxTurns) {
       const allMet = objectives.goals.every((g) => checkGoal(next, g));
       const score = computeScore(newHistory, objectives.goals);
@@ -300,11 +323,14 @@ export const useGameStore = create<GameState>((set, get) => ({
           description: g.description,
         })),
         finalState: next,
+        history: newHistory,
+        initialState,
       };
       set({ gameResult: result });
 
       // Generate post-game analysis (async)
-      generatePostGameAnalysis(llmConfig, newHistory, allMet, score).then((analysis) => {
+      const historyForAnalysis = newHistory.map(h => h.state);
+      generatePostGameAnalysis(llmConfig, historyForAnalysis, allMet, score).then((analysis) => {
         if (analysis) set({ postGameAnalysis: analysis });
       }).catch(() => {});
     }
@@ -323,10 +349,13 @@ export const useGameStore = create<GameState>((set, get) => ({
           description: g.description,
         })),
         finalState: next,
+        history: newHistory,
+        initialState,
       };
       set({ gameResult: result });
 
-      generatePostGameAnalysis(llmConfig, newHistory, false, result.score).then((analysis) => {
+      const historyForAnalysis = newHistory.map(h => h.state);
+      generatePostGameAnalysis(llmConfig, historyForAnalysis, false, result.score).then((analysis) => {
         if (analysis) set({ postGameAnalysis: analysis });
       }).catch(() => {});
     }
@@ -337,9 +366,9 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (history.length <= 1 || gameResult) return;
     const newHistory = history.slice(0, -1);
     const prev = newHistory[newHistory.length - 1];
-    const advisory = getAdvisory(prev as import('../engine/state').SimulationState);
+    const advisory = getAdvisory(prev.state as import('../engine/state').SimulationState);
     set({
-      state: prev,
+      state: prev.state,
       history: newHistory,
       advisory,
       turnBriefing: null,

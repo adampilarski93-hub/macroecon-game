@@ -8,7 +8,7 @@ import {
   Area,
   AreaChart,
 } from 'recharts';
-import type { SimulationState } from '../../types';
+import type { SimulationState, GameHistoryEntry } from '../../types';
 import {
   IconGDP,
   IconInflation,
@@ -21,7 +21,7 @@ import {
 
 interface DashboardProps {
   state: SimulationState;
-  history?: SimulationState[];
+  history?: GameHistoryEntry[];
 }
 
 type HealthStatus = 'good' | 'warning' | 'danger';
@@ -84,16 +84,28 @@ export function Dashboard({ state, history }: DashboardProps) {
   const prevTurn = useRef(state.turn);
   const justUpdated = state.turn !== prevTurn.current;
 
-  const data = (history ?? [state]).map((s) => ({
-    turn: s.turn,
-    gdp: s.country.gdp,
-    inflation: s.country.inflationRate * 100,
-    unemployment: s.country.unemploymentRate * 100,
-    debtToGdp: s.country.debtToGdp * 100,
-    approval: s.country.approval * 100,
-    wageShare: (s.country.wageShare ?? 0.5) * 100,
-    fragility: (s.country.financialFragility ?? 0.1) * 100,
-  }));
+  // Map history entries to chart data (handle both GameHistoryEntry and current state)
+  const chartData = history && history.length > 0
+    ? history.map((entry) => ({
+        turn: entry.state.turn,
+        gdp: entry.state.country.gdp,
+        inflation: entry.state.country.inflationRate * 100,
+        unemployment: entry.state.country.unemploymentRate * 100,
+        debtToGdp: entry.state.country.debtToGdp * 100,
+        approval: entry.state.country.approval * 100,
+        wageShare: (entry.state.country.wageShare ?? 0.5) * 100,
+        fragility: (entry.state.country.financialFragility ?? 0.1) * 100,
+      }))
+    : [{
+        turn: state.turn,
+        gdp: state.country.gdp,
+        inflation: state.country.inflationRate * 100,
+        unemployment: state.country.unemploymentRate * 100,
+        debtToGdp: state.country.debtToGdp * 100,
+        approval: state.country.approval * 100,
+        wageShare: (state.country.wageShare ?? 0.5) * 100,
+        fragility: (state.country.financialFragility ?? 0.1) * 100,
+      }];
 
   useEffect(() => {
     prevTurn.current = state.turn;
@@ -337,7 +349,7 @@ const kpis: KpiItem[] = [
       </div>
 
       {/* Separate mini-charts so each metric has its own Y-axis */}
-      {data.length > 1 && (
+      {chartData.length > 1 && (
         <div className="charts-grid">
           {chartConfig.map((cfg) => (
             <div className="mini-chart" key={cfg.key}>
@@ -346,7 +358,7 @@ const kpis: KpiItem[] = [
               </span>
               <ResponsiveContainer width="100%" height={120}>
                 <AreaChart
-                  data={data}
+                  data={chartData}
                   margin={{ top: 4, right: 4, left: 4, bottom: 4 }}
                 >
                   <defs>

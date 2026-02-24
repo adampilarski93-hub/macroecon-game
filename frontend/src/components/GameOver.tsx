@@ -1,4 +1,6 @@
-import type { GameResult, SimulationState } from '../types';
+import React from 'react';
+import type { GameResult, SimulationState, GameHistoryEntry } from '../types';
+import { analyzeDecisionImpact, generateDecisionImpactReport, type AggregateImpactAnalysis } from '../engine/decision-impact';
 
 interface GameOverProps {
   result: GameResult;
@@ -9,6 +11,11 @@ interface GameOverProps {
 export function GameOver({ result, postGameAnalysis, onPlayAgain }: GameOverProps) {
   const pct = Math.min(100, Math.max(0, result.score));
   const insights = generateDefaultInsights(result);
+
+  // Generate detailed decision impact analysis
+  const decisionImpact = result.history && result.history.length > 0
+    ? analyzeDecisionImpact(result.history, result.initialState ?? result.finalState, result.finalState)
+    : null;
 
   return (
     <div className="game-over-overlay">
@@ -77,7 +84,10 @@ export function GameOver({ result, postGameAnalysis, onPlayAgain }: GameOverProp
         </div>
 
         {/* Post-Game Debrief Section */}
-        <PostGameDebrief insights={insights} result={result} />
+        <PostGameDebrief insights={insights} result={result} decisionImpact={decisionImpact} />
+
+        {/* Decision Impact Analysis */}
+        {decisionImpact && <DecisionImpactSection analysis={decisionImpact} />}
 
         {/* LLM analysis */}
         {postGameAnalysis && (
@@ -99,9 +109,11 @@ export function GameOver({ result, postGameAnalysis, onPlayAgain }: GameOverProp
 function PostGameDebrief({
   insights,
   result,
+  decisionImpact,
 }: {
   insights: DebriefInsights;
   result: GameResult;
+  decisionImpact: AggregateImpactAnalysis | null;
 }) {
   return (
     <div className="post-game-debrief">
@@ -325,4 +337,154 @@ interface DebriefInsights {
     consistency: number;
     balance: number;
   };
+}
+
+/** Decision Impact Analysis Section */
+function DecisionImpactSection({ analysis }: { analysis: AggregateImpactAnalysis }) {
+  const [expandedTurn, setExpandedTurn] = React.useState<number | null>(null);
+
+  return (
+    <div className="decision-impact-section">
+      <h3>📊 Decision Impact Analysis</h3>
+      <p className="impact-summary">{analysis.educationalSummary}</p>
+
+      {/* Key Decisions */}
+      {analysis.topDecisions.length > 0 && (
+        <div className="impact-subsection">
+          <h4>🔑 Most Impactful Decisions</h4>
+          <div className="decisions-timeline">
+            {analysis.topDecisions.map((d) => (
+              <div key={d.turn} className="decision-card">
+                <button
+                  className="decision-header"
+                  onClick={() => setExpandedTurn(expandedTurn === d.turn ? null : d.turn)}
+                >
+                  <span className="turn-badge">Turn {d.turn}</span>
+                  <span className="decision-headline">{d.headline}</span>
+                  <span className="expand-icon">{expandedTurn === d.turn ? '▼' : '▶'}</span>
+                </button>
+
+                {expandedTurn === d.turn && (
+                  <div className="decision-details">
+                    <div className="policy-row">
+                      <span className="policy-label">📝 Fiscal:</span>
+                      <span className="policy-value">{d.policies.fiscal}</span>
+                    </div>
+                    <div className="policy-row">
+                      <span className="policy-label">💰 Monetary:</span>
+                      <span className="policy-value">{d.policies.monetary}</span>
+                    </div>
+                    <div className="policy-row">
+                      <span className="policy-label">🏗️ Structural:</span>
+                      <span className="policy-value">{d.policies.structural}</span>
+                    </div>
+                    <div className="policy-row">
+                      <span className="policy-label">🌐 Trade:</span>
+                      <span className="policy-value">{d.policies.trade}</span>
+                    </div>
+
+                    <div className="effects-list">
+                      <h5>Immediate Effects:</h5>
+                      {d.immediateEffects.slice(0, 3).map((e, i) => (
+                        <div key={i} className={`effect-item effect-${e.direction}`}>
+                          <span className="effect-metric">{e.metric}</span>
+                          <span className="effect-change">
+                            {e.change > 0 ? '+' : ''}{e.change.toFixed(1)}%
+                          </span>
+                          <span className="effect-explanation">{e.explanation}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="educational-note">
+                      <span className="note-icon">💡</span>
+                      <span className="note-text">{d.educationalNote}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Policy Patterns */}
+      {analysis.policyPatterns.length > 0 && (
+        <div className="impact-subsection">
+          <h4>📈 Policy Patterns</h4>
+          <div className="patterns-list">
+            {analysis.policyPatterns.map((p, i) => (
+              <div key={i} className="pattern-card">
+                <div className="pattern-header">
+                  <span className="pattern-category">{p.category}</span>
+                  <span className="pattern-turns">{p.turnsApplied.length} turns</span>
+                </div>
+                <p className="pattern-desc">{p.description}</p>
+                <div className="pattern-impact">
+                  <span className="impact-label">Overall Impact:</span>
+                  <span className="impact-value">{p.overallImpact}</span>
+                </div>
+                <div className="pattern-lesson">
+                  <span className="lesson-icon">📚</span>
+                  <span className="lesson-text">{p.lesson}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tradeoffs */}
+      {analysis.keyTradeoffs.length > 0 && (
+        <div className="impact-subsection">
+          <h4>⚖️ Economic Tradeoffs You Faced</h4>
+          <div className="tradeoffs-list">
+            {analysis.keyTradeoffs.map((t, i) => (
+              <div key={i} className="tradeoff-card">
+                <div className="tradeoff-title">{t.tradeoff}</div>
+                <div className="tradeoff-choice">
+                  <span className="choice-label">Your Choice:</span>
+                  <span className="choice-value">{t.playerChoice}</span>
+                </div>
+                <div className="tradeoff-consequence">
+                  <span className="consequence-label">Result:</span>
+                  <span className="consequence-value">{t.consequence}</span>
+                </div>
+                <div className="tradeoff-alternative">
+                  <span className="alt-label">Alternative:</span>
+                  <span className="alt-value">{t.alternative}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* What-If Scenarios */}
+      {analysis.whatIfScenarios.length > 0 && (
+        <div className="impact-subsection">
+          <h4>🔮 What If You Had Done Different?</h4>
+          <div className="whatif-list">
+            {analysis.whatIfScenarios.map((w, i) => (
+              <div key={i} className="whatif-card">
+                <div className="whatif-title">{w.scenario}</div>
+                <div className="whatif-row">
+                  <span className="whatif-label">You did:</span>
+                  <span className="whatif-value">{w.originalDecision}</span>
+                </div>
+                <div className="whatif-row">
+                  <span className="whatif-label">Alternative:</span>
+                  <span className="whatif-value">{w.alternative}</span>
+                </div>
+                <div className="whatif-row">
+                  <span className="whatif-label">Possible outcome:</span>
+                  <span className="whatif-value">{w.projectedOutcome}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

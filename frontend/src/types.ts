@@ -143,6 +143,13 @@ export interface ScenarioObjectives {
   goals: ObjectiveGoal[];
 }
 
+export interface GameHistoryEntry {
+  turn: number;
+  state: SimulationState;
+  actions: PolicyActions;
+  causalExplanation?: string;
+}
+
 export interface GameResult {
   won: boolean;
   score: number;
@@ -150,6 +157,8 @@ export interface GameResult {
   maxTurns: number;
   objectives: { label: string; met: boolean; description: string }[];
   finalState: SimulationState;
+  history: GameHistoryEntry[];
+  initialState: SimulationState;
 }
 
 /* ── LLM integration ── */
