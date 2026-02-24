@@ -1,246 +1,363 @@
-import type { DecisionBlock, LongFormEnding } from '../long-form-tree';
-import { createLongFormTree } from '../long-form-tree';
+import type { DecisionBlock, LongFormEnding, ScenarioArc } from '../long-form-tree';
+import { createArcBasedTree } from '../long-form-tree';
 
 /**
- * Stagflation — Federated States of Norden (20 decisions)
+ * Stagflation — Federated States of Norden
+ * Refactored with Parallel Arcs to eliminate repetition
+ * Three distinct approaches: Monetarist, Keynesian, Structuralist
  */
-const blocks: DecisionBlock[] = [
-  {
-    phase: 1,
-    title: 'The Worst of Both Worlds',
-    narrative: `You lead the Federated States of Norden — a developed economy now caught in stagflation. Inflation is at 8%, growth has turned negative, and unemployment is creeping up. Your citizens are angry: prices are rising while wages stagnate and jobs disappear.
 
-Some argue that treating labour purely as a market commodity destroys the social fabric — and that society inevitably pushes back through regulation and welfare. Historical studies suggest that financial crises require political intervention; markets do not self-correct. The central bank wants to hike rates aggressively. Your labour minister warns that will deepen the recession. What do you do first?`,
-    choices: [
-      { id: 'fight_inflation', text: 'Prioritize fighting inflation', consequence: 'You back rate hikes.', effects: { priceStability: 12, economicStrength: -10, publicSupport: -8 }, nextBlock: 20 },
-      { id: 'protect_jobs', text: 'Prioritize jobs', consequence: 'You resist tightening.', effects: { economicStrength: 5, publicSupport: 8, priceStability: -10 }, nextBlock: 21 },
-      { id: 'supply', text: 'Focus on supply', consequence: 'You invest in bottlenecks.', effects: { priceStability: 5, economicStrength: 5, publicSupport: 3 }, nextBlock: 22 },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'Central Bank Pressure',
-    narrative: `The central bank wants aggressive rate hikes. They argue that inflation must be crushed before it becomes embedded in expectations. But critics point out that rate hikes hit workers first — by raising unemployment and slowing wage growth — while the financial sector continues to extract returns. You must decide: do you publicly support the central bank and share the blame for the pain, or resist and risk a confrontation that could undermine confidence?`,
-    choices: [
-      { id: 'support', text: 'Support the central bank', consequence: 'Rates rise.', effects: { priceStability: 10, economicStrength: -8, publicSupport: -6 } },
-      { id: 'resist', text: 'Resist', consequence: 'You push back.', effects: { economicStrength: 3, publicSupport: 5, priceStability: -5 } },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'Fiscal Response',
-    narrative: `Your finance minister proposes targeted relief: energy bill support for low-income households, extended unemployment benefits, and a one-time payment for pensioners. Some analysts would frame this as society's "counter-movement" — when markets squeeze too hard, the state steps in to protect people. The cost would add to the deficit. The central bank would see it as working against their inflation fight. But the social cost of doing nothing is mounting. Do you approve it?`,
-    choices: [
-      { id: 'approve', text: 'Approve targeted relief', consequence: 'You spend.', effects: { publicSupport: 10, priceStability: -3, debtBurden: 5 } },
-      { id: 'reject', text: 'Reject — no new spending', consequence: 'You hold the line.', effects: { debtBurden: -5, publicSupport: -8 } },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'Supply Side Strategy',
-    narrative: `You have chosen to focus on the supply side. This is a long-term play: by addressing the physical constraints of the economy — energy, transport, skills — you hope to lower costs without crushing demand. But the results will not be immediate. You can start with a massive infrastructure push to clear bottlenecks, or a targeted program to subsidize energy efficiency for firms.`,
-    choices: [
-      { id: 'infrastructure', text: 'Infrastructure push', consequence: 'Big investment, big debt.', effects: { economicStrength: 10, debtBurden: 12, priceStability: 2 }, nextBlock: 1 },
-      { id: 'efficiency', text: 'Energy efficiency subsidies', consequence: 'Targeted support.', effects: { priceStability: 5, economicStrength: 3, debtBurden: 5 }, nextBlock: 1 },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'Energy Crisis',
-    narrative: `Energy prices have spiked again. Global supply disruptions and geopolitical tensions have pushed oil and gas costs to levels not seen in years. Households are struggling to heat their homes. Businesses are warning of closures. Subsidizing household bills would cushion the shock and protect the most vulnerable — but it would add to the deficit and could keep demand high, prolonging inflation. Letting prices rise would hurt people immediately but might force the adjustment faster. What do you do?`,
-    choices: [
-      { id: 'subsidize', text: 'Subsidize household bills', consequence: 'You cushion the shock.', effects: { publicSupport: 12, priceStability: 5, debtBurden: 8 } },
-      { id: 'let_rise', text: 'Let prices rise', consequence: 'You avoid intervention.', effects: { priceStability: -5, debtBurden: -5, publicSupport: -12 } },
-    ],
-  },
-  {
-    phase: 2,
-    title: 'Wage Negotiations',
-    narrative: `Unions are demanding raises to keep pace with inflation. Firms say they will pass any wage increase on to consumers, which could fuel more inflation. You could broker a wage-price deal — bringing business and labour together to agree on modest increases that do not spiral. Some countries have used such "incomes policy" to tame inflation without crushing demand. Or you could stay out and let them negotiate — or fight — on their own. What do you do?`,
-    choices: [
-      { id: 'broker', text: 'Broker a wage-price deal', consequence: 'You convene talks.', effects: { publicSupport: 8, priceStability: 5, economicStrength: 3 } },
-      { id: 'stay_out', text: 'Stay out', consequence: 'You let them negotiate.', effects: { priceStability: -3, publicSupport: -5 } },
-    ],
-  },
-  {
-    phase: 2,
-    title: 'Supply Chain Investment',
-    narrative: `Bottlenecks persist — in ports, in energy, in key inputs. Part of the inflation is not from too much demand but from too little supply. You could launch a major supply-side program: invest in infrastructure, storage, and domestic production of critical goods. It would take time to bear fruit but could ease inflation without the same job losses as rate hikes. Or you could rely on market adjustment — let high prices attract new supply over time. The first costs money; the second costs time. Which do you choose?`,
-    choices: [
-      { id: 'launch', text: 'Launch supply-side program', consequence: 'You invest.', effects: { economicStrength: 10, priceStability: 8, debtBurden: 10 } },
-      { id: 'market', text: 'Rely on market adjustment', consequence: 'You wait.', effects: { debtBurden: -5, economicStrength: -3 } },
-    ],
-  },
-  {
-    phase: 2,
-    title: 'Recession Deepens',
-    narrative: `GDP has contracted again. Unemployment is rising. Experience from Europe after 2010 suggests that austerity as a crisis response often failed — it deepened recessions and sometimes made debt worse by shrinking the economy. The real recovery, when it came, required political intervention: stimulus, bank support, or both. Your advisors are split. Do you pivot to stimulus and ease the squeeze, or hold course and bet that the recession will burn out inflation first?`,
-    choices: [
-      { id: 'stimulus', text: 'Pivot to stimulus', consequence: 'You ease policy.', effects: { economicStrength: 8, publicSupport: 10, priceStability: -5 } },
-      { id: 'hold', text: 'Hold course', consequence: 'You resist.', effects: { priceStability: 8, economicStrength: -10, publicSupport: -12 } },
-    ],
-  },
-  {
-    phase: 2,
-    title: 'FIRE Sector Scrutiny',
-    narrative: `Some analysts argue that the FIRE sector — finance, insurance, real estate — extracts value from the productive economy rather than supporting it. Profits in finance have remained high even as manufacturing and services struggle. A tax on financial sector profits or transactions could raise revenue and signal that you expect everyone to share the burden. But the financial industry is powerful and would lobby hard against it. Do you propose financial sector taxes, or leave it alone to avoid the fight?`,
-    choices: [
-      { id: 'tax', text: 'Propose financial sector taxes', consequence: 'You target finance.', effects: { publicSupport: 8, economicStrength: 2, debtBurden: -5 } },
-      { id: 'leave', text: 'Leave it alone', consequence: 'You avoid the fight.', effects: { economicStrength: -2 } },
-    ],
-  },
-  {
-    phase: 3,
-    title: 'Inflation Expectations',
-    narrative: `The central bank says inflation expectations are unanchored — people and firms are starting to assume high inflation will persist, which can make it self-fulfilling. They want one more rate hike to signal resolve. But unemployment is already high and growth is weak. Do you back the hike and share responsibility for the pain, or argue enough is enough — that further tightening risks a deeper recession for uncertain gain?`,
-    choices: [
-      { id: 'back', text: 'Back one more hike', consequence: 'Rates rise.', effects: { priceStability: 10, economicStrength: -8, publicSupport: -6 } },
-      { id: 'enough', text: 'Argue enough is enough', consequence: 'You resist.', effects: { economicStrength: 5, publicSupport: 8, priceStability: -3 } },
-    ],
-  },
-  {
-    phase: 3,
-    title: 'Price Caps',
-    narrative: `Some economists urge price caps on essentials — food, energy, rent. The argument is that these are not ordinary commodities; treating them as such leaves the poorest at the mercy of the market. "Decommodifying" them, even temporarily, could protect living standards. But price caps can create shortages, distort incentives, and draw criticism from free-market advocates. The central bank would see them as masking inflation rather than curing it. Do you impose them?`,
-    choices: [
-      { id: 'impose', text: 'Impose price caps', consequence: 'You intervene.', effects: { priceStability: 8, publicSupport: 10, economicStrength: -3 } },
-      { id: 'reject', text: 'Reject price caps', consequence: 'You stay market-oriented.', effects: { economicStrength: 3, publicSupport: -5 } },
-    ],
-  },
-  {
-    phase: 3,
-    title: 'Coalition Tension',
-    narrative: `Your coalition partner wants a jobs guarantee — a promise that the state will provide work to anyone who cannot find it in the private sector. Supporters say it would eliminate involuntary unemployment and stabilise demand. Critics say it would be expensive and could distort labour markets. Do you negotiate a compromise — perhaps a smaller pilot or targeted program — or refuse and risk the coalition?`,
-    choices: [
-      { id: 'compromise', text: 'Negotiate a compromise', consequence: 'You find middle ground.', effects: { publicSupport: 8, employment: 5, debtBurden: 5 } },
-      { id: 'refuse', text: 'Refuse', consequence: 'You hold firm.', effects: { debtBurden: -5, publicSupport: -10 } },
-    ],
-  },
-  {
-    phase: 3,
-    title: 'Export Competitiveness',
-    narrative: `The weak currency has boosted exports — your goods are cheaper abroad. Some argue you should support further depreciation to capture more market share and create jobs. But a weaker currency also raises import costs and can fuel inflation. Do you support further depreciation or resist it to protect purchasing power?`,
-    choices: [
-      { id: 'support', text: 'Support depreciation', consequence: 'Exports surge.', effects: { economicStrength: 10, priceStability: -5 } },
-      { id: 'resist', text: 'Resist', consequence: 'You defend the currency.', effects: { priceStability: 5, economicStrength: -5 } },
-    ],
-  },
-  {
-    phase: 4,
-    title: 'Mid-Term Assessment',
-    narrative: `You are halfway through your term. Inflation has eased from its peak but growth is weak. Do you declare victory and ease policy — pivoting toward stimulus to support recovery — or push for more, holding the line on inflation until it is fully tamed? Easing may revive growth but could let inflation creep back; pushing for more may secure price stability but prolong the slump.`,
-    choices: [
-      { id: 'ease', text: 'Declare victory and ease', consequence: 'You pivot.', effects: { economicStrength: 8, publicSupport: 10, priceStability: -3 } },
-      { id: 'push', text: 'Push for more', consequence: 'You hold.', effects: { priceStability: 5, economicStrength: -3 } },
-    ],
-  },
-  {
-    phase: 4,
-    title: 'Housing Crisis',
-    narrative: `Housing costs are driving inflation — rents and mortgage payments weigh heavily on the index. Do you invest in social housing to add supply and cap costs for the most vulnerable, or rely on market supply — deregulating zoning, streamlining permits — to let builders respond to demand? Social housing is direct but costly; supply-side reform may be cheaper but slower and less targeted.`,
-    choices: [
-      { id: 'social', text: 'Invest in social housing', consequence: 'You build.', effects: { publicSupport: 12, priceStability: 5, debtBurden: 8 } },
-      { id: 'supply', text: 'Rely on supply', consequence: 'You deregulate.', effects: { economicStrength: 5, publicSupport: -5 } },
-    ],
-  },
-  {
-    phase: 4,
-    title: 'Energy Transition',
-    narrative: `Green investment — renewables, efficiency, grid upgrades — could ease dependence on volatile fossil fuel markets and reduce the energy-driven inflation you have faced. Do you launch a major program, or keep support modest? A major program could pay dividends over time but adds to debt now; modest support may be fiscally prudent but leaves you exposed to the next energy shock.`,
-    choices: [
-      { id: 'launch', text: 'Launch green program', consequence: 'You invest.', effects: { economicStrength: 8, priceStability: 5, debtBurden: 10 } },
-      { id: 'modest', text: 'Modest green support only', consequence: 'You go slow.', effects: { economicStrength: 3, debtBurden: 3 } },
-    ],
-  },
-  {
-    phase: 4,
-    title: 'Labor Market Reform',
-    narrative: `Some urge labour market flexibility — making it easier to hire and fire, weakening collective bargaining, reducing regulations. They argue it would boost employment and growth. But critics warn that treating labour as a pure commodity — something to be bought and sold with no protection — tears the social fabric. Workers would bear more risk; job security would fall. The evidence from countries that have gone down this path is mixed. Do you support reform, or oppose it to protect workers?`,
-    choices: [
-      { id: 'support', text: 'Support reform', consequence: 'You liberalize.', effects: { economicStrength: 5, publicSupport: -8 } },
-      { id: 'oppose', text: 'Oppose', consequence: 'You protect workers.', effects: { publicSupport: 10, economicStrength: -3 } },
-    ],
-  },
-  {
-    phase: 5,
-    title: 'Year Two',
-    narrative: `Growth has returned but inflation persists — not at crisis levels, but still above target. Do you prioritise growth, easing policy to support the recovery and jobs, or prioritise price stability, holding the line until inflation is fully under control? The first may boost employment but risk rekindling inflation; the second may secure stability but slow the rebound.`,
-    choices: [
-      { id: 'growth', text: 'Prioritize growth', consequence: 'You ease.', effects: { economicStrength: 10, publicSupport: 10, priceStability: -5 } },
-      { id: 'stability', text: 'Prioritize stability', consequence: 'You hold.', effects: { priceStability: 10, economicStrength: -5 } },
-    ],
-  },
-  {
-    phase: 5,
-    title: 'Tax Policy',
-    narrative: `Do you raise taxes on profits to fund relief for households and reduce the deficit, or cut taxes to stimulate investment and consumption? Raising taxes may ease fiscal pressure and address inequality but could dampen activity; cutting may boost growth but add to debt and favour those who have profited during the crisis.`,
-    choices: [
-      { id: 'raise', text: 'Raise taxes on profits', consequence: 'You redistribute.', effects: { publicSupport: 10, debtBurden: -5, economicStrength: -2 } },
-      { id: 'cut', text: 'Cut taxes', consequence: 'You stimulate.', effects: { economicStrength: 8, debtBurden: 8 } },
-    ],
-  },
-  {
-    phase: 5,
-    title: 'Central Bank Mandate',
-    narrative: `Some want to expand the central bank's mandate to include employment — a "dual mandate" like the Fed, balancing inflation and jobs. Supporters say it would prevent the bank from crushing employment to fight inflation; critics say it would dilute the inflation focus and risk politicising monetary policy. Do you support the change or oppose it?`,
-    choices: [
-      { id: 'support', text: 'Support expanded mandate', consequence: 'You reform.', effects: { publicSupport: 8, economicStrength: 5 } },
-      { id: 'oppose', text: 'Oppose', consequence: 'You keep narrow mandate.', effects: { priceStability: 5 } },
-    ],
-  },
-  {
-    phase: 5,
-    title: 'Final Quarter',
-    narrative: `Your term nears its end. The economy has stabilised — inflation has moderated, growth has returned, though neither is where you might have hoped. What legacy do you leave? A growth-oriented handover, betting on expansion? A stability-oriented one, prioritising price control? Or a balanced approach, splitting the difference?`,
-    choices: [
-      { id: 'growth_legacy', text: 'A growth-oriented handover', consequence: 'You prioritize expansion.', effects: { economicStrength: 8, publicSupport: 8 } },
-      { id: 'stability_legacy', text: 'A stability-oriented handover', consequence: 'You prioritize prices.', effects: { priceStability: 10, economicStrength: 2 } },
-      { id: 'balanced_legacy', text: 'A balanced handover', consequence: 'You split the difference.', effects: { economicStrength: 5, priceStability: 5, publicSupport: 5 } },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'The Inflation Fight',
-    narrative: `You have signalled that inflation is the priority. The central bank is pleased; markets are watching. But unemployment will rise as rates bite. Some argue that rate hikes hit workers first while the financial sector continues to extract returns. Do you publicly align with the bank to build credibility, or keep some distance to preserve political room to ease later?`,
-    choices: [
-      { id: 'align', text: 'Publicly align with the bank', consequence: 'You share the message.', effects: { priceStability: 5, publicSupport: -5 }, nextBlock: 23 },
-      { id: 'distance', text: 'Keep some distance', consequence: 'You preserve options.', effects: { publicSupport: 3, priceStability: -2 }, nextBlock: 23 },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'The Jobs Priority',
-    narrative: `You have signalled that jobs come first. The central bank is uneasy; they warn that inflation could spiral. But your labour minister is relieved. Some argue that when markets squeeze too hard, society pushes back — and that crushing demand to fight inflation can do more harm than good. Do you seek a compromise with the bank, or dig in and resist rate hikes?`,
-    choices: [
-      { id: 'compromise', text: 'Seek a compromise', consequence: 'You look for middle ground.', effects: { economicStrength: 3, publicSupport: 5 }, nextBlock: 24 },
-      { id: 'resist', text: 'Dig in and resist', consequence: 'You hold the line.', effects: { publicSupport: 8, priceStability: -8 }, nextBlock: 24 },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'Inflation Messaging',
-    narrative: `Your stance on the inflation fight has created a rift in the cabinet. The finance minister is worried about market credibility, while the social affairs minister is seeing the impact on families. You need to decide on the next step in your communication strategy. Do you double down on the 'inflation first' message, or start to introduce 'growth' concerns into your speeches?`,
-    choices: [
-      { id: 'double_down', text: 'Double down', consequence: 'Consistency at all costs.', effects: { priceStability: 8, publicSupport: -10 }, nextBlock: 1 },
-      { id: 'pivot_growth', text: 'Introduce growth concerns', consequence: 'A more balanced tone.', effects: { publicSupport: 5, priceStability: -3 }, nextBlock: 1 },
-    ],
-  },
-  {
-    phase: 1,
-    title: 'Jobs vs. Stability Debate',
-    narrative: `Your focus on jobs has emboldened the unions, but the central bank is leaking its concerns to the press. A major strike is looming in the transport sector. The strikers are demanding a 10% raise. Business leaders warn this will trigger a wage-price spiral. Do you support the strikers' demands to keep your jobs promise, or urge them to accept a lower offer to protect price stability?`,
-    choices: [
-      { id: 'support_strikers', text: 'Support strikers', consequence: 'Jobs and wages protected.', effects: { publicSupport: 12, priceStability: -10, economicStrength: -2 }, nextBlock: 1 },
-      { id: 'urge_moderation', text: 'Urge moderation', consequence: 'Stability first.', effects: { priceStability: 8, publicSupport: -8, economicStrength: 2 }, nextBlock: 1 },
-    ],
-  },
-];
+const introArc: ScenarioArc = {
+  id: 'start',
+  blocks: [
+    {
+      phase: 1,
+      title: 'The Worst of Both Worlds',
+      narrative: `You lead the Federated States of Norden — a developed economy now caught in stagflation. Inflation is at 8%, growth has turned negative, and unemployment is creeping up. Your citizens are angry: prices are rising while wages stagnate and jobs disappear.
+
+Three schools of thought dominate the cabinet debate:
+
+**The Monetarists** — led by your central bank governor — argue that inflation must be crushed before it becomes embedded in expectations. They cite Paul Volcker's playbook: aggressive rate hikes, even at the cost of a deep recession.
+
+**The Keynesians** — led by your finance minister — argue for a coordinated approach using fiscal stimulus alongside gradual tightening. They cite James Tobin's "stabilization policy" — using demand management to soften the blow while controlling inflation.
+
+**The Structuralists** — led by your labour minister — argue that stagflation isn't just a demand problem but a supply crisis. They cite John Kenneth Galbraith's institutionalism — address physical bottlenecks, decommodify essential goods, and protect workers from market violence.
+
+How do you frame your initial response?`,
+      choices: [
+        {
+          id: 'monetarist',
+          text: 'Back the Central Bank — Inflation First',
+          consequence: 'You commit to crushing inflation at any cost, following the Volcker playbook.',
+          effects: { priceStability: 15, economicStrength: -12, publicSupport: -10 },
+          nextArc: 'monetarist',
+        },
+        {
+          id: 'keynesian',
+          text: 'Coordinate Fiscal-Monetary Policy',
+          consequence: 'You choose Tobin-style stabilization — balancing inflation control with employment.',
+          effects: { priceStability: 5, economicStrength: 5, publicSupport: 3 },
+          nextArc: 'keynesian',
+        },
+        {
+          id: 'structuralist',
+          text: 'Address Supply Constraints Directly',
+          consequence: 'You choose Galbraith-style institutional reform — attacking bottlenecks and protecting workers.',
+          effects: { priceStability: 3, economicStrength: 8, publicSupport: 8 },
+          nextArc: 'structuralist',
+        },
+      ],
+    },
+  ],
+};
+
+/**
+ * MONETARIST ARC — Volcker-Style Orthodox Approach
+ * Prioritizes price stability above all else
+ */
+const monetaristArc: ScenarioArc = {
+  id: 'monetarist',
+  blocks: [
+    {
+      phase: 2,
+      title: 'The Volcker Shock',
+      narrative: `You have aligned with the central bank. The governor proposes a "shock therapy" approach: raising rates by 300 basis points immediately, triggering a deliberate recession to break inflation psychology.
+
+Some advisors warn this will cause unemployment to spike to 12% or higher. Others argue that without credibility, inflation will persist. The Volcker precedent suggests that only dramatic action can anchor expectations.
+
+Do you back the full shock, or seek a more gradual approach?`,
+      choices: [
+        { id: 'full_shock', text: 'Full Shock — 300bp hike immediately', consequence: 'You go all-in on credibility.', effects: { priceStability: 20, economicStrength: -20, publicSupport: -15 } },
+        { id: 'gradual', text: 'Gradual approach — 150bp now, more later', consequence: 'You try to split the difference.', effects: { priceStability: 10, economicStrength: -10, publicSupport: -5 } },
+      ],
+    },
+    {
+      phase: 2,
+      title: 'Defending the Policy',
+      narrative: `Unemployment is rising. Factories are closing. The opposition is organizing mass protests. Your coalition partners are nervous — their constituents are losing jobs.
+
+The central bank insists this is temporary pain for permanent gain. They need your public support to maintain credibility. But every day you defend the policy, your approval ratings fall.
+
+Do you double down on defending the bank, or quietly distance yourself?`,
+      choices: [
+        { id: 'defend', text: 'Publicly defend the central bank', consequence: 'You share ownership of the pain.', effects: { priceStability: 8, publicSupport: -12 } },
+        { id: 'distance', text: 'Keep political distance', consequence: 'You preserve room to pivot later.', effects: { publicSupport: 5, priceStability: -5 } },
+      ],
+    },
+    {
+      phase: 3,
+      title: 'Fiscal Discipline',
+      narrative: `Your finance minister wants austerity — cutting spending to signal fiscal responsibility. This would reinforce the disinflationary message. But social services are already strained.
+
+The Keynesians in your cabinet warn that fiscal austerity combined with monetary tightening is a recipe for depression. They want counter-cyclical spending.
+
+Do you impose fiscal austerity or maintain spending?`,
+      choices: [
+        { id: 'austerity', text: 'Impose fiscal austerity', consequence: 'You signal total commitment to stability.', effects: { priceStability: 10, debtBurden: -8, publicSupport: -10 } },
+        { id: 'spend', text: 'Maintain social spending', consequence: 'You soften the blow, but weaken credibility.', effects: { publicSupport: 8, priceStability: -5, debtBurden: 5 } },
+      ],
+    },
+    {
+      phase: 3,
+      title: 'Wage Restraint',
+      narrative: `Unions are demanding 15% raises to keep pace with inflation. The central bank warns that wage spirals will undo all their work. They want you to publicly oppose the demands.
+
+Galbraith's institutionalists argue that wage restraint without profit restraint is just class war. But the monetarists insist: expectations must be broken everywhere.
+
+Do you back wage restraint, or support the workers?`,
+      choices: [
+        { id: 'restraint', text: 'Back wage restraint', consequence: 'You take on the unions.', effects: { priceStability: 12, publicSupport: -15 } },
+        { id: 'support_workers', text: 'Support worker demands', consequence: 'You protect living standards.', effects: { publicSupport: 12, priceStability: -10 } },
+      ],
+    },
+    {
+      phase: 4,
+      title: 'The Turning Point',
+      narrative: `Inflation has dropped to 4% — a major victory. But unemployment is at 11% and growth has been negative for six quarters. The social cost is immense.
+
+The central bank wants one more hike to ensure inflation doesn't rebound. Your political advisors say you're facing electoral annihilation if you don't pivot to growth now.
+
+Do you hold course or declare victory?`,
+      choices: [
+        { id: 'hold', text: 'One more hike — finish the job', consequence: 'You risk political destruction.', effects: { priceStability: 10, economicStrength: -8, publicSupport: -15 } },
+        { id: 'pivot', text: 'Declare victory and ease', consequence: 'You save your government.', effects: { economicStrength: 10, publicSupport: 10, priceStability: -5 } },
+      ],
+    },
+    {
+      phase: 5,
+      title: 'Monetarist Legacy',
+      narrative: `Your term is ending. The monetarist experiment has run its course. Inflation has been crushed — but at what cost?
+
+Some argue you saved the currency and restored central bank credibility. Others argue you engineered a needless depression that destroyed livelihoods for a generation.
+
+What legacy do you choose to emphasize?`,
+      choices: [
+        { id: 'credibility', text: 'Price stability restored', consequence: 'You claim victory on inflation.', effects: { priceStability: 8 }, endingIndex: 0 },
+        { id: 'mixed', text: 'The cost was too high', consequence: 'You acknowledge the trade-off.', effects: { publicSupport: -5 }, endingIndex: 1 },
+        { id: 'regret', text: 'A mistake from the start', consequence: 'You disown the approach.', effects: { publicSupport: 5, priceStability: -8 }, endingIndex: 2 },
+      ],
+    },
+  ],
+};
+
+/**
+ * KEYNESIAN ARC — Tobin-Style Demand Management
+ * Balances inflation control with employment
+ */
+const keynesianArc: ScenarioArc = {
+  id: 'keynesian',
+  blocks: [
+    {
+      phase: 2,
+      title: 'Coordinated Stabilization',
+      narrative: `You have chosen the Tobin path — fiscal-monetary coordination. The central bank agrees to moderate rate hikes (150bp instead of 300bp) in exchange for fiscal discipline on non-essential spending.
+
+But your finance minister wants to use the "fiscal space" created by the deal to fund a major jobs program. The central bank warns this would undermine the agreement.
+
+Do you stick to the coordinated plan, or use the fiscal space for stimulus?`,
+      choices: [
+        { id: 'stick', text: 'Stick to the coordinated plan', consequence: 'You preserve the agreement.', effects: { priceStability: 8, economicStrength: 3 } },
+        { id: 'stimulus', text: 'Launch jobs program', consequence: 'You risk the central bank revolting.', effects: { economicStrength: 10, publicSupport: 10, priceStability: -8 } },
+      ],
+    },
+    {
+      phase: 2,
+      title: 'Incomes Policy',
+      narrative: `James Tobin's approach included "incomes policy" — bringing unions and business together to negotiate wage and price guidelines that prevent spiral inflation without massive unemployment.
+
+Your labour minister wants to convene a "social partnership" summit. Business leaders are skeptical but willing to talk. Unions want guarantees before they agree to restraint.
+
+Do you invest political capital in this summit?`,
+      choices: [
+        { id: 'summit', text: 'Convene the social partnership', consequence: 'You broker a national deal.', effects: { publicSupport: 10, priceStability: 5, economicStrength: 5 } },
+        { id: 'skip', text: 'Let markets handle it', consequence: 'You avoid the political risk.', effects: { priceStability: -5, economicStrength: -3 } },
+      ],
+    },
+    {
+      phase: 3,
+      title: 'Automatic Stabilizers',
+      narrative: `Unemployment is rising but not as sharply as in the monetarist scenario. Your automatic stabilizers — unemployment benefits, progressive taxation — are cushioning the blow.
+
+Some want to strengthen them: extend benefits, expand eligibility. Others warn that making safety nets too comfortable reduces work incentives and prolongs adjustment.
+
+What do you do?`,
+      choices: [
+        { id: 'expand', text: 'Expand automatic stabilizers', consequence: 'You protect the vulnerable.', effects: { publicSupport: 10, debtBurden: 8, economicStrength: 3 } },
+        { id: 'limit', text: 'Keep them as-is', consequence: 'You avoid moral hazard concerns.', effects: { debtBurden: -5, publicSupport: -5 } },
+      ],
+    },
+    {
+      phase: 3,
+      title: 'Targeted Relief',
+      narrative: `Energy prices remain volatile. Households are struggling with heating bills. You can target relief to the most vulnerable without adding significantly to aggregate demand.
+
+The monetarists in your cabinet oppose any relief as "working against the central bank." The structuralists say you're just treating symptoms.
+
+Do you implement targeted relief?`,
+      choices: [
+        { id: 'relief', text: 'Targeted energy subsidies', consequence: 'You protect the poorest.', effects: { publicSupport: 10, priceStability: -3, debtBurden: 5 } },
+        { id: 'none', text: 'No targeted relief', consequence: 'You maintain policy purity.', effects: { debtBurden: -5, publicSupport: -8 } },
+      ],
+    },
+    {
+      phase: 4,
+      title: 'Investment Program',
+      narrative: `Growth has stabilized but remains weak. Your finance minister proposes a major infrastructure and green investment program — "investing in the future" while boosting demand now.
+
+The central bank warns this will reignite inflation. But with unemployment still elevated, the Keynesians argue the economy has slack.
+
+Do you launch the investment program?`,
+      choices: [
+        { id: 'invest', text: 'Launch major investment program', consequence: 'You bet on growth.', effects: { economicStrength: 12, publicSupport: 10, priceStability: -5, debtBurden: 10 } },
+        { id: 'wait', text: 'Wait for private recovery', consequence: 'You avoid crowding out.', effects: { priceStability: 3, economicStrength: -3 } },
+      ],
+    },
+    {
+      phase: 5,
+      title: 'Keynesian Assessment',
+      narrative: `Your term ends. The Keynesian experiment produced mixed but generally positive results. Inflation is down to 5% — not as low as the monetarists achieved, but unemployment stayed under 8%.
+
+Some call it the "soft landing" that Tobin envisioned. Others say you simply prolonged stagflation rather than solving it.
+
+How do you frame your legacy?`,
+      choices: [
+        { id: 'balanced', text: 'The balanced path worked', consequence: 'You claim the soft landing.', effects: { economicStrength: 8, publicSupport: 8 }, endingIndex: 0 },
+        { id: 'compromise', text: 'Neither fish nor fowl', consequence: 'You acknowledge the muddle.', effects: { publicSupport: -3 }, endingIndex: 1 },
+        { id: 'incomplete', text: 'Should have gone further', consequence: 'You regret the compromises.', effects: { priceStability: -5 }, endingIndex: 2 },
+      ],
+    },
+  ],
+};
+
+/**
+ * STRUCTURALIST ARC — Galbraith-Style Institutional Reform
+ * Addresses supply constraints and protects workers
+ */
+const structuralistArc: ScenarioArc = {
+  id: 'structuralist',
+  blocks: [
+    {
+      phase: 2,
+      title: 'Decommodification Agenda',
+      narrative: `You have chosen the Galbraith path — addressing the structural causes of inflation. Your first move is to identify which goods are essential and should be partially decommodified: removed from pure market pricing.
+
+The structuralists argue that housing, energy, and food are not ordinary commodities — they are prerequisites for social participation. Markets should not determine who freezes or starves.
+
+What do you prioritize?`,
+      choices: [
+        { id: 'housing', text: 'Social housing expansion', consequence: 'You attack the housing crisis.', effects: { publicSupport: 10, debtBurden: 12, priceStability: 5 } },
+        { id: 'energy', text: 'Public energy infrastructure', consequence: 'You reduce energy volatility.', effects: { priceStability: 8, economicStrength: 5, debtBurden: 10 } },
+        { id: 'food', text: 'Strategic food reserves', consequence: 'You buffer supply shocks.', effects: { priceStability: 5, publicSupport: 5, debtBurden: 5 } },
+      ],
+    },
+    {
+      phase: 2,
+      title: 'Supply Chain Sovereignty',
+      narrative: `Galbraith emphasized "countervailing power" — institutions that balance corporate power. In this case, you're targeting supply chain sovereignty: domestic production of critical inputs so you're not hostage to global markets.
+
+You can invest in domestic semiconductor production, battery manufacturing, or pharmaceutical synthesis. Each requires major capital and time.
+
+Which sector do you prioritize?`,
+      choices: [
+        { id: 'chips', text: 'Domestic semiconductors', consequence: 'You reduce tech dependence.', effects: { economicStrength: 10, debtBurden: 15, priceStability: 3 } },
+        { id: 'batteries', text: 'Battery manufacturing', consequence: 'You electrify the future.', effects: { economicStrength: 8, priceStability: 5, debtBurden: 12 } },
+        { id: 'pharma', text: 'Pharmaceutical synthesis', consequence: 'You secure medicine supply.', effects: { publicSupport: 10, debtBurden: 10, priceStability: 2 } },
+      ],
+    },
+    {
+      phase: 3,
+      title: 'Labor Protection',
+      narrative: `The structuralists argue that treating labor as a commodity "destroys the social fabric." You propose strengthening collective bargaining, extending worker representation on corporate boards, and creating a jobs guarantee for the hardest hit.
+
+Business lobbies are furious. They warn this will reduce flexibility and investment. But your labor minister says that without this, the social contract is broken.
+
+How far do you push?`,
+      choices: [
+        { id: 'full', text: 'Comprehensive labor protection', consequence: 'You transform labor relations.', effects: { publicSupport: 15, economicStrength: -5, debtBurden: 8 } },
+        { id: 'moderate', text: 'Moderate reforms only', consequence: 'You avoid business war.', effects: { publicSupport: 5, economicStrength: 2 } },
+        { id: 'minimal', text: 'Minimal intervention', consequence: 'You disappoint your base.', effects: { publicSupport: -10, economicStrength: 5 } },
+      ],
+    },
+    {
+      phase: 3,
+      title: 'Price Controls on Essentials',
+      narrative: `With supply chains stabilized, you now face the question of price controls. Galbraith advised controls on essential goods during wartime and crisis — not as permanent policy, but as emergency protection.
+
+Your advisors are split. Some say controls will create shortages. Others say they're necessary to protect living standards while supply adjusts.
+
+Do you impose temporary price caps on essentials?`,
+      choices: [
+        { id: 'controls', text: 'Temporary price controls', consequence: 'You shield consumers.', effects: { priceStability: 8, publicSupport: 10, economicStrength: -5 } },
+        { id: 'no_controls', text: 'Market pricing with subsidies', consequence: 'You use transfers instead.', effects: { publicSupport: 5, debtBurden: 8, economicStrength: 3 } },
+      ],
+    },
+    {
+      phase: 4,
+      title: 'Countervailing Power',
+      narrative: `Galbraith argued that corporate power must be balanced by strong unions, consumer organizations, and regulatory agencies. You propose creating a "Price and Supply Authority" with powers to investigate supply manipulation and strategic stockpiling.
+
+The business community sees this as government overreach. But evidence suggests some corporations used the crisis to raise prices beyond cost increases.
+
+Do you create the authority?`,
+      choices: [
+        { id: 'authority', text: 'Create the Price and Supply Authority', consequence: 'You challenge corporate power.', effects: { priceStability: 10, publicSupport: 8, economicStrength: -3 } },
+        { id: 'existing', text: 'Strengthen existing regulators', consequence: 'You work within the system.', effects: { priceStability: 3, publicSupport: 3 } },
+      ],
+    },
+    {
+      phase: 5,
+      title: 'Structuralist Legacy',
+      narrative: `Your term ends. The structuralist approach has transformed the economy's foundations. Supply chains are more resilient, essential goods are less volatile, and workers have more protection.
+
+But the central bank complains you "ignored inflation" by focusing on structure. Business says you overregulated. Workers say you delivered.
+
+How do you assess the structuralist experiment?`,
+      choices: [
+        { id: 'success', text: 'We built a resilient economy', consequence: 'You claim structural victory.', effects: { economicStrength: 10, publicSupport: 10 }, endingIndex: 0 },
+        { id: 'partial', text: 'Progress, but inflation remains', consequence: 'You acknowledge trade-offs.', effects: { priceStability: 3, publicSupport: 5 }, endingIndex: 1 },
+        { id: 'unfinished', text: 'The work continues', consequence: 'You pass the torch.', effects: { publicSupport: 5, economicStrength: 5 }, endingIndex: 2 },
+      ],
+    },
+  ],
+};
 
 const endings: LongFormEnding[] = [
-  { id: 'victory', endingType: 'victory', title: 'Soft Landing', endingNarrative: `You navigated stagflation. Inflation has moderated. Growth has returned. You found the narrow path between inflation and recession.` },
-  { id: 'partial', endingType: 'partial_victory', title: 'Mixed Results', endingNarrative: `You made progress. Inflation eased but growth remained weak — or growth returned but inflation proved stubborn. The outcome is mixed.` },
-  { id: 'defeat', endingType: 'defeat', title: 'Crisis Unresolved', endingNarrative: `Stagflation persists. You could not find the balance. The next government inherits the same difficult trade-offs.` },
+  {
+    id: 'victory',
+    endingType: 'victory',
+    title: 'Soft Landing Achieved',
+    endingNarrative: `You navigated stagflation without destroying the economy or society. Inflation has moderated, growth has stabilized, and unemployment never reached crisis levels. 
+
+Your approach — whether monetarist discipline, Keynesian balance, or structuralist reform — succeeded in threading the needle. The next government inherits a functioning economy rather than a crisis.
+
+History may debate whether your solution was optimal, but it worked.`,
+  },
+  {
+    id: 'partial',
+    endingType: 'partial_victory',
+    title: 'Mixed Results',
+    endingNarrative: `You made progress on stagflation, but the victory was incomplete. Inflation eased but remains elevated, or growth returned but unemployment persists.
+
+Your chosen approach — monetarist, Keynesian, or structuralist — addressed some problems while leaving others. The economy is better than when you started, but the fundamental tensions remain.
+
+The next government will face similar trade-offs, though from a more stable base.`,
+  },
+  {
+    id: 'defeat',
+    endingType: 'defeat',
+    title: 'Crisis Unresolved',
+    endingNarrative: `Stagflation persists or has worsened. Your chosen approach — whether too aggressive, too timid, or too slow — failed to break the cycle.
+
+Unemployment and inflation remain high. Public support has collapsed. The next government inherits the same difficult choices, but with fewer resources and less credibility.
+
+The history of stagflation suggests that some crises simply outlast political cycles. This may be one of them.`,
+  },
 ];
 
-const { getNode } = createLongFormTree(blocks, endings, (i) => (i === 0 ? 0 : i === 1 ? 1 : 2));
+const { getNode } = createArcBasedTree(
+  [introArc, monetaristArc, keynesianArc, structuralistArc],
+  endings,
+  (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
+);
+
 export { getNode };
