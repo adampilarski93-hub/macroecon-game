@@ -108,10 +108,18 @@ export function DecisionTreePage() {
   const [game, setGame] = useState<{
     currentNodeId: string;
     stats: GenericStats;
-    history: { nodeId: string; choiceId: string; title: string }[];
+    history: {
+      nodeId: string;
+      choiceId: string;
+      title: string;
+      choiceLabel: string;
+      effects: Partial<GenericStats>;
+      simState: SimulationState | null;
+    }[];
     turn: number;
     finished: boolean;
     simState: SimulationState | null;
+    initialSimState: SimulationState | null;
   } | null>(null);
 
   useEffect(() => {
@@ -124,6 +132,7 @@ export function DecisionTreePage() {
         turn: 1,
         finished: false,
         simState,
+        initialSimState: simState,
       });
     }
   }, [config, game, scenarioId]);
@@ -186,11 +195,15 @@ export function DecisionTreePage() {
               nodeId: prev.currentNodeId,
               choiceId: choice.id,
               title: node?.title ?? 'Unknown',
+              choiceLabel: choice.text,
+              effects: choice.effects,
+              simState: nextSimState,
             },
           ],
           turn: prev.turn + 1,
           finished: false,
           simState: nextSimState,
+          initialSimState: prev.initialSimState,
         };
       });
       setTransitioning(false);
@@ -330,6 +343,17 @@ export function DecisionTreePage() {
                   <span className="score-label">/ 100</span>
                 </div>
               </div>
+
+              {/* Decision Impact Analysis for early end */}
+              <NarrativeDecisionImpact
+                history={game.history}
+                initialStats={config.initialStats}
+                finalStats={game.stats}
+                statLabels={statLabels}
+                statColors={statColors}
+                isEarlyEnd={true}
+              />
+
               <button className="play-again-btn" onClick={() => navigate('/')}>
                 Try again
               </button>
@@ -392,6 +416,16 @@ export function DecisionTreePage() {
                   ))}
                 </div>
               </div>
+
+              {/* Decision Impact Analysis */}
+              <NarrativeDecisionImpact
+                history={game.history}
+                initialStats={config.initialStats}
+                finalStats={game.stats}
+                statLabels={statLabels}
+                statColors={statColors}
+              />
+
               <button className="play-again-btn" onClick={() => navigate('/')}>
                 Play again
               </button>
@@ -423,4 +457,292 @@ export function DecisionTreePage() {
       </div>
     </div>
   );
+}
+
+/** Narrative Decision Impact Component */
+function NarrativeDecisionImpact({
+  history,
+  initialStats,
+  finalStats,
+  statLabels,
+  statColors,
+  isEarlyEnd = false,
+}: {
+  history: {
+    nodeId: string;
+    choiceId: string;
+    title: string;
+    choiceLabel: string;
+    effects: Partial<GenericStats>;
+    simState: SimulationState | null;
+  }[];
+  initialStats: GenericStats;
+  finalStats: GenericStats;
+  statLabels: Record<string, string>;
+  statColors: Record<string, string>;
+  isEarlyEnd?: boolean;
+}) {
+  const [expandedDecision, setExpandedDecision] = useState<number | null>(null);
+
+  if (history.length === 0) return null;
+
+  // Calculate aggregate effects
+  const aggregateEffects: Record<string, number> = {};
+  history.forEach((h) => {
+    Object.entries(h.effects).forEach(([key, val]) => {
+      if (typeof val === 'number') {
+        aggregateEffects[key] = (aggregateEffects[key] ?? 0) + val;
+      }
+    });
+  });
+
+  // Identify key tradeoffs made
+  const tradeoffs = identifyNarrativeTradeoffs(history, aggregateEffects);
+
+  // Get most impactful decisions
+  const impactfulDecisions = history
+    .map((h, idx) => ({
+      ...h,
+      idx,
+      totalImpact: Object.values(h.effects).reduce((sum: number, v) => sum + (typeof v === 'number' ? Math.abs(v) : 0), 0),
+    }))
+    .sort((a, b) => (b.totalImpact ?? 0) - (a.totalImpact ?? 0))
+    .slice(0, 3);
+
+  return (
+    <div className="narr-decision-impact">
+      <h3>📊 Decision Impact Analysis</h3>
+
+      {isEarlyEnd && (
+        <div className="narr-impact-warning">
+          Your government ended early. Here&apos;s how your decisions led to this outcome:
+        </div>
+      )}
+
+      {/* Summary Stats */}
+      <div className="narr-impact-summary">
+        <h4>Overall Impact</h4>
+        <div className="narr-impact-stats-grid">
+          {Object.entries(aggregateEffects)
+            .filter(([_, val]) => Math.abs(val) > 5)
+            .map(([key, val]) => (
+              <div key={key} className="narr-impact-stat">
+                <span className="narr-impact-stat-label">{statLabels[key] ?? key}</span>
+                <span
+                  className="narr-impact-stat-value"
+                  style={{ color: val > 0 ? '#22c55e' : '#ef4444' }}
+                >
+                  {val > 0 ? '+' : ''}{Math.round(val)}
+                </span>
+                <span className="narr-impact-stat-context">
+                  {Math.round(initialStats[key] ?? 0)} → {Math.round(finalStats[key] ?? 0)}
+                </span>
+              </div>
+            ))}
+        </div>
+      </div>
+
+      {/* Most Impactful Decisions */}
+      {impactfulDecisions.length > 0 && (
+        <div className="narr-impact-decisions">
+          <h4>🔑 Most Impactful Decisions</h4>
+          <div className="narr-impact-timeline">
+            {impactfulDecisions.map((d) => (
+              <div key={d.idx} className="narr-impact-decision-card">
+                <button
+                  className="narr-impact-header"
+                  onClick={() => setExpandedDecision(expandedDecision === d.idx ? null : d.idx)}
+                >
+                  <span className="narr-impact-turn">Decision {d.idx + 1}</span>
+                  <span className="narr-impact-title">{d.title}</span>
+                  <span className="narr-impact-choice">→ {d.choiceLabel}</span>
+                  <span className="narr-expand-icon">{expandedDecision === d.idx ? '▼' : '▶'}</span>
+                </button>
+
+                {expandedDecision === d.idx && (
+                  <div className="narr-impact-details">
+                    <div className="narr-impact-effects">
+                      <h5>Effects:</h5>
+                      {Object.entries(d.effects)
+                        .filter(([_, val]) => typeof val === 'number' && val !== 0)
+                        .map(([key, val]) => (
+                          <div key={key} className="narr-impact-effect-row">
+                            <span className="narr-effect-label">{statLabels[key] ?? key}</span>
+                            <span
+                              className="narr-effect-value"
+                              style={{ color: (val as number) > 0 ? '#22c55e' : '#ef4444' }}
+                            >
+                              {(val as number) > 0 ? '+' : ''}{Math.round(val as number)}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                    {d.simState && (
+                      <div className="narr-impact-sim">
+                        <h5>Economic Impact:</h5>
+                        <div className="narr-sim-metrics">
+                          <span>GDP: {d.simState.country.gdp.toFixed(0)}</span>
+                          <span>Inflation: {(d.simState.country.inflationRate * 100).toFixed(1)}%</span>
+                          <span>Unemployment: {(d.simState.country.unemploymentRate * 100).toFixed(1)}%</span>
+                        </div>
+                      </div>
+                    )}
+                    <div className="narr-impact-lesson">
+                      <span className="lesson-icon">💡</span>
+                      <span className="lesson-text">
+                        {generateNarrativeLesson(d.effects, statLabels)}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tradeoffs Analysis */}
+      {tradeoffs.length > 0 && (
+        <div className="narr-impact-tradeoffs">
+          <h4>⚖️ Key Tradeoffs You Faced</h4>
+          {tradeoffs.map((t, i) => (
+            <div key={i} className="narr-tradeoff-card">
+              <div className="narr-tradeoff-title">{t.tradeoff}</div>
+              <div className="narr-tradeoff-detail">
+                <span className="narr-tradeoff-label">Your path:</span>
+                <span className="narr-tradeoff-value">{t.choice}</span>
+              </div>
+              <div className="narr-tradeoff-detail">
+                <span className="narr-tradeoff-label">Result:</span>
+                <span className="narr-tradeoff-value">{t.result}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* What to Try Next Time */}
+      <div className="narr-impact-suggestions">
+        <h4>🎯 Suggestions for Next Time</h4>
+        <ul>
+          {generateNarrativeSuggestions(history, finalStats, statLabels).map((s, i) => (
+            <li key={i}>{s}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function identifyNarrativeTradeoffs(
+  history: { effects: Partial<GenericStats> }[],
+  aggregateEffects: Record<string, number>,
+): { tradeoff: string; choice: string; result: string }[] {
+  const tradeoffs: { tradeoff: string; choice: string; result: string }[] = [];
+
+  // Check for growth vs stability tradeoff
+  const gdpChange = aggregateEffects['gdp'] ?? 0;
+  const debtChange = aggregateEffects['debtBurden'] ?? 0;
+
+  if (gdpChange > 10 && debtChange > 10) {
+    tradeoffs.push({
+      tradeoff: 'Growth vs. Debt Sustainability',
+      choice: 'Prioritized economic expansion',
+      result: `GDP increased significantly but debt rose by ${Math.round(debtChange)} points`,
+    });
+  }
+
+  // Check for equality vs efficiency
+  const equalityChange = aggregateEffects['socialEquality'] ?? 0;
+  const gdpSignificant = Math.abs(gdpChange) > 15;
+
+  if (gdpSignificant && equalityChange < -5) {
+    tradeoffs.push({
+      tradeoff: 'Efficiency vs. Equality',
+      choice: 'Favored growth-oriented policies',
+      result: 'Stronger economy but widening inequality',
+    });
+  } else if (equalityChange > 10 && gdpChange < 0) {
+    tradeoffs.push({
+      tradeoff: 'Efficiency vs. Equality',
+      choice: 'Prioritized social programs and redistribution',
+      result: 'Improved equality but slower growth',
+    });
+  }
+
+  // Check for political capital spending
+  const polCapSpent = history.filter(h => (h.effects['politicalCapital'] ?? 0) < -5).length;
+  if (polCapSpent >= 2) {
+    tradeoffs.push({
+      tradeoff: 'Political Capital Management',
+      choice: 'Spent significant political capital on reforms',
+      result: 'Achieved policy goals but weakened political position',
+    });
+  }
+
+  return tradeoffs;
+}
+
+function generateNarrativeLesson(
+  effects: Partial<GenericStats>,
+  statLabels: Record<string, string>,
+): string {
+  const entries = Object.entries(effects).filter(([_, v]) => typeof v === 'number' && v !== 0);
+  if (entries.length === 0) return 'A balanced decision with mixed effects.';
+
+  // Find largest effect
+  const [largestKey, largestVal] = entries.sort((a, b) => Math.abs(b[1] as number) - Math.abs(a[1] as number))[0];
+  const val = largestVal as number;
+  const label = statLabels[largestKey] ?? largestKey;
+
+  if (largestKey === 'debtBurden' && val > 5) {
+    return `Taking on debt can fund growth, but sustainability matters. The ${Math.round(val)}-point increase will require future attention.`;
+  }
+  if (largestKey === 'gdp' && val > 5) {
+    return `Strong pro-growth policies yielded ${Math.round(val)} points of economic expansion.`;
+  }
+  if (largestKey === 'socialEquality' && val > 5) {
+    return `Redistributive policies improved social equality by ${Math.round(val)} points.`;
+  }
+  if (largestKey === 'politicalCapital' && val < -5) {
+    return `Expending political capital (${Math.round(Math.abs(val))} points) can achieve reforms but creates future constraints.`;
+  }
+  if (largestKey === 'politicalStability' && val < -5) {
+    return `Stability declined—consider whether the tradeoff was worth the policy gains.`;
+  }
+
+  return `${label} ${val > 0 ? 'increased' : 'decreased'} by ${Math.round(Math.abs(val))} points.`;
+}
+
+function generateNarrativeSuggestions(
+  history: { effects: Partial<GenericStats> }[],
+  finalStats: GenericStats,
+  statLabels: Record<string, string>,
+): string[] {
+  const suggestions: string[] = [];
+
+  // Check for patterns
+  const debtIncreases = history.filter(h => (h.effects['debtBurden'] ?? 0) > 3).length;
+  if (debtIncreases >= 3) {
+    suggestions.push('Consider balancing growth investments with debt sustainability.');
+  }
+
+  if ((finalStats['socialEquality'] ?? 50) < 40) {
+    suggestions.push('Lower inequality might improve long-term stability and domestic demand.');
+  }
+
+  if ((finalStats['politicalStability'] ?? 50) < 40) {
+    suggestions.push('Building political capital before major reforms can prevent crises.');
+  }
+
+  if ((finalStats['institutionalCapacity'] ?? 50) < 40) {
+    suggestions.push('Investing in institutional capacity pays dividends for future policy implementation.');
+  }
+
+  if (suggestions.length === 0) {
+    suggestions.push('Your balanced approach worked well—consider what specific choices led to success.');
+    suggestions.push('Try different scenarios to explore alternative economic strategies.');
+  }
+
+  return suggestions;
 }

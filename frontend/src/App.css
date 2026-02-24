@@ -3575,6 +3575,263 @@ header p {
   }
 }
 
+/* ========== Narrative Decision Impact Analysis ========== */
+.narr-decision-impact {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.narr-decision-impact h3 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.narr-decision-impact h4 {
+  margin: 1.25rem 0 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.narr-impact-warning {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 3px solid var(--color-inflation);
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+/* Impact Summary Stats */
+.narr-impact-summary {
+  margin-bottom: 1.5rem;
+}
+
+.narr-impact-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.narr-impact-stat {
+  background: var(--surface);
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.narr-impact-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.narr-impact-stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.narr-impact-stat-context {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Impact Timeline */
+.narr-impact-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.narr-impact-decision-card {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.narr-impact-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--surface);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.narr-impact-header:hover {
+  background: var(--surface-hover);
+}
+
+.narr-impact-turn {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(20, 184, 166, 0.15);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.narr-impact-title {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
+}
+
+.narr-impact-choice {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.narr-expand-icon {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Impact Details */
+.narr-impact-details {
+  padding: 0 0.75rem 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.narr-impact-effects h5,
+.narr-impact-sim h5 {
+  margin: 0.75rem 0 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.narr-impact-effect-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.narr-impact-effect-row:last-child {
+  border-bottom: none;
+}
+
+.narr-effect-label {
+  color: var(--text-muted);
+}
+
+.narr-effect-value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.narr-sim-metrics {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.narr-impact-lesson {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(34, 197, 94, 0.08);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid #22c55e;
+}
+
+.lesson-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.lesson-text {
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+/* Tradeoffs */
+.narr-impact-tradeoffs {
+  margin-top: 1.5rem;
+}
+
+.narr-tradeoff-card {
+  background: var(--surface);
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+  border-left: 3px solid var(--color-inflation);
+}
+
+.narr-tradeoff-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.narr-tradeoff-detail {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+
+.narr-tradeoff-label {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  width: 80px;
+}
+
+.narr-tradeoff-value {
+  color: var(--text);
+  flex: 1;
+}
+
+/* Suggestions */
+.narr-impact-suggestions {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.narr-impact-suggestions ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.narr-impact-suggestions li {
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
 /* Landscape orientation optimizations */
 @media (max-height: 500px) and (orientation: landscape) {
   /* Compact header for short screens */
