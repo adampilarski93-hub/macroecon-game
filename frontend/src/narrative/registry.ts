@@ -8,6 +8,7 @@ import { getNode as getCommodityNode } from './scenario-trees/commodity-pressure
 import { getNode as getRisingNode } from './scenario-trees/rising-industrializer';
 import { getNode as getSanctionsNode } from './scenario-trees/sanctions-isolation';
 import { getNode as getGulfMigrantNode } from './scenario-trees/gulf-migrant';
+import { getNode as getPlurinationalNode } from './scenario-trees/plurinational-path';
 
 const COMMON_STAT_COLORS: Record<string, string> = {
   economicStrength: '#22c55e',
@@ -23,6 +24,8 @@ const COMMON_STAT_COLORS: Record<string, string> = {
   legalStatus: '#3b82f6',
   solidarity: '#ec4899',
   dignity: '#f59e0b',
+  plurinationalUnity: '#10b981',
+  laborUnity: '#f97316',
 };
 
 type EvaluateEndingFn = ScenarioNarrativeConfig['evaluateEnding'];
@@ -222,6 +225,44 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig> 
         summary: won
           ? `You survived with dignity. You built the megacity — and you left with more than you came with.`
           : `The system took its toll. You leave with what you could save. The struggle continues.`,
+      };
+    },
+  ),
+  'plurinational-path': makeConfig(
+    'plurinational-path',
+    'Plurinational Path',
+    'Republic of Altura',
+    ['sovereignty', 'publicSupport', 'economicStrength', 'plurinationalUnity', 'laborUnity', 'debtBurden'],
+    {
+      sovereignty: 'Sovereignty',
+      publicSupport: 'Public Support',
+      economicStrength: 'Economic Strength',
+      plurinationalUnity: 'Plurinational Unity',
+      laborUnity: 'Labor Unity',
+      debtBurden: 'Debt Burden',
+    },
+    { sovereignty: 45, publicSupport: 55, economicStrength: 40, plurinationalUnity: 45, laborUnity: 50, debtBurden: 50 },
+    getPlurinationalNode,
+    [],
+    {},
+    (stats) => {
+      const sovereignty = stats.sovereignty ?? 50;
+      const support = stats.publicSupport ?? 50;
+      const economic = stats.economicStrength ?? 50;
+      const plurinational = stats.plurinationalUnity ?? 50;
+      const labor = stats.laborUnity ?? 50;
+      const debt = stats.debtBurden ?? 50;
+      const score = Math.round(
+        sovereignty * 0.2 + support * 0.2 + economic * 0.15 +
+        plurinational * 0.15 + labor * 0.15 + (100 - debt) * 0.15,
+      );
+      const won = sovereignty >= 40 && support >= 40 && (plurinational >= 45 || labor >= 45);
+      return {
+        won,
+        score: Math.min(100, Math.max(0, score)),
+        summary: won
+          ? `You built socialism in a plurinational country. Sovereignty, unity, and worker power — the struggle continues.`
+          : `The old order returned. But hope persists. The fight for a sovereign, plurinational future goes on.`,
       };
     },
   ),

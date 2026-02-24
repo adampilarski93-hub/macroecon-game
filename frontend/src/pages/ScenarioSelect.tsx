@@ -230,6 +230,31 @@ export function ScenarioSelect() {
             Begin Gulf Migrant
           </button>
         </article>
+        <article className="scenario-card narrative-card">
+          <div className="card-icon narrative-card-icon" aria-hidden>
+            <IconSovereignty />
+          </div>
+          <div className="narrative-card-badge">Narrative Mode</div>
+          <h2>Plurinational Path</h2>
+          <div className="card-meta">
+            <span className="difficulty hard">hard</span>
+            <span className="turns-badge">branching decisions</span>
+          </div>
+          <p>
+            You are the newly-elected leader of a South American country. Build socialism while
+            balancing a plurinational economy. Face U.S. sanctions, CIA pressure, predatory World
+            Bank loans, labor unions, Indigenous nations, and uneven development.
+          </p>
+          <ul className="card-objectives">
+            <li>Build sovereignty</li>
+            <li>Strengthen plurinational unity</li>
+            <li>Support labor and Indigenous rights</li>
+            <li>Resist coups and economic warfare</li>
+          </ul>
+          <button type="button" onClick={() => navigate('/narrative/plurinational-path')}>
+            Begin Plurinational Path
+          </button>
+        </article>
       </section>
 
       {loading && !scenarios.length ? (
