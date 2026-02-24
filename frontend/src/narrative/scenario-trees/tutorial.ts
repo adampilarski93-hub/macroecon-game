@@ -29,6 +29,7 @@ Some decisions will also branch — sending you down a different path depending 
       { id: 'balanced', text: 'Balanced approach', consequence: 'Start with modest, balanced policies.', effects: { economicStrength: 5, publicSupport: 5, debtBurden: 0 } },
       { id: 'expansionary', text: 'Stimulate the economy', consequence: 'Spend big to kickstart growth — but you will take on debt.', effects: { economicStrength: 10, publicSupport: 10, debtBurden: 15 }, nextBlock: 20 },
       { id: 'conservative', text: 'Be fiscally conservative', consequence: 'Cut spending to reduce debt — but people may not like it.', effects: { economicStrength: -3, publicSupport: -5, debtBurden: -15 }, nextBlock: 21 },
+      { id: 'radical', text: 'Radical restructuring', consequence: 'High risk, high reward.', effects: { economicStrength: 15, publicSupport: -15, debtBurden: 20 }, nextBlock: 22, minStats: { economicStrength: 60 } },
     ],
   },
   {
@@ -312,8 +313,8 @@ The question now is how to stimulate. Government spending gives you direct contr
 
 Do you prioritise government spending or tax cuts?`,
     choices: [
-      { id: 'spending', text: 'Government spending', consequence: 'Direct control; strong public support boost.', effects: { economicStrength: 10, publicSupport: 8, debtBurden: 10 }, nextBlock: 1 },
-      { id: 'tax_cuts', text: 'Tax cuts', consequence: 'Private-led growth; less public support.', effects: { economicStrength: 8, debtBurden: 8 }, nextBlock: 1 },
+      { id: 'spending', text: 'Government spending', consequence: 'Direct control; strong public support boost.', effects: { economicStrength: 10, publicSupport: 8, debtBurden: 10 }, nextBlock: 23 },
+      { id: 'tax_cuts', text: 'Tax cuts', consequence: 'Private-led growth; less public support.', effects: { economicStrength: 8, debtBurden: 8 }, nextBlock: 23 },
     ],
   },
   {
@@ -325,8 +326,35 @@ The question is where to cut. Spending cuts reduce government outlays — fewer 
 
 Do you prioritise spending cuts, or take a balanced approach?`,
     choices: [
-      { id: 'cuts', text: 'Spending cuts', consequence: 'Fast debt reduction; people feel the pain.', effects: { debtBurden: -12, publicSupport: -8 }, nextBlock: 1 },
-      { id: 'balanced_cuts', text: 'Balanced approach', consequence: 'Slower debt reduction; less disruption.', effects: { debtBurden: -8, economicStrength: -2 }, nextBlock: 1 },
+      { id: 'cuts', text: 'Spending cuts', consequence: 'Fast debt reduction; people feel the pain.', effects: { debtBurden: -12, publicSupport: -8 }, nextBlock: 24 },
+      { id: 'balanced_cuts', text: 'Balanced approach', consequence: 'Slower debt reduction; less disruption.', effects: { debtBurden: -8, economicStrength: -2 }, nextBlock: 24 },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'Radical Path',
+    narrative: `You have chosen a radical path. This is a high-stakes branch available only to those with a strong starting economy. You are attempting to leapfrog traditional development stages. This will require immense political will and will likely alienate traditional power brokers. Do you focus on state-led high-tech investment, or a radical decentralization of economic power?`,
+    choices: [
+      { id: 'hitech', text: 'High-tech investment', consequence: 'State-led innovation.', effects: { economicStrength: 15, debtBurden: 15, publicSupport: -5 }, nextBlock: 1 },
+      { id: 'decentralize', text: 'Decentralization', consequence: 'Power to the regions.', effects: { publicSupport: 10, economicStrength: -5, sovereignty: 10 }, nextBlock: 1 },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'Stimulus Deep-Dive',
+    narrative: `Your stimulus plan is being implemented. The early results are promising, but the debt is rising faster than expected. You need to fine-tune the delivery. Do you focus the remaining funds on urban centers to maximize immediate growth, or spread them to rural areas to ensure social stability?`,
+    choices: [
+      { id: 'urban', text: 'Urban focus', consequence: 'Maximum growth efficiency.', effects: { economicStrength: 8, publicSupport: -3 }, nextBlock: 1 },
+      { id: 'rural', text: 'Rural focus', consequence: 'Social cohesion first.', effects: { publicSupport: 10, economicStrength: 2 }, nextBlock: 1 },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'Conservative Deep-Dive',
+    narrative: `Your conservative measures are biting. The budget is looking healthier, but the public mood is souring. You have a small surplus. Do you use it to pay down debt even faster, or offer a small, targeted tax break to the middle class to shore up support?`,
+    choices: [
+      { id: 'pay_debt', text: 'Pay down debt', consequence: 'Fiscal purity.', effects: { debtBurden: -10 }, nextBlock: 1 },
+      { id: 'tax_break', text: 'Middle class tax break', consequence: 'Political pragmatism.', effects: { publicSupport: 8, debtBurden: -2 }, nextBlock: 1 },
     ],
   },
 ];

@@ -14,7 +14,8 @@ Some analysts argue that international debt often functions as a tool of control
     choices: [
       { id: 'austerity', text: 'Announce austerity', consequence: 'You signal fiscal discipline.', effects: { debtBurden: -8, publicSupport: -12, economicStrength: -5 } },
       { id: 'growth', text: 'Prioritize growth', consequence: 'You bet on expansion.', effects: { debtBurden: 5, publicSupport: 5, economicStrength: 8 } },
-      { id: 'restructure', text: 'Seek debt restructuring', consequence: 'You open talks with creditors.', effects: { debtBurden: -15, sovereignty: -5, publicSupport: 5 } },
+      { id: 'restructure', text: 'Seek debt restructuring', consequence: 'You open talks with creditors.', effects: { debtBurden: -15, sovereignty: -5, publicSupport: 5 }, nextBlock: 22 },
+      { id: 'default', text: 'Declare a moratorium', consequence: 'Stop all debt payments immediately.', effects: { debtBurden: -30, sovereignty: 15, internationalStanding: -25, publicSupport: 10 }, nextBlock: 25, minStats: { sovereignty: 60 } },
     ],
   },
   {
@@ -33,6 +34,15 @@ Some analysts argue that international debt often functions as a tool of control
     choices: [
       { id: 'engage', text: 'Engage seriously with the IMF', consequence: 'You open negotiations.', effects: { debtBurden: -5, sovereignty: -8, internationalStanding: 5 }, nextBlock: 20 },
       { id: 'arm_length', text: 'Keep the IMF at arm\'s length', consequence: 'You pursue alternatives.', effects: { sovereignty: 8, debtBurden: 3, internationalStanding: -5 }, nextBlock: 21 },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'Restructuring Negotiations',
+    narrative: `You have initiated restructuring talks. Creditors are wary, but they recognize that Meridia cannot pay its current obligations. The negotiation is a power struggle: they want you to commit to structural reforms in exchange for debt relief. You can push for a "clean" restructuring without policy strings, or you can offer some concessions to speed up the process and lower interest rates immediately.`,
+    choices: [
+      { id: 'clean', text: 'Push for clean restructuring', consequence: 'You protect sovereignty but risk a stalemate.', effects: { sovereignty: 10, debtBurden: -5, internationalStanding: -5 }, nextBlock: 1 },
+      { id: 'concessions', text: 'Offer policy concessions', consequence: 'Faster relief, but less control.', effects: { debtBurden: -12, sovereignty: -8, internationalStanding: 5 }, nextBlock: 1 },
     ],
   },
   {
@@ -194,8 +204,8 @@ Some analysts argue that international debt often functions as a tool of control
     title: 'The IMF Negotiation',
     narrative: `The negotiation has begun. The IMF team presents their terms: fiscal targets, structural benchmarks, a timetable. Your team pushes back on the wage freeze and asset sales. Some analysts argue that conditionality is designed to transfer control, not just money — that the real goal is to lock in policies that serve creditor interests. Do you hold firm on key red lines, or accept most terms to secure the tranche quickly?`,
     choices: [
-      { id: 'hold_firm', text: 'Hold firm on red lines', consequence: 'You push back.', effects: { sovereignty: 5, debtBurden: 3 }, nextBlock: 3 },
-      { id: 'accept', text: 'Accept most terms', consequence: 'You secure the tranche.', effects: { debtBurden: -8, sovereignty: -10 }, nextBlock: 3 },
+      { id: 'hold_firm', text: 'Hold firm on red lines', consequence: 'You push back.', effects: { sovereignty: 5, debtBurden: 3 }, nextBlock: 23 },
+      { id: 'accept', text: 'Accept most terms', consequence: 'You secure the tranche.', effects: { debtBurden: -8, sovereignty: -10 }, nextBlock: 23 },
     ],
   },
   {
@@ -203,8 +213,35 @@ Some analysts argue that international debt often functions as a tool of control
     title: 'Pursuing Alternatives',
     narrative: `You have turned from the IMF. Now you must find other financing. Regional development banks, bilateral partners, and domestic bond issuance are options. Each has different conditions and costs. Some scholars argue that building alternatives to Bretton Woods institutions is essential for sovereignty — but it takes time and political capital. Do you prioritize regional banks and South-South cooperation, or pursue bilateral deals with the fastest disbursement?`,
     choices: [
-      { id: 'regional', text: 'Prioritize regional banks', consequence: 'You build alternatives.', effects: { sovereignty: 10, debtBurden: 5 }, nextBlock: 3 },
-      { id: 'bilateral', text: 'Pursue bilateral deals', consequence: 'You seek quick disbursement.', effects: { debtBurden: -5, sovereignty: -5 }, nextBlock: 3 },
+      { id: 'regional', text: 'Prioritize regional banks', consequence: 'You build alternatives.', effects: { sovereignty: 10, debtBurden: 5 }, nextBlock: 24 },
+      { id: 'bilateral', text: 'Pursue bilateral deals', consequence: 'You seek quick disbursement.', effects: { debtBurden: -5, sovereignty: -5 }, nextBlock: 24 },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'Negotiating Red Lines',
+    narrative: `Your stance on the IMF red lines has sparked a debate within the cabinet. Some argue that flexibility is needed to avoid a default, while others insist that the red lines are essential for the country's long-term development. The IMF has come back with a slightly modified proposal. Do you accept the new terms, or continue to push for more concessions?`,
+    choices: [
+      { id: 'accept_modified', text: 'Accept modified terms', consequence: 'A middle ground is found.', effects: { debtBurden: -4, sovereignty: -5, internationalStanding: 3 }, nextBlock: 3 },
+      { id: 'push_further', text: 'Push for more concessions', consequence: 'You hold your ground.', effects: { sovereignty: 8, debtBurden: 5, internationalStanding: -3 }, nextBlock: 3 },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'Alternative Financing Success',
+    narrative: `Your search for alternative financing has yielded results. A group of regional partners has agreed to provide a stabilization loan with fewer policy strings than the IMF. However, the interest rates are slightly higher, and the total amount is smaller. This will require you to be even more disciplined with your domestic budget. Do you accept the regional loan, or try to combine it with a smaller IMF package?`,
+    choices: [
+      { id: 'accept_regional', text: 'Accept regional loan', consequence: 'Sovereign financing secured.', effects: { sovereignty: 12, debtBurden: 8, internationalStanding: 5 }, nextBlock: 3 },
+      { id: 'combine', text: 'Combine with IMF', consequence: 'A complex hybrid approach.', effects: { debtBurden: -2, sovereignty: -5, internationalStanding: 8 }, nextBlock: 3 },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'Moratorium Fallout',
+    narrative: `The moratorium has sent shockwaves through the international financial system. Creditors are furious, and some have already filed lawsuits in foreign courts. However, the immediate pressure on your budget has vanished. You now have a window of opportunity to redirect those funds. Do you invest in a national development bank to support local industry, or use the funds for an emergency social safety net?`,
+    choices: [
+      { id: 'dev_bank', text: 'National Development Bank', consequence: 'Long-term industrial strategy.', effects: { economicStrength: 15, sovereignty: 10, internationalStanding: -5 }, nextBlock: 1 },
+      { id: 'safety_net', text: 'Emergency Safety Net', consequence: 'Protect the most vulnerable.', effects: { publicSupport: 20, economicStrength: 5, debtBurden: -5 }, nextBlock: 1 },
     ],
   },
 ];

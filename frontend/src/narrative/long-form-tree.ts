@@ -14,6 +14,8 @@ export interface DecisionChoice {
   nextBlock?: number;
   /** If set, go directly to this ending. For terminal blocks. */
   endingIndex?: number;
+  /** Optional requirements to see this choice */
+  minStats?: Record<string, number>;
 }
 
 export interface DecisionBlock {
@@ -65,7 +67,7 @@ export function createLongFormTree(
         consequence: c.consequence,
         effects: c.effects,
         nextNode,
-        minStats: undefined,
+        minStats: c.minStats,
       };
     });
 

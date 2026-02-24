@@ -14,7 +14,7 @@ Some argue that treating labour purely as a market commodity destroys the social
     choices: [
       { id: 'fight_inflation', text: 'Prioritize fighting inflation', consequence: 'You back rate hikes.', effects: { priceStability: 12, economicStrength: -10, publicSupport: -8 }, nextBlock: 20 },
       { id: 'protect_jobs', text: 'Prioritize jobs', consequence: 'You resist tightening.', effects: { economicStrength: 5, publicSupport: 8, priceStability: -10 }, nextBlock: 21 },
-      { id: 'supply', text: 'Focus on supply', consequence: 'You invest in bottlenecks.', effects: { priceStability: 5, economicStrength: 5, publicSupport: 3 } },
+      { id: 'supply', text: 'Focus on supply', consequence: 'You invest in bottlenecks.', effects: { priceStability: 5, economicStrength: 5, publicSupport: 3 }, nextBlock: 22 },
     ],
   },
   {
@@ -33,6 +33,15 @@ Some argue that treating labour purely as a market commodity destroys the social
     choices: [
       { id: 'approve', text: 'Approve targeted relief', consequence: 'You spend.', effects: { publicSupport: 10, priceStability: -3, debtBurden: 5 } },
       { id: 'reject', text: 'Reject — no new spending', consequence: 'You hold the line.', effects: { debtBurden: -5, publicSupport: -8 } },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'Supply Side Strategy',
+    narrative: `You have chosen to focus on the supply side. This is a long-term play: by addressing the physical constraints of the economy — energy, transport, skills — you hope to lower costs without crushing demand. But the results will not be immediate. You can start with a massive infrastructure push to clear bottlenecks, or a targeted program to subsidize energy efficiency for firms.`,
+    choices: [
+      { id: 'infrastructure', text: 'Infrastructure push', consequence: 'Big investment, big debt.', effects: { economicStrength: 10, debtBurden: 12, priceStability: 2 }, nextBlock: 1 },
+      { id: 'efficiency', text: 'Energy efficiency subsidies', consequence: 'Targeted support.', effects: { priceStability: 5, economicStrength: 3, debtBurden: 5 }, nextBlock: 1 },
     ],
   },
   {
@@ -194,8 +203,8 @@ Some argue that treating labour purely as a market commodity destroys the social
     title: 'The Inflation Fight',
     narrative: `You have signalled that inflation is the priority. The central bank is pleased; markets are watching. But unemployment will rise as rates bite. Some argue that rate hikes hit workers first while the financial sector continues to extract returns. Do you publicly align with the bank to build credibility, or keep some distance to preserve political room to ease later?`,
     choices: [
-      { id: 'align', text: 'Publicly align with the bank', consequence: 'You share the message.', effects: { priceStability: 5, publicSupport: -5 }, nextBlock: 1 },
-      { id: 'distance', text: 'Keep some distance', consequence: 'You preserve options.', effects: { publicSupport: 3, priceStability: -2 }, nextBlock: 1 },
+      { id: 'align', text: 'Publicly align with the bank', consequence: 'You share the message.', effects: { priceStability: 5, publicSupport: -5 }, nextBlock: 23 },
+      { id: 'distance', text: 'Keep some distance', consequence: 'You preserve options.', effects: { publicSupport: 3, priceStability: -2 }, nextBlock: 23 },
     ],
   },
   {
@@ -203,8 +212,26 @@ Some argue that treating labour purely as a market commodity destroys the social
     title: 'The Jobs Priority',
     narrative: `You have signalled that jobs come first. The central bank is uneasy; they warn that inflation could spiral. But your labour minister is relieved. Some argue that when markets squeeze too hard, society pushes back — and that crushing demand to fight inflation can do more harm than good. Do you seek a compromise with the bank, or dig in and resist rate hikes?`,
     choices: [
-      { id: 'compromise', text: 'Seek a compromise', consequence: 'You look for middle ground.', effects: { economicStrength: 3, publicSupport: 5 }, nextBlock: 1 },
-      { id: 'resist', text: 'Dig in and resist', consequence: 'You hold the line.', effects: { publicSupport: 8, priceStability: -8 }, nextBlock: 1 },
+      { id: 'compromise', text: 'Seek a compromise', consequence: 'You look for middle ground.', effects: { economicStrength: 3, publicSupport: 5 }, nextBlock: 24 },
+      { id: 'resist', text: 'Dig in and resist', consequence: 'You hold the line.', effects: { publicSupport: 8, priceStability: -8 }, nextBlock: 24 },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'Inflation Messaging',
+    narrative: `Your stance on the inflation fight has created a rift in the cabinet. The finance minister is worried about market credibility, while the social affairs minister is seeing the impact on families. You need to decide on the next step in your communication strategy. Do you double down on the 'inflation first' message, or start to introduce 'growth' concerns into your speeches?`,
+    choices: [
+      { id: 'double_down', text: 'Double down', consequence: 'Consistency at all costs.', effects: { priceStability: 8, publicSupport: -10 }, nextBlock: 1 },
+      { id: 'pivot_growth', text: 'Introduce growth concerns', consequence: 'A more balanced tone.', effects: { publicSupport: 5, priceStability: -3 }, nextBlock: 1 },
+    ],
+  },
+  {
+    phase: 1,
+    title: 'Jobs vs. Stability Debate',
+    narrative: `Your focus on jobs has emboldened the unions, but the central bank is leaking its concerns to the press. A major strike is looming in the transport sector. The strikers are demanding a 10% raise. Business leaders warn this will trigger a wage-price spiral. Do you support the strikers' demands to keep your jobs promise, or urge them to accept a lower offer to protect price stability?`,
+    choices: [
+      { id: 'support_strikers', text: 'Support strikers', consequence: 'Jobs and wages protected.', effects: { publicSupport: 12, priceStability: -10, economicStrength: -2 }, nextBlock: 1 },
+      { id: 'urge_moderation', text: 'Urge moderation', consequence: 'Stability first.', effects: { priceStability: 8, publicSupport: -8, economicStrength: 2 }, nextBlock: 1 },
     ],
   },
 ];
