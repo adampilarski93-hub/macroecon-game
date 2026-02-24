@@ -430,10 +430,11 @@ The next government inherits the same challenge: how to revive a region that ind
   },
 ];
 
-const { getNode } = createArcBasedTree(
-  [introArc, industrialistArc, humanCapitalArc, complexityArc],
-  endings,
-  (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
-);
-
-export { getNode };
+export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number }) {
+  return createArcBasedTree(
+    [introArc, industrialistArc, humanCapitalArc, complexityArc],
+    endings,
+    (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
+    { shuffleBlocks: options?.shuffle ?? true, seed: options?.seed },
+  );
+}

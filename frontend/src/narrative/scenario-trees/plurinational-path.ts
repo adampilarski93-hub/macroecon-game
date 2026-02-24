@@ -209,5 +209,11 @@ const routeLastToEndings = (choiceIndex: number) => {
   return 0; // balanced -> victory
 };
 
-const tree = createLongFormTree(blocks, endings, routeLastToEndings);
-export const getNode = tree.getNode;
+export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number }) {
+  return createLongFormTree(
+    blocks,
+    endings,
+    routeLastToEndings,
+    { shuffleBlocks: options?.shuffle ?? true, seed: options?.seed },
+  );
+}

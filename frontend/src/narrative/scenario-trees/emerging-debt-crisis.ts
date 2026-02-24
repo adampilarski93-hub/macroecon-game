@@ -99,7 +99,7 @@ const kadriArc: ScenarioArc = {
       narrative: `Ali Kadri warns that imperialist debt traps are designed to deindustrialize the periphery. You notice foreign firms are buying up your strategic assets at fire-sale prices. Do you block these sales and nationalize the resources?`,
       choices: [
         { id: 'block_sales', text: 'Block Asset Sales', consequence: 'Protect national productive capacity.', effects: { sovereignty: 12, economicStrength: 5, internationalStanding: -8 } },
-        { id: 'negotiate', text: 'Negotiate Partnerships', consequence: 'Allow investment with state oversight.', effects: { economicStanding: 8, internationalStanding: 5, sovereignty: -3 } },
+        { id: 'negotiate', text: 'Negotiate Partnerships', consequence: 'Allow investment with state oversight.', effects: { economicStrength: 8, internationalStanding: 5, sovereignty: -3 } },
       ],
     },
     {
@@ -129,10 +129,11 @@ const endings: LongFormEnding[] = [
   { id: 'defeat', endingType: 'defeat', title: 'Crisis Deepens', endingNarrative: `The crisis has deepened. Your choices failed to break the cycle of debt and dependency. The struggle for Meridia's future continues under even harder conditions.` },
 ];
 
-const { getNode } = createArcBasedTree(
-  [introArc, hudsonArc, toozeArc, kadriArc],
-  endings,
-  (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
-);
-
-export { getNode };
+export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number }) {
+  return createArcBasedTree(
+    [introArc, hudsonArc, toozeArc, kadriArc],
+    endings,
+    (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
+    { shuffleBlocks: options?.shuffle ?? true, seed: options?.seed },
+  );
+}

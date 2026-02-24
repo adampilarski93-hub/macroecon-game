@@ -229,5 +229,11 @@ const endings: LongFormEnding[] = [
   },
 ];
 
-const { getNode } = createLongFormTree(blocks, endings, (i) => (i === 0 ? 2 : i === 1 ? 1 : 0)); // survivor->defeat, fighter->partial, both->victory
-export { getNode };
+export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number }) {
+  return createLongFormTree(
+    blocks,
+    endings,
+    (i) => (i === 0 ? 2 : i === 1 ? 1 : 0), // survivor->defeat, fighter->partial, both->victory
+    { shuffleBlocks: options?.shuffle ?? true, seed: options?.seed },
+  );
+}

@@ -354,10 +354,11 @@ The history of stagflation suggests that some crises simply outlast political cy
   },
 ];
 
-const { getNode } = createArcBasedTree(
-  [introArc, monetaristArc, keynesianArc, structuralistArc],
-  endings,
-  (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
-);
-
-export { getNode };
+export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number }) {
+  return createArcBasedTree(
+    [introArc, monetaristArc, keynesianArc, structuralistArc],
+    endings,
+    (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
+    { shuffleBlocks: options?.shuffle ?? true, seed: options?.seed },
+  );
+}

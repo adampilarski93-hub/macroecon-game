@@ -344,10 +344,11 @@ The next government inherits the same dilemma that has faced commodity exporters
   },
 ];
 
-const { getNode } = createArcBasedTree(
-  [introArc, stabilizationArc, diversificationArc, sovereignArc],
-  endings,
-  (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
-);
-
-export { getNode };
+export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number }) {
+  return createArcBasedTree(
+    [introArc, stabilizationArc, diversificationArc, sovereignArc],
+    endings,
+    (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
+    { shuffleBlocks: options?.shuffle ?? true, seed: options?.seed },
+  );
+}

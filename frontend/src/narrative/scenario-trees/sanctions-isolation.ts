@@ -44,5 +44,11 @@ const endings: LongFormEnding[] = [
   { id: 'defeat', endingType: 'defeat', title: 'Isolation Deepens', endingNarrative: `Sanctions have taken their toll. The economy has contracted. The struggle continues.` },
 ];
 
-const { getNode } = createLongFormTree(blocks, endings, (i) => (i === 0 ? 0 : i === 1 ? 1 : 2));
-export { getNode };
+export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number }) {
+  return createLongFormTree(
+    blocks,
+    endings,
+    (i) => (i === 0 ? 0 : i === 1 ? 1 : 2),
+    { shuffleBlocks: options?.shuffle ?? true, seed: options?.seed },
+  );
+}

@@ -365,5 +365,11 @@ const endings: LongFormEnding[] = [
   { id: 'defeat', endingType: 'defeat', title: 'Learning Experience', endingNarrative: `This was a tough run. The economy struggled, or your people lost confidence, or debt spiralled beyond control. But you have seen the mechanics: how spending and taxes interact, how trade-offs compound, and how early choices constrain later ones. That understanding is the foundation for everything else in the game. Try again with a different strategy, or jump into a narrative mode where the real stories begin.` },
 ];
 
-const { getNode } = createLongFormTree(blocks, endings, (i) => (i === 0 ? 0 : i === 1 ? 1 : 2));
-export { getNode };
+export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number }) {
+  return createLongFormTree(
+    blocks,
+    endings,
+    (i) => (i === 0 ? 0 : i === 1 ? 1 : 2),
+    { shuffleBlocks: options?.shuffle ?? true, seed: options?.seed },
+  );
+}

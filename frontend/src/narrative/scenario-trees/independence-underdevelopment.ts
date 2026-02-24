@@ -388,10 +388,11 @@ The next government will face the same fundamental challenge: how a peripheral c
   },
 ];
 
-const { getNode } = createArcBasedTree(
-  [introArc, isiArc, exportLedArc, delinkingArc],
-  endings,
-  (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
-);
-
-export { getNode };
+export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number }) {
+  return createArcBasedTree(
+    [introArc, isiArc, exportLedArc, delinkingArc],
+    endings,
+    (choiceIdx) => (choiceIdx === 0 ? 0 : choiceIdx === 1 ? 1 : 2),
+    { shuffleBlocks: options?.shuffle ?? true, seed: options?.seed },
+  );
+}

@@ -2,6 +2,8 @@
  * Creates a long-form decision tree. Supports both linear chains and branching.
  * - Linear: each decision leads to the next; final decision routes to endings.
  * - Branching: choices can specify nextBlock, nextArc, or endingIndex to create different paths.
+ * - shuffleBlocks: randomize block order within arcs for replay variety.
+ * - blockPool: show a random subset of blocks per playthrough (e.g., 3 of 5).
  */
 import type { GenericNarrativeNode, GenericNarrativeChoice } from './scenario-types';
 
@@ -30,6 +32,10 @@ export interface DecisionBlock {
 export interface ScenarioArc {
   id: string;
   blocks: DecisionBlock[];
+  /** Optional: indices of blocks to randomly sample. E.g. [1,2,3,4,5] = pick 3 of these 5. */
+  blockPool?: number[];
+  /** If blockPool set, how many blocks to pick from the pool. Default 1 less than pool size. */
+  blockPoolCount?: number;
 }
 
 export interface LongFormEnding {
@@ -39,19 +45,71 @@ export interface LongFormEnding {
   endingNarrative: string;
 }
 
+/** Fisher-Yates shuffle. Mutates array. */
+function shuffle<T>(arr: T[], rng: () => number = Math.random): T[] {
+  const out = [...arr];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+export interface CreateTreeOptions {
+  /** Shuffle block order within each arc (except first/last) for replay variety */
+  shuffleBlocks?: boolean;
+  /** Random seed for reproducible shuffling (0 = use Math.random) */
+  seed?: number;
+}
+
+/** Simple seeded RNG for reproducible shuffles */
+function createSeededRng(seed: number): () => number {
+  return () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+}
+
 export function createArcBasedTree(
   arcs: ScenarioArc[],
   endings: LongFormEnding[],
   routeLastToEndings: (choiceIndex: number) => number,
+  options?: CreateTreeOptions,
 ): { nodes: GenericNarrativeNode[]; getNode: (id: string) => GenericNarrativeNode | undefined } {
   const nodes: GenericNarrativeNode[] = [];
+  const rng = options?.seed !== undefined && options.seed !== 0
+    ? createSeededRng(options.seed)
+    : Math.random;
 
   const blockId = (arcId: string, idx: number) => (arcId === 'start' && idx === 0 ? 'start' : `${arcId}_${idx}`);
 
   for (const arc of arcs) {
-    const numBlocks = arc.blocks.length;
+    let blocks = arc.blocks;
+
+    // Block pool: pick a random subset of blocks (e.g., 3 of 5 middle blocks)
+    if (arc.blockPool && arc.blockPool.length > 0) {
+      const poolIndices = shuffle(arc.blockPool, rng);
+      const count = arc.blockPoolCount ?? Math.max(1, poolIndices.length - 1);
+      const picked = poolIndices.slice(0, count).sort((a, b) => a - b);
+      const first = arc.blocks[0];
+      const last = arc.blocks[arc.blocks.length - 1];
+      const middle = picked.map((i) => arc.blocks[i]).filter(Boolean);
+      if (first && last && arc.blocks.length > 2) {
+        blocks = [first, ...middle, last];
+      } else {
+        blocks = middle.length > 0 ? [first ?? middle[0], ...middle.slice(1), last ?? middle[middle.length - 1]] : arc.blocks;
+      }
+    }
+    // Shuffle middle blocks for replay variety
+    else if (options?.shuffleBlocks && blocks.length > 2) {
+      const [first, ...rest] = blocks;
+      const last = rest.pop()!;
+      blocks = [first, ...shuffle(rest, rng), last];
+    }
+
+    const numBlocks = blocks.length;
     for (let i = 0; i < numBlocks; i++) {
-      const block = arc.blocks[i];
+      const block = blocks[i];
       const nodeId = blockId(arc.id, i);
       const isLastInArc = i === numBlocks - 1;
 
@@ -140,6 +198,7 @@ export function createLongFormTree(
   blocks: DecisionBlock[],
   endings: LongFormEnding[],
   routeLastToEndings: (choiceIndex: number) => number,
+  options?: CreateTreeOptions,
 ) {
-  return createArcBasedTree([{ id: 'start', blocks }], endings, routeLastToEndings);
+  return createArcBasedTree([{ id: 'start', blocks }], endings, routeLastToEndings, options);
 }

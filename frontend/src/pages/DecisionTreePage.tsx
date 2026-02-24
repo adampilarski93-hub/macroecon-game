@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { GenericStats, GenericNarrativeChoice, GenericNarrativeNode } from '../narrative/scenario-types';
 import type { SimulationState } from '../engine/state';
@@ -103,7 +103,11 @@ export function DecisionTreePage() {
   const narrativeRef = useRef<HTMLDivElement>(null);
   const [transitioning, setTransitioning] = useState(false);
 
-  const config = scenarioId ? getScenarioNarrativeConfig(scenarioId) : null;
+  // Memoize config so we get a stable tree for the session (fresh shuffle each time scenarioId changes)
+  const config = useMemo(
+    () => (scenarioId ? getScenarioNarrativeConfig(scenarioId) : null),
+    [scenarioId],
+  );
 
   const [game, setGame] = useState<{
     currentNodeId: string;
