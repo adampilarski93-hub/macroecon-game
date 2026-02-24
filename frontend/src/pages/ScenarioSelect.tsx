@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../state/gameStore';
-import { IconScenarioEconomy, IconScenarioStagflation, IconLoading } from '../components/Icons';
+import { IconScenarioEconomy, IconScenarioStagflation, IconLoading, IconInfo } from '../components/Icons';
 import { getScenarioObjectives } from '../scenarios';
 import { hasDecisionTreeMode } from '../narrative/registry';
 
@@ -12,6 +12,165 @@ function IconSovereignty() {
       <path d="M28 8v40M8 28h40" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" />
       <path d="M28 16l6 8h-4v8h4l-6 8-6-8h4v-8h-4l6-8z" fill="currentColor" opacity="0.85" />
     </svg>
+  );
+}
+
+/** Guided Path Welcome Modal for New Players */
+function GuidedPathModal({
+  isOpen,
+  onClose,
+  onSelectMode,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelectMode: (mode: 'easy' | 'hard') => void;
+}) {
+  const [step, setStep] = useState(1);
+
+  if (!isOpen) return null;
+
+  const handleModeSelect = (mode: 'easy' | 'hard') => {
+    onSelectMode(mode);
+    onClose();
+  };
+
+  return (
+    <div className="guided-path-overlay">
+      <div className="guided-path-modal">
+        <button className="guided-path-close" onClick={onClose} aria-label="Close">
+          &times;
+        </button>
+
+        {step === 1 && (
+          <>
+            <div className="guided-path-header">
+              <span className="guided-path-emoji">🎓</span>
+              <h2>Welcome to Macro Planner</h2>
+            </div>
+            <p className="guided-path-intro">
+              You're about to step into the role of an economic policymaker. Your decisions will shape 
+              the future of a nation. But first, let's find the right experience for you.
+            </p>
+            <div className="guided-path-question">
+              <h3>How would you describe your economics background?</h3>
+            </div>
+            <div className="guided-path-options">
+              <button
+                className="guided-option guided-option-beginner"
+                onClick={() => setStep(2)}
+              >
+                <span className="option-emoji">🌱</span>
+                <div className="option-content">
+                  <strong>Just Starting Out</strong>
+                  <span>I'm new to economics and want to learn the basics</span>
+                </div>
+              </button>
+              <button
+                className="guided-option guided-option-experienced"
+                onClick={() => setStep(3)}
+              >
+                <span className="option-emoji">📊</span>
+                <div className="option-content">
+                  <strong>Comfortable with Economics</strong>
+                  <span>I understand concepts like inflation, GDP, and monetary policy</span>
+                </div>
+              </button>
+            </div>
+          </>
+        )}
+
+        {step === 2 && (
+          <>
+            <div className="guided-path-header">
+              <span className="guided-path-emoji">🌱</span>
+              <h2>Perfect! Let's Start Your Journey</h2>
+            </div>
+            <p className="guided-path-intro">
+              As a beginner, we recommend starting with <strong>Easy Mode</strong>. 
+              This guided experience will teach you core economic concepts through 
+              narrative choices rather than complex policy controls.
+            </p>
+            <div className="mode-comparison">
+              <div className="mode-card mode-easy">
+                <h4>Easy Mode: Decision Tree</h4>
+                <ul>
+                  <li>📝 Story-driven narrative choices</li>
+                  <li>📚 Learn as you play</li>
+                  <li>🎯 Clear explanations of consequences</li>
+                  <li>✅ 20 guided decisions per scenario</li>
+                </ul>
+              </div>
+              <div className="mode-card mode-hard">
+                <h4>Hard Mode: Full Simulation</h4>
+                <ul>
+                  <li>⚙️ 15+ detailed policy levers</li>
+                  <li>📈 Complex economic modeling</li>
+                  <li>🧠 Requires economics knowledge</li>
+                  <li>⏱️ 20-200 turn scenarios</li>
+                </ul>
+              </div>
+            </div>
+            <div className="guided-path-actions">
+              <button className="guided-btn-secondary" onClick={() => setStep(1)}>
+                ← Back
+              </button>
+              <button className="guided-btn-primary" onClick={() => handleModeSelect('easy')}>
+                Start Easy Mode 🌱
+              </button>
+            </div>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <div className="guided-path-header">
+              <span className="guided-path-emoji">📊</span>
+              <h2>Choose Your Challenge</h2>
+            </div>
+            <p className="guided-path-intro">
+              With your economics background, you're ready for either mode. Choose based on 
+              your preferred learning style:
+            </p>
+            <div className="mode-comparison">
+              <div className="mode-card mode-easy">
+                <h4>Easy Mode: Learn Through Stories</h4>
+                <ul>
+                  <li>📝 Narrative-driven choices</li>
+                  <li>🎓 Focus on economic concepts</li>
+                  <li>📖 Historical context included</li>
+                  <li>✨ Great for understanding trade-offs</li>
+                </ul>
+                <button className="mode-select-btn" onClick={() => handleModeSelect('easy')}>
+                  Choose Easy Mode
+                </button>
+              </div>
+              <div className="mode-card mode-hard mode-recommended">
+                <span className="recommended-badge">Recommended for You</span>
+                <h4>Hard Mode: Full Control</h4>
+                <ul>
+                  <li>⚙️ Fine-tune every policy lever</li>
+                  <li>🔬 Realistic economic simulation</li>
+                  <li>🎯 Test advanced strategies</li>
+                  <li>🏆 Challenge yourself</li>
+                </ul>
+                <button className="mode-select-btn mode-select-btn-primary" onClick={() => handleModeSelect('hard')}>
+                  Choose Hard Mode
+                </button>
+              </div>
+            </div>
+            <div className="guided-path-actions">
+              <button className="guided-btn-secondary" onClick={() => setStep(1)}>
+                ← Back
+              </button>
+            </div>
+          </>
+        )}
+
+        <div className="guided-path-footer">
+          <p>💡 <strong>Tip:</strong> You can always switch modes later. Start with what feels right!</p>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -45,9 +204,29 @@ export function ScenarioSelect() {
   const [useCustomTurns, setUseCustomTurns] = useState(customMaxTurns > 0);
   const [sliderValue, setSliderValue] = useState(customMaxTurns > 0 ? customMaxTurns : 40);
 
+  // Guided Path modal state
+  const [showGuidedPath, setShowGuidedPath] = useState(() => {
+    // Only show if user hasn't seen it before
+    if (typeof window !== 'undefined') {
+      return !localStorage.getItem('macroplanner_guided_seen');
+    }
+    return false;
+  });
+
   useEffect(() => {
     fetchScenarios();
   }, [fetchScenarios]);
+
+  const handleGuidedModeSelect = (selectedMode: 'easy' | 'hard') => {
+    setMode(selectedMode === 'easy' ? 'easy' : 'advanced');
+    localStorage.setItem('macroplanner_guided_seen', 'true');
+    setShowGuidedPath(false);
+  };
+
+  const handleCloseGuidedPath = () => {
+    localStorage.setItem('macroplanner_guided_seen', 'true');
+    setShowGuidedPath(false);
+  };
 
   const handleSelect = async (id: string) => {
     await startSimulation(id);
@@ -68,9 +247,24 @@ export function ScenarioSelect() {
 
   return (
     <div className="page scenario-select">
+      {/* Guided Path Welcome Modal */}
+      <GuidedPathModal
+        isOpen={showGuidedPath}
+        onClose={handleCloseGuidedPath}
+        onSelectMode={handleGuidedModeSelect}
+      />
+
       <header>
         <h1>Macro Planner</h1>
         <p>Choose a scenario and lead your country's economy.</p>
+        <button
+          className="guided-reopen-btn"
+          onClick={() => setShowGuidedPath(true)}
+          title="Reopen welcome guide"
+        >
+          <IconInfo />
+          First time here?
+        </button>
       </header>
       {error && <div className="error">{error}</div>}
 

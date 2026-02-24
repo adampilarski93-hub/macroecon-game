@@ -350,12 +350,157 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
           </section>
         )}
 
+        {/* Policy Impact Preview */}
+        <PolicyImpactPreview
+          state={state}
+          policies={{
+            incomeTaxRate,
+            tariffRate,
+            spendingShareOfGdp,
+            policyRate,
+            exchangeRateRegime,
+            socialSpendingShare,
+            profitWindfallTaxRate,
+            priceControlStrength,
+            capitalControlStrength,
+            incomesPolicyStrength,
+            financialRegulationStrength,
+            domesticDebtShare,
+            basicGoodsGuarantee,
+            planningIntensity,
+            publicBankingStrength,
+            debtRestructuringStance,
+            multiYearAgendaStrength,
+            infrastructureShare,
+          }}
+        />
+
         <div className="advance-turn-bar">
           <button type="submit" className="advance-turn-btn" disabled={loading || gameOver}>
             {gameOver ? 'Game Over' : loading ? 'Advancing...' : '\u25B6  Next Turn'}
           </button>
         </div>
       </form>
+    </div>
+  );
+}
+
+/** Preview panel showing projected effects of current policy settings */
+function PolicyImpactPreview({
+  state,
+  policies,
+}: {
+  state: SimulationState;
+  policies: Record<string, number | string>;
+}) {
+  const c = state.country;
+  const s = state.scenario;
+
+  // Calculate projected changes based on policy settings
+  const projections = [];
+
+  // GDP Growth projection
+  const spendingBoost = (policies.spendingShareOfGdp as number - 0.25) * 2;
+  const taxDrag = (policies.incomeTaxRate as number - 0.2) * -1;
+  const infraBoost = (policies.infrastructureShare as number) * 1.5;
+  const planningEffect = (policies.planningIntensity as number) * 0.5;
+  const tradeEffect = (policies.tariffRate as number) * -0.5;
+  const gdpChange = spendingBoost + taxDrag + infraBoost + planningEffect + tradeEffect;
+
+  if (Math.abs(gdpChange) > 0.1) {
+    projections.push({
+      indicator: 'GDP Growth',
+      change: gdpChange > 0 ? `+${gdpChange.toFixed(1)}%` : `${gdpChange.toFixed(1)}%`,
+      direction: gdpChange > 0 ? 'up' : 'down',
+      reason: gdpChange > 0 ? 'Stimulus from spending & investment' : 'Contraction from taxes/tariffs',
+    });
+  }
+
+  // Inflation projection
+  const priceControlEffect = -(policies.priceControlStrength as number) * 2;
+  const policyRateEffect = (policies.policyRate as number - 0.03) * -3;
+  const spendPressure = (policies.spendingShareOfGdp as number - 0.3) * 1;
+  const inflationChange = priceControlEffect + policyRateEffect + spendPressure;
+
+  if (Math.abs(inflationChange) > 0.2) {
+    projections.push({
+      indicator: 'Inflation',
+      change: inflationChange > 0 ? `+${inflationChange.toFixed(1)}%` : `${inflationChange.toFixed(1)}%`,
+      direction: inflationChange > 0 ? 'up' : 'down',
+      reason: inflationChange > 0 ? 'Demand pressure from spending' : 'Rate hikes & price controls suppressing prices',
+    });
+  }
+
+  // Unemployment projection
+  const socialSpendingJobs = (policies.socialSpendingShare as number) * -1;
+  const policyRateJobs = (policies.policyRate as number - 0.03) * 2;
+  const publicBankingJobs = -(policies.publicBankingStrength as number) * 0.5;
+  const unemployChange = socialSpendingJobs + policyRateJobs + publicBankingJobs;
+
+  if (Math.abs(unemployChange) > 0.1) {
+    projections.push({
+      indicator: 'Unemployment',
+      change: unemployChange > 0 ? `+${unemployChange.toFixed(1)}%` : `${unemployChange.toFixed(1)}%`,
+      direction: unemployChange > 0 ? 'up' : 'down',
+      reason: unemployChange > 0 ? 'Tighter policy reducing job creation' : 'Public support maintaining employment',
+    });
+  }
+
+  // Debt projection
+  const spendDebt = ((policies.spendingShareOfGdp as number) - (policies.incomeTaxRate as number)) * 10;
+  const windfallHelp = -(policies.profitWindfallTaxRate as number) * 5;
+  const debtChange = spendDebt + windfallHelp;
+
+  if (Math.abs(debtChange) > 1) {
+    projections.push({
+      indicator: 'Debt/GDP',
+      change: debtChange > 0 ? `+${debtChange.toFixed(1)} pts` : `${debtChange.toFixed(1)} pts`,
+      direction: debtChange > 0 ? 'up' : 'down',
+      reason: debtChange > 0 ? 'Deficit spending increasing debt' : 'Higher revenues reducing debt burden',
+    });
+  }
+
+  // Approval projection
+  const socialApproval = (policies.socialSpendingShare as number) * 3;
+  const basicGoodsApproval = (policies.basicGoodsGuarantee as number) * 2;
+  const multiYearApproval = (policies.multiYearAgendaStrength as number);
+  const debtRestrApproval = -(policies.debtRestructuringStance as number) * 1;
+  const approvalChange = socialApproval + basicGoodsApproval + multiYearApproval + debtRestrApproval;
+
+  if (Math.abs(approvalChange) > 0.5) {
+    projections.push({
+      indicator: 'Public Approval',
+      change: approvalChange > 0 ? `+${approvalChange.toFixed(1)}%` : `${approvalChange.toFixed(1)}%`,
+      direction: approvalChange > 0 ? 'up' : 'down',
+      reason: approvalChange > 0 ? 'Social programs boosting support' : 'Austerity measures reducing popularity',
+    });
+  }
+
+  if (projections.length === 0) {
+    projections.push({
+      indicator: 'Stability',
+      change: 'Minimal',
+      direction: 'neutral',
+      reason: 'Current policies maintain status quo',
+    });
+  }
+
+  return (
+    <div className="policy-impact-preview">
+      <h4>
+        <span className="impact-icon">📊</span>
+        Expected Impact
+        <span className="impact-hint">(projected next turn)</span>
+      </h4>
+      <div className="impact-grid">
+        {projections.map((proj, idx) => (
+          <div key={idx} className={`impact-item impact-${proj.direction}`}>
+            <span className="impact-indicator">{proj.indicator}</span>
+            <span className="impact-change">{proj.change}</span>
+            <span className="impact-reason">{proj.reason}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
