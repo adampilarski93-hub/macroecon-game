@@ -3,14 +3,14 @@ import { createLongFormTree } from '../long-form-tree';
 
 /**
  * Plurinational Path — Newly-elected leader of a South American country (20 decisions)
- * Informed by: Vijay Prashad (Washington Bullets, The Darker Nations), Bolivia, Brazil, Venezuela, Chile
- * Objective: Build socialism while balancing a plurinational, complex economy
+ * Informed by: Prashad, Mariátegui, Allende, Castro, Bolivia MAS, Prebisch, Sandino, Blanco,
+ * Merino, Green Rioja, Vacarezza. See .cursor/skills/plurinational-path-thinkers/SKILL.md
  */
 const blocks: DecisionBlock[] = [
   {
     phase: 1,
     title: 'The Inauguration',
-    narrative: `You have just been sworn in as president of the Republic of Altura, a South American nation of 12 million. Your country has gas, lithium, and copper — but decades of structural adjustment left the economy dependent on raw exports. As Vijay Prashad documents in Washington Bullets, nations that chart their own course face pressure: sanctions, coups, and "reforms" that restore the old order. Your coalition includes labor unions, Indigenous movements, and urban poor. The World Bank has offered a "development loan" with conditions. What do you do first?`,
+    narrative: `You have just been sworn in as president of the Republic of Altura, a South American nation of 12 million. Your country has gas, lithium, and copper — but decades of structural adjustment left the economy dependent on raw exports. As Vijay Prashad documents in Washington Bullets, nations that chart their own course must balance pressure from sanctions, coups, and "reforms" that restore the old order. Your coalition includes labor unions, Indigenous movements, and urban poor. The World Bank has offered a "development loan" with conditions. What do you do first?`,
     choices: [
       { id: 'reject_wb', text: 'Reject the World Bank package', consequence: 'You refuse the conditions.', effects: { sovereignty: 15, debtBurden: -10, economicStrength: -5 } },
       { id: 'negotiate', text: 'Negotiate with the World Bank', consequence: 'You seek better terms.', effects: { sovereignty: -5, debtBurden: 5, economicStrength: 3 } },
@@ -20,7 +20,7 @@ const blocks: DecisionBlock[] = [
   {
     phase: 1,
     title: 'Indigenous Nations',
-    narrative: `Your country is plurinational — dozens of Indigenous nations with territorial claims, languages, and demands for autonomy. As in Bolivia under Morales, constitutional recognition is not enough; the question is land, resources, and power. The gas fields overlap Indigenous territory. Do you prioritise revenue from extraction to fund social programs, or slow extraction and strengthen Indigenous territorial rights?`,
+    narrative: `Your country is plurinational — dozens of Indigenous nations with territorial claims, languages, and demands for autonomy. Mariátegui argued that the "Indian problem" is not humanitarian but economic: land and power. As Bolivia's MAS showed, constitutional recognition alone is not enough. Roger Merino writes that Indigenous peoples must be recognised as nations with territorial rights, not ethnic minorities. The gas fields overlap Indigenous territory. Do you prioritise revenue from extraction to fund social programs, or slow extraction and strengthen Indigenous territorial rights?`,
     choices: [
       { id: 'extract', text: 'Prioritise extraction revenue', consequence: 'You accelerate development.', effects: { economicStrength: 12, plurinationalUnity: -15, publicSupport: -5 } },
       { id: 'rights', text: 'Strengthen Indigenous territorial rights', consequence: 'You slow and consult.', effects: { plurinationalUnity: 18, economicStrength: -8, publicSupport: 8 } },
@@ -40,7 +40,7 @@ const blocks: DecisionBlock[] = [
   {
     phase: 1,
     title: 'The First Warning',
-    narrative: `A cable from your ambassador in Washington: U.S. officials are "concerned" about your policies. Prashad's Washington Bullets traces how such "concern" has preceded coups from Chile in 1973 to Bolivia in 2019. Your intelligence chief reports increased activity around opposition figures and media. Do you publicly denounce foreign interference, work quietly to build alliances, or avoid confrontation?`,
+    narrative: `A cable from your ambassador in Washington: U.S. officials are "concerned" about your policies. Sandino called to abolish the Monroe Doctrine; Prashad's Washington Bullets traces how such "concern" has preceded coups from Chile in 1973 to Bolivia in 2019. Your intelligence chief reports increased activity around opposition figures and media. Do you publicly denounce foreign interference, work quietly to build alliances, or avoid confrontation?`,
     choices: [
       { id: 'denounce', text: 'Denounce foreign interference publicly', consequence: 'You speak out.', effects: { sovereignty: 12, publicSupport: 10, internationalStanding: -8 } },
       { id: 'quiet', text: 'Build alliances quietly', consequence: 'You work behind the scenes.', effects: { sovereignty: 5, internationalStanding: 3 } },
@@ -87,7 +87,7 @@ const blocks: DecisionBlock[] = [
   {
     phase: 2,
     title: 'Sanctions',
-    narrative: `The U.S. has imposed sanctions. Banks are cutting ties. As with Venezuela, the goal is to squeeze the economy until it breaks. Your finance minister says you need to find alternative payment channels and trading partners. Do you pivot to regional and non-dollar trade, or seek a negotiated lifting of sanctions?`,
+    narrative: `The U.S. has imposed sanctions. Banks are cutting ties. As with Venezuela, the goal is to squeeze the economy until it breaks. Sandino's resistance showed that continental solidarity can counter imperial pressure. Your finance minister says you need to find alternative payment channels and trading partners. Do you pivot to regional and non-dollar trade, or seek a negotiated lifting of sanctions?`,
     choices: [
       { id: 'pivot', text: 'Pivot to alternative partners and payment systems', consequence: 'You build new circuits.', effects: { sovereignty: 15, economicStrength: 5 } },
       { id: 'negotiate', text: 'Seek negotiated lifting of sanctions', consequence: 'You open dialogue.', effects: { internationalStanding: 5, sovereignty: -10 } },
@@ -105,7 +105,7 @@ const blocks: DecisionBlock[] = [
   {
     phase: 3,
     title: 'The World Bank Returns',
-    narrative: `The World Bank offers a new loan — "poverty reduction" and "institutional strengthening." The conditions are softer than before, but they still require privatising the water utility and "rationalising" public employment. As Prashad and others argue, such loans often restore the logic of extraction. Do you accept, or refuse and fund your own programs?`,
+    narrative: `The World Bank offers a new loan — "poverty reduction" and "institutional strengthening." The conditions are softer than before, but they still require privatising the water utility and "rationalising" public employment. Prebisch's ECLA argued that periphery nations need import-substituting industrialisation, not more conditional loans. Do you accept, or refuse and fund your own programs?`,
     choices: [
       { id: 'refuse', text: 'Refuse and fund your own programs', consequence: 'You stay independent.', effects: { sovereignty: 15, debtBurden: -5, economicStrength: -5 } },
       { id: 'accept', text: 'Accept with minimal conditions', consequence: 'You take the money.', effects: { debtBurden: 15, sovereignty: -15, economicStrength: 5 } },
@@ -114,7 +114,7 @@ const blocks: DecisionBlock[] = [
   {
     phase: 3,
     title: 'Land Reform',
-    narrative: `Large estates control the best land. Indigenous and peasant movements demand reform. Brazil under Lula showed that land reform can build support — but agribusiness fights back, and the courts can block you. Do you push for redistribution, support cooperatives on state land, or defer to avoid conflict?`,
+    narrative: `Large estates control the best land. Mariátegui wrote that indigenous servitude cannot be abolished without eliminating the latifundium. Hugo Blanco's peasant unions forced Peru's radical agrarian reform. Indigenous and peasant movements demand the same. Do you push for redistribution, support cooperatives on state land, or defer to avoid conflict?`,
     choices: [
       { id: 'redistribute', text: 'Push for land redistribution', consequence: 'You take on the estates.', effects: { plurinationalUnity: 18, publicSupport: 15, economicStrength: -5 } },
       { id: 'coops', text: 'Support cooperatives on state land', consequence: 'You create alternatives.', effects: { plurinationalUnity: 10, economicStrength: 5, publicSupport: 8 } },
@@ -143,7 +143,7 @@ const blocks: DecisionBlock[] = [
   {
     phase: 4,
     title: 'Diversification',
-    narrative: `Your economy still depends heavily on gas and minerals. When prices fall, everything suffers. Building industry — value-added processing, manufacturing — would reduce that dependence. But it takes time and investment. Do you prioritise industrialisation now, or focus on stabilising the current model?`,
+    narrative: `Your economy still depends heavily on gas and minerals. When prices fall, everything suffers. Prebisch's dependency theory held that the periphery must industrialise — import substitution, value-added processing — to break the center's grip. Building that capacity takes time and investment. Do you prioritise industrialisation now, or focus on stabilising the current model?`,
     choices: [
       { id: 'industrialise', text: 'Prioritise industrialisation', consequence: 'You invest in industry.', effects: { economicStrength: 15, debtBurden: 10 } },
       { id: 'stabilise', text: 'Focus on stabilising the current model', consequence: 'You secure what you have.', effects: { economicStrength: 3, debtBurden: -5 } },
@@ -170,7 +170,7 @@ const blocks: DecisionBlock[] = [
   {
     phase: 5,
     title: 'The Legacy',
-    narrative: `What have you built? A more sovereign economy, or one still tied to old circuits? A plurinational state that recognises Indigenous nations, or one that papered over difference? A worker-peasant alliance, or a fractured coalition? The struggle continues — in your country and across the Global South.`,
+    narrative: `What have you built? A more sovereign economy, or one still tied to old circuits? A plurinational state that recognises Indigenous nations — as Green Rioja and Vacarezza argue, "Somos Pluri" means embracing the diversity of movements — or one that papered over difference? A worker-peasant alliance, or a fractured coalition? The struggle continues — in your country and across the Global South.`,
     choices: [
       { id: 'sovereign', text: 'Sovereignty above all', consequence: 'You chose independence.', effects: { sovereignty: 15 } },
       { id: 'plurinational', text: 'Plurinational unity', consequence: 'You chose recognition.', effects: { plurinationalUnity: 15 } },

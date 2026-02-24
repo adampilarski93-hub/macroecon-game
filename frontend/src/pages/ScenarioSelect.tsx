@@ -241,9 +241,10 @@ export function ScenarioSelect() {
             <span className="turns-badge">branching decisions</span>
           </div>
           <p>
-            You are the newly-elected leader of a South American country. Build socialism while
-            balancing a plurinational economy. Face U.S. sanctions, CIA pressure, predatory World
-            Bank loans, labor unions, Indigenous nations, and uneven development.
+            You are the newly-elected leader of a South American country. Your mandate: build
+            socialism in a plurinational state — where Indigenous nations, labor unions, and the
+            urban poor each hold urgent claims. Balance U.S. sanctions and CIA pressure against
+            predatory World Bank loans, uneven development, and the constant threat of coups.
           </p>
           <ul className="card-objectives">
             <li>Build sovereignty</li>
