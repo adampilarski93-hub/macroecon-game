@@ -2,7 +2,9 @@
  * Creates a long-form decision tree. Supports both linear chains and branching.
  * - Linear: each decision leads to the next; final decision routes to endings.
  * - Branching: choices can specify nextBlock, nextArc, or endingIndex to create different paths.
- * - shuffleBlocks: randomize block order within arcs for replay variety.
+ * - shuffleBlocks: phase-aware shuffle — randomize only within the same phase to preserve
+ *   macroeconomic causality and heterodox theoretical progression (e.g., Hudson's debt jubilee
+ *   → public banking → resisting deflation; Phillips curve before turning point).
  * - blockPool: show a random subset of blocks per playthrough (e.g., 3 of 5).
  */
 import type { GenericNarrativeNode, GenericNarrativeChoice } from './scenario-types';
@@ -100,11 +102,29 @@ export function createArcBasedTree(
         blocks = middle.length > 0 ? [first ?? middle[0], ...middle.slice(1), last ?? middle[middle.length - 1]] : arc.blocks;
       }
     }
-    // Shuffle middle blocks for replay variety
+    // Phase-aware shuffle: preserve macroeconomic causality and heterodox theoretical progression.
+    // Blocks are grouped by phase; phases stay in ascending order (crisis → stabilization → turning point → legacy).
+    // Only blocks within the same phase are shuffled, so e.g. Phillips-curve content stays before "declare victory."
     else if (options?.shuffleBlocks && blocks.length > 2) {
       const [first, ...rest] = blocks;
       const last = rest.pop()!;
-      blocks = [first, ...shuffle(rest, rng), last];
+      const middle = rest as DecisionBlock[];
+
+      // Group middle blocks by phase
+      const byPhase = new Map<number, DecisionBlock[]>();
+      for (const b of middle) {
+        const p = b.phase;
+        if (!byPhase.has(p)) byPhase.set(p, []);
+        byPhase.get(p)!.push(b);
+      }
+
+      // Process phases in ascending order; shuffle only within each phase
+      const sortedPhases = [...byPhase.keys()].sort((a, b) => a - b);
+      const shuffledMiddle: DecisionBlock[] = [];
+      for (const p of sortedPhases) {
+        shuffledMiddle.push(...shuffle(byPhase.get(p)!, rng));
+      }
+      blocks = [first, ...shuffledMiddle, last];
     }
 
     const numBlocks = blocks.length;
