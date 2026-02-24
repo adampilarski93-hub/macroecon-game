@@ -1,0 +1,672 @@
+import type { SimulationState, CountryState, GlobalState, ScenarioParams, SectorId, SimulationEvent } from '../engine/state';
+import type { ScenarioObjectives, EasyConfig } from '../types';
+
+const SECTOR_IDS: SectorId[] = ['agriculture', 'manufacturing', 'services'];
+
+export interface ScenarioDef {
+  id: string;
+  name: string;
+  description: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  params: ScenarioParams;
+  initialCountry: Partial<CountryState>;
+  initialGlobal: Partial<GlobalState>;
+  objectives: ScenarioObjectives;
+}
+
+const emergingDebtCrisis: ScenarioDef = {
+  id: 'emerging-debt-crisis',
+  name: 'Emerging Debt Crisis',
+  description: 'You lead a middle-income country with high public debt and a current account deficit. Global interest rates are rising. Balance fiscal consolidation with growth.',
+  difficulty: 'hard',
+  objectives: {
+    maxTurns: 20,
+    goals: [
+      { metric: 'debtToGdp', target: 0.80, compare: 'below', label: 'Stabilize debt below 80% GDP', description: 'Prevent debt from spiralling. Growth can reduce this ratio as effectively as cuts — Keynesian stimulus or restructuring are valid strategies.' },
+      { metric: 'inflationRate', target: 0.10, compare: 'below', label: 'Keep inflation under 10%', description: 'Manage prices through whatever means work: rate hikes, incomes policy, price controls, or supply-side investment.' },
+      { metric: 'approval', target: 0.35, compare: 'above', label: 'Maintain approval above 35%', description: 'Keep enough public support to govern. Social spending and basic goods matter as much as GDP growth.' },
+    ],
+  },
+  params: {
+    scenarioId: 'emerging-debt-crisis',
+    countryName: 'Republic of Meridia',
+    periodsPerYear: 4,
+    minTaxRate: 0.1,
+    maxTaxRate: 0.4,
+    minSpendingShare: 0.15,
+    maxSpendingShare: 0.45,
+    minPolicyRate: 0.01,
+    maxPolicyRate: 0.25,
+    consumptionPropensity: 0.75,
+    investmentInterestElasticity: 2,
+    phillipsCurveSlope: 0.3,
+    tradeElasticity: 1.2,
+    debtSustainabilityThreshold: 0.6,
+  },
+  initialCountry: {
+    gdp: 1000,
+    gdpGrowth: 0.02,
+    sectors: {
+      agriculture: { output: 100, laborShare: 0.2, capitalStock: 80, tfp: 1.0 },
+      manufacturing: { output: 400, laborShare: 0.35, capitalStock: 500, tfp: 1.1 },
+      services: { output: 500, laborShare: 0.45, capitalStock: 300, tfp: 1.05 },
+    },
+    laborForce: 500,
+    employed: 475,
+    unemployed: 25,
+    unemploymentRate: 0.05,
+    inflationRate: 0.06,
+    inflationTarget: 0.025,
+    exchangeRate: 1.0,
+    taxRevenue: 200,
+    expenditure: 280,
+    deficit: 80,
+    publicDebt: 650,
+    debtToGdp: 0.65,
+    policyRate: 0.08,
+    exports: 300,
+    imports: 320,
+    currentAccount: -20,
+    fxReserves: 80,
+    inflationExpectations: 0.05,
+    institutionQuality: 0.5,
+    approval: 0.45,
+  },
+  initialGlobal: {
+    worldGrowth: 0.02,
+    worldRate: 0.05,
+    commodityPriceIndex: 1.0,
+    exportDemandMultiplier: 1.0,
+    sanctionsActive: false,
+    riskPremium: 0.02,
+  },
+};
+
+const stagflationScenario: ScenarioDef = {
+  id: 'stagflation',
+  name: 'Stagflation',
+  description: 'A developed economy faces rising inflation and slowing growth. You must tighten policy without tipping the economy into recession.',
+  difficulty: 'medium',
+  objectives: {
+    maxTurns: 20,
+    goals: [
+      { metric: 'inflationRate', target: 0.04, compare: 'below', label: 'Bring inflation below 4%', description: 'Tame inflation without crashing the economy.' },
+      { metric: 'gdpGrowth', target: 0, compare: 'above', label: 'Restore positive growth', description: 'Get GDP growing again.' },
+      { metric: 'approval', target: 0.35, compare: 'above', label: 'Keep approval above 35%', description: 'Maintain public confidence.' },
+    ],
+  },
+  params: {
+    scenarioId: 'stagflation',
+    countryName: 'Federated States of Norden',
+    periodsPerYear: 4,
+    minTaxRate: 0.15,
+    maxTaxRate: 0.45,
+    minSpendingShare: 0.2,
+    maxSpendingShare: 0.5,
+    minPolicyRate: 0.0,
+    maxPolicyRate: 0.15,
+    consumptionPropensity: 0.7,
+    investmentInterestElasticity: 1.5,
+    phillipsCurveSlope: 0.25,
+    tradeElasticity: 1.0,
+    debtSustainabilityThreshold: 0.9,
+  },
+  initialCountry: {
+    gdp: 5000,
+    gdpGrowth: -0.01,
+    sectors: {
+      agriculture: { output: 150, laborShare: 0.05, capitalStock: 100, tfp: 1.2 },
+      manufacturing: { output: 1500, laborShare: 0.25, capitalStock: 2000, tfp: 1.15 },
+      services: { output: 3350, laborShare: 0.7, capitalStock: 1500, tfp: 1.1 },
+    },
+    laborForce: 2500,
+    employed: 2375,
+    unemployed: 125,
+    unemploymentRate: 0.05,
+    inflationRate: 0.08,
+    inflationTarget: 0.02,
+    exchangeRate: 1.0,
+    taxRevenue: 1500,
+    expenditure: 1625,
+    deficit: 125,
+    publicDebt: 3500,
+    debtToGdp: 0.7,
+    policyRate: 0.05,
+    exports: 1200,
+    imports: 1250,
+    currentAccount: -50,
+    fxReserves: 500,
+    inflationExpectations: 0.07,
+    institutionQuality: 0.8,
+    approval: 0.4,
+  },
+  initialGlobal: {
+    worldGrowth: 0.01,
+    worldRate: 0.04,
+    commodityPriceIndex: 1.2,
+    exportDemandMultiplier: 0.95,
+    sanctionsActive: false,
+    riskPremium: 0.01,
+  },
+};
+
+/** De-industrialized developed country (e.g. US Rust Belt, UK post-industrial). Manufacturing has shrunk, services dominate, unemployment elevated. */
+const rustBeltScenario: ScenarioDef = {
+  id: 'rust-belt',
+  name: 'Rust Belt Revival',
+  description: 'A once-industrial powerhouse has seen factories close and jobs move away. Services dominate now, but unemployment is high and growth is weak. Revive industry or lean into services—and manage inflation from energy and imports.',
+  difficulty: 'medium',
+  objectives: {
+    maxTurns: 20,
+    goals: [
+      { metric: 'unemploymentRate', target: 0.06, compare: 'below', label: 'Cut unemployment below 6%', description: 'Put people back to work through industrial policy, retraining, green investment, or market growth.' },
+      { metric: 'debtToGdp', target: 0.90, compare: 'below', label: 'Keep debt below 90% of GDP', description: 'Manage fiscal position. Counter-cyclical spending that boosts growth can improve debt-to-GDP via the denominator.' },
+      { metric: 'approval', target: 0.40, compare: 'above', label: 'Keep approval above 40%', description: 'Win the people\'s trust through jobs, services, or visible improvement.' },
+    ],
+  },
+  params: {
+    scenarioId: 'rust-belt',
+    countryName: 'Federal Republic of Nordmark',
+    periodsPerYear: 4,
+    minTaxRate: 0.12,
+    maxTaxRate: 0.45,
+    minSpendingShare: 0.2,
+    maxSpendingShare: 0.5,
+    minPolicyRate: 0.0,
+    maxPolicyRate: 0.12,
+    consumptionPropensity: 0.72,
+    investmentInterestElasticity: 1.8,
+    phillipsCurveSlope: 0.28,
+    tradeElasticity: 1.1,
+    debtSustainabilityThreshold: 0.85,
+  },
+  initialCountry: {
+    gdp: 3200,
+    gdpGrowth: 0.005,
+    sectors: {
+      agriculture: { output: 80, laborShare: 0.03, capitalStock: 60, tfp: 1.15 },
+      manufacturing: { output: 720, laborShare: 0.18, capitalStock: 900, tfp: 1.05 },
+      services: { output: 2400, laborShare: 0.79, capitalStock: 1200, tfp: 1.08 },
+    },
+    laborForce: 1600,
+    employed: 1472,
+    unemployed: 128,
+    unemploymentRate: 0.08,
+    inflationRate: 0.055,
+    inflationTarget: 0.025,
+    exchangeRate: 1.0,
+    taxRevenue: 704,
+    expenditure: 800,
+    deficit: 96,
+    publicDebt: 2080,
+    debtToGdp: 0.65,
+    policyRate: 0.04,
+    exports: 640,
+    imports: 700,
+    currentAccount: -60,
+    fxReserves: 200,
+    inflationExpectations: 0.05,
+    institutionQuality: 0.75,
+    approval: 0.42,
+  },
+  initialGlobal: {
+    worldGrowth: 0.02,
+    worldRate: 0.04,
+    commodityPriceIndex: 1.15,
+    exportDemandMultiplier: 0.98,
+    sanctionsActive: false,
+    riskPremium: 0.015,
+  },
+};
+
+/** Recently liberated colony grappling with underdevelopment (e.g. post-1947 India, Kenya, Ghana). Agriculture-dominated, little industry, low revenue base. */
+const independenceUnderdevelopment: ScenarioDef = {
+  id: 'independence-underdevelopment',
+  name: 'Independence & Underdevelopment',
+  description: 'Your country has just won independence. The economy is still dominated by agriculture; industry is small and the tax base is weak. Build industry, raise revenue, and meet people’s expectations without breaking the budget.',
+  difficulty: 'hard',
+  objectives: {
+    maxTurns: 24,
+    goals: [
+      { metric: 'gdp', target: 480, compare: 'above', label: 'Grow GDP above 480', description: 'Expand the economy. All paths work: state-led industrialisation (South Korea model), mixed economy (India model), or market-led (Singapore model).' },
+      { metric: 'approval', target: 0.40, compare: 'above', label: 'Keep approval above 40%', description: 'Meet the people\'s expectations through literacy campaigns, healthcare, land reform, or growth.' },
+      { metric: 'debtToGdp', target: 0.70, compare: 'below', label: 'Keep debt below 70% of GDP', description: 'Domestic borrowing for productive investment is safer than foreign debt. Manage wisely.' },
+    ],
+  },
+  params: {
+    scenarioId: 'independence-underdevelopment',
+    countryName: 'Republic of Uhuru',
+    periodsPerYear: 4,
+    minTaxRate: 0.05,
+    maxTaxRate: 0.35,
+    minSpendingShare: 0.12,
+    maxSpendingShare: 0.4,
+    minPolicyRate: 0.02,
+    maxPolicyRate: 0.2,
+    consumptionPropensity: 0.8,
+    investmentInterestElasticity: 2.2,
+    phillipsCurveSlope: 0.35,
+    tradeElasticity: 1.3,
+    debtSustainabilityThreshold: 0.5,
+  },
+  initialCountry: {
+    gdp: 400,
+    gdpGrowth: 0.02,
+    sectors: {
+      agriculture: { output: 220, laborShare: 0.65, capitalStock: 60, tfp: 0.85 },
+      manufacturing: { output: 80, laborShare: 0.12, capitalStock: 50, tfp: 0.9 },
+      services: { output: 100, laborShare: 0.23, capitalStock: 40, tfp: 0.95 },
+    },
+    laborForce: 600,
+    employed: 558,
+    unemployed: 42,
+    unemploymentRate: 0.07,
+    inflationRate: 0.07,
+    inflationTarget: 0.03,
+    exchangeRate: 1.0,
+    taxRevenue: 48,
+    expenditure: 72,
+    deficit: 24,
+    publicDebt: 180,
+    debtToGdp: 0.45,
+    policyRate: 0.08,
+    exports: 100,
+    imports: 95,
+    currentAccount: 5,
+    fxReserves: 30,
+    inflationExpectations: 0.08,
+    institutionQuality: 0.35,
+    approval: 0.55,
+  },
+  initialGlobal: {
+    worldGrowth: 0.03,
+    worldRate: 0.06,
+    commodityPriceIndex: 1.0,
+    exportDemandMultiplier: 1.0,
+    sanctionsActive: false,
+    riskPremium: 0.04,
+  },
+};
+
+/** Developing country in the Global South under commodity or geopolitical pressure (e.g. Egypt, Iran, Kenya). */
+const commodityPressure: ScenarioDef = {
+  id: 'commodity-pressure',
+  name: 'Commodity Shock & Development Squeeze',
+  description: 'Your developing economy depends on commodity exports or key imports. World prices are volatile and the exchange rate is under pressure. Manage inflation, debt, and the current account while keeping growth and stability.',
+  difficulty: 'hard',
+  objectives: {
+    maxTurns: 20,
+    goals: [
+      { metric: 'inflationRate', target: 0.07, compare: 'below', label: 'Keep inflation under 7%', description: 'Stabilise prices despite commodity shocks.' },
+      { metric: 'currentAccount', target: -20, compare: 'above', label: 'Narrow current account deficit', description: 'Bring the trade gap above -20.' },
+      { metric: 'approval', target: 0.35, compare: 'above', label: 'Keep approval above 35%', description: 'Maintain political stability.' },
+    ],
+  },
+  params: {
+    scenarioId: 'commodity-pressure',
+    countryName: 'Republic of Kemet',
+    periodsPerYear: 4,
+    minTaxRate: 0.08,
+    maxTaxRate: 0.38,
+    minSpendingShare: 0.18,
+    maxSpendingShare: 0.42,
+    minPolicyRate: 0.03,
+    maxPolicyRate: 0.22,
+    consumptionPropensity: 0.78,
+    investmentInterestElasticity: 2,
+    phillipsCurveSlope: 0.32,
+    tradeElasticity: 1.25,
+    debtSustainabilityThreshold: 0.55,
+  },
+  initialCountry: {
+    gdp: 800,
+    gdpGrowth: 0.03,
+    sectors: {
+      agriculture: { output: 160, laborShare: 0.4, capitalStock: 80, tfp: 0.95 },
+      manufacturing: { output: 280, laborShare: 0.28, capitalStock: 200, tfp: 1.0 },
+      services: { output: 360, laborShare: 0.32, capitalStock: 120, tfp: 1.0 },
+    },
+    laborForce: 450,
+    employed: 418,
+    unemployed: 32,
+    unemploymentRate: 0.071,
+    inflationRate: 0.09,
+    inflationTarget: 0.03,
+    exchangeRate: 1.0,
+    taxRevenue: 136,
+    expenditure: 200,
+    deficit: 64,
+    publicDebt: 440,
+    debtToGdp: 0.55,
+    policyRate: 0.12,
+    exports: 220,
+    imports: 260,
+    currentAccount: -40,
+    fxReserves: 60,
+    inflationExpectations: 0.09,
+    institutionQuality: 0.5,
+    approval: 0.38,
+  },
+  initialGlobal: {
+    worldGrowth: 0.025,
+    worldRate: 0.055,
+    commodityPriceIndex: 1.35,
+    exportDemandMultiplier: 0.92,
+    sanctionsActive: false,
+    riskPremium: 0.035,
+  },
+};
+
+/** Rising industrializer (e.g. China reform era, India post-liberalisation). Fast growth potential, large agriculture, growing manufacturing, inflation and debt risks. */
+const risingIndustrializer: ScenarioDef = {
+  id: 'rising-industrializer',
+  name: 'Rising Industrializer',
+  description: 'Your economy is shifting from farm to factory. Growth is strong but uneven: inflation can spike, debt can build, and the exchange rate is sensitive. Balance industrialisation with stability and shared gains.',
+  difficulty: 'medium',
+  objectives: {
+    maxTurns: 20,
+    goals: [
+      { metric: 'gdpGrowth', target: 0.02, compare: 'above', label: 'Keep growth above 2%', description: 'Sustain industrialisation. State-directed investment (China model), export discipline (Korea model), or market-led growth all work.' },
+      { metric: 'inflationRate', target: 0.10, compare: 'below', label: 'Keep inflation under 10%', description: 'Growth without runaway prices. Incomes policy and supply investment fight inflation as well as rate hikes.' },
+      { metric: 'approval', target: 0.40, compare: 'above', label: 'Keep approval above 40%', description: 'Share the gains of growth with workers and rural communities.' },
+    ],
+  },
+  params: {
+    scenarioId: 'rising-industrializer',
+    countryName: 'People\'s Republic of Donghai',
+    periodsPerYear: 4,
+    minTaxRate: 0.1,
+    maxTaxRate: 0.4,
+    minSpendingShare: 0.18,
+    maxSpendingShare: 0.45,
+    minPolicyRate: 0.02,
+    maxPolicyRate: 0.2,
+    consumptionPropensity: 0.76,
+    investmentInterestElasticity: 2.2,
+    phillipsCurveSlope: 0.3,
+    tradeElasticity: 1.3,
+    debtSustainabilityThreshold: 0.6,
+  },
+  initialCountry: {
+    gdp: 1200,
+    gdpGrowth: 0.065,
+    sectors: {
+      agriculture: { output: 300, laborShare: 0.45, capitalStock: 120, tfp: 0.95 },
+      manufacturing: { output: 480, laborShare: 0.32, capitalStock: 350, tfp: 1.08 },
+      services: { output: 420, laborShare: 0.23, capitalStock: 130, tfp: 1.02 },
+    },
+    laborForce: 800,
+    employed: 752,
+    unemployed: 48,
+    unemploymentRate: 0.06,
+    inflationRate: 0.065,
+    inflationTarget: 0.03,
+    exchangeRate: 1.0,
+    taxRevenue: 216,
+    expenditure: 300,
+    deficit: 84,
+    publicDebt: 600,
+    debtToGdp: 0.5,
+    policyRate: 0.07,
+    exports: 360,
+    imports: 340,
+    currentAccount: 20,
+    fxReserves: 120,
+    inflationExpectations: 0.065,
+    institutionQuality: 0.55,
+    approval: 0.52,
+  },
+  initialGlobal: {
+    worldGrowth: 0.035,
+    worldRate: 0.05,
+    commodityPriceIndex: 1.1,
+    exportDemandMultiplier: 1.08,
+    sanctionsActive: false,
+    riskPremium: 0.025,
+  },
+};
+
+/** Tutorial: calm economy to learn basic concepts and how policy levers work. */
+const tutorialScenario: ScenarioDef = {
+  id: 'tutorial',
+  name: 'Learning the Basics',
+  description: 'A calm economy with no crisis. Use this scenario to learn how the economy works: what GDP, inflation, unemployment, and debt mean, and how your policy choices affect them. Try different tools and click Advance turn to see what happens.',
+  difficulty: 'easy',
+  objectives: {
+    maxTurns: 16,
+    goals: [
+      { metric: 'approval', target: 0.50, compare: 'above', label: 'Keep approval above 50%', description: 'Keep your citizens happy.' },
+      { metric: 'unemploymentRate', target: 0.08, compare: 'below', label: 'Keep unemployment below 8%', description: 'Make sure people have jobs.' },
+    ],
+  },
+  params: {
+    scenarioId: 'tutorial',
+    countryName: 'Republic of Calmwater',
+    periodsPerYear: 4,
+    minTaxRate: 0.1,
+    maxTaxRate: 0.4,
+    minSpendingShare: 0.18,
+    maxSpendingShare: 0.45,
+    minPolicyRate: 0.01,
+    maxPolicyRate: 0.12,
+    consumptionPropensity: 0.74,
+    investmentInterestElasticity: 1.8,
+    phillipsCurveSlope: 0.22,
+    tradeElasticity: 1.1,
+    debtSustainabilityThreshold: 0.7,
+  },
+  initialCountry: {
+    gdp: 1500,
+    gdpGrowth: 0.025,
+    sectors: {
+      agriculture: { output: 150, laborShare: 0.08, capitalStock: 100, tfp: 1.05 },
+      manufacturing: { output: 600, laborShare: 0.38, capitalStock: 450, tfp: 1.08 },
+      services: { output: 750, laborShare: 0.54, capitalStock: 350, tfp: 1.05 },
+    },
+    laborForce: 750,
+    employed: 720,
+    unemployed: 30,
+    unemploymentRate: 0.04,
+    inflationRate: 0.03,
+    inflationTarget: 0.025,
+    exchangeRate: 1.0,
+    taxRevenue: 330,
+    expenditure: 360,
+    deficit: 30,
+    publicDebt: 525,
+    debtToGdp: 0.35,
+    policyRate: 0.04,
+    exports: 450,
+    imports: 435,
+    currentAccount: 15,
+    fxReserves: 150,
+    inflationExpectations: 0.03,
+    institutionQuality: 0.7,
+    approval: 0.6,
+  },
+  initialGlobal: {
+    worldGrowth: 0.025,
+    worldRate: 0.04,
+    commodityPriceIndex: 1.0,
+    exportDemandMultiplier: 1.0,
+    sanctionsActive: false,
+    riskPremium: 0.01,
+  },
+};
+
+/** Sanctions and isolation (e.g. Iran, sanctioned states). Higher risk premium, weaker trade. */
+const sanctionsIsolation: ScenarioDef = {
+  id: 'sanctions-isolation',
+  name: 'Under Sanctions',
+  description: 'Your country faces international sanctions. Trade and finance are restricted, the risk premium is high, and you must find ways to stabilise the economy and protect living standards with limited external options.',
+  difficulty: 'hard',
+  objectives: {
+    maxTurns: 20,
+    goals: [
+      { metric: 'approval', target: 0.30, compare: 'above', label: 'Keep approval above 30%', description: 'Hold the country together.' },
+      { metric: 'inflationRate', target: 0.15, compare: 'below', label: 'Keep inflation under 15%', description: 'Prevent prices from spiralling out of control.' },
+      { metric: 'gdpGrowth', target: -0.02, compare: 'above', label: 'Limit GDP decline', description: 'Don\'t let the economy collapse.' },
+    ],
+  },
+  params: {
+    scenarioId: 'sanctions-isolation',
+    countryName: 'Republic of Persea',
+    periodsPerYear: 4,
+    minTaxRate: 0.1,
+    maxTaxRate: 0.4,
+    minSpendingShare: 0.15,
+    maxSpendingShare: 0.45,
+    minPolicyRate: 0.05,
+    maxPolicyRate: 0.25,
+    consumptionPropensity: 0.78,
+    investmentInterestElasticity: 1.8,
+    phillipsCurveSlope: 0.33,
+    tradeElasticity: 1.1,
+    debtSustainabilityThreshold: 0.5,
+  },
+  initialCountry: {
+    gdp: 900,
+    gdpGrowth: -0.01,
+    sectors: {
+      agriculture: { output: 135, laborShare: 0.2, capitalStock: 70, tfp: 0.95 },
+      manufacturing: { output: 405, laborShare: 0.4, capitalStock: 280, tfp: 1.0 },
+      services: { output: 360, laborShare: 0.4, capitalStock: 100, tfp: 0.98 },
+    },
+    laborForce: 500,
+    employed: 465,
+    unemployed: 35,
+    unemploymentRate: 0.07,
+    inflationRate: 0.12,
+    inflationTarget: 0.03,
+    exchangeRate: 1.0,
+    taxRevenue: 153,
+    expenditure: 225,
+    deficit: 72,
+    publicDebt: 495,
+    debtToGdp: 0.55,
+    policyRate: 0.18,
+    exports: 180,
+    imports: 250,
+    currentAccount: -70,
+    fxReserves: 40,
+    inflationExpectations: 0.11,
+    institutionQuality: 0.45,
+    approval: 0.35,
+  },
+  initialGlobal: {
+    worldGrowth: 0.02,
+    worldRate: 0.05,
+    commodityPriceIndex: 1.2,
+    exportDemandMultiplier: 0.75,
+    sanctionsActive: true,
+    riskPremium: 0.06,
+  },
+};
+
+export const scenarios: ScenarioDef[] = [
+  tutorialScenario,
+  emergingDebtCrisis,
+  stagflationScenario,
+  rustBeltScenario,
+  independenceUnderdevelopment,
+  commodityPressure,
+  risingIndustrializer,
+  sanctionsIsolation,
+];
+
+export function getScenarioObjectives(scenarioId: string): ScenarioObjectives | null {
+  const def = scenarios.find((s) => s.id === scenarioId);
+  return def?.objectives ?? null;
+}
+
+export function createInitialState(scenarioId: string, easyConfig?: EasyConfig): SimulationState | null {
+  const def = scenarios.find((s) => s.id === scenarioId);
+  if (!def) return null;
+
+  const country: CountryState = {
+    gdp: def.initialCountry.gdp ?? 1000,
+    gdpGrowth: def.initialCountry.gdpGrowth ?? 0,
+    sectors: (def.initialCountry.sectors ?? emergingDebtCrisis.initialCountry.sectors) as CountryState['sectors'],
+    laborForce: def.initialCountry.laborForce ?? 500,
+    employed: def.initialCountry.employed ?? 475,
+    unemployed: def.initialCountry.unemployed ?? 25,
+    unemploymentRate: def.initialCountry.unemploymentRate ?? 0.05,
+    inflationRate: def.initialCountry.inflationRate ?? 0.05,
+    inflationTarget: def.initialCountry.inflationTarget ?? 0.025,
+    exchangeRate: def.initialCountry.exchangeRate ?? 1,
+    taxRevenue: def.initialCountry.taxRevenue ?? 200,
+    expenditure: def.initialCountry.expenditure ?? 250,
+    deficit: def.initialCountry.deficit ?? 50,
+    publicDebt: def.initialCountry.publicDebt ?? 500,
+    debtToGdp: def.initialCountry.debtToGdp ?? 0.5,
+    policyRate: def.initialCountry.policyRate ?? 0.05,
+    exports: def.initialCountry.exports ?? 250,
+    imports: def.initialCountry.imports ?? 270,
+    currentAccount: def.initialCountry.currentAccount ?? -20,
+    fxReserves: def.initialCountry.fxReserves ?? 100,
+    inflationExpectations: def.initialCountry.inflationExpectations ?? 0.05,
+    institutionQuality: def.initialCountry.institutionQuality ?? 0.6,
+    approval: def.initialCountry.approval ?? 0.5,
+  };
+
+  const global: GlobalState = {
+    worldGrowth: def.initialGlobal.worldGrowth ?? 0.02,
+    worldRate: def.initialGlobal.worldRate ?? 0.04,
+    commodityPriceIndex: def.initialGlobal.commodityPriceIndex ?? 1,
+    exportDemandMultiplier: def.initialGlobal.exportDemandMultiplier ?? 1,
+    sanctionsActive: def.initialGlobal.sanctionsActive ?? false,
+    riskPremium: def.initialGlobal.riskPremium ?? 0.01,
+  };
+
+  const events: SimulationEvent[] = scenarioId === 'tutorial'
+    ? [{
+        id: 'tutorial-welcome',
+        turn: 0,
+        type: 'milestone',
+        title: 'Welcome to the tutorial',
+        description: 'This is a learning scenario. The economy is stable so you can experiment. Try this: change one or two policy levers (for example taxes or spending), then click Advance turn. Watch the dashboard: GDP is how much the country produces; inflation is how fast prices rise; unemployment is how many people want work but cannot find it; debt is how much the government owes. The ? next to each policy explains what it does. Have fun exploring.',
+      }]
+    : [];
+
+  // Apply easy-mode presets to starting conditions
+  if (easyConfig) {
+    // Ideology affects tax, spending, planning
+    if (easyConfig.ideology === 'socialist') {
+      country.taxRevenue *= 1.15;
+      country.expenditure *= 1.1;
+      country.institutionQuality = Math.min(1, country.institutionQuality + 0.05);
+    } else if (easyConfig.ideology === 'capitalist') {
+      country.taxRevenue *= 0.85;
+      country.expenditure *= 0.9;
+    }
+    // Trade posture affects tariffs, openness
+    if (easyConfig.tradePosture === 'closed') {
+      country.imports *= 0.85;
+      country.exports *= 0.92;
+      country.currentAccount = country.exports - country.imports;
+    } else if (easyConfig.tradePosture === 'open') {
+      country.imports *= 1.1;
+      country.exports *= 1.05;
+      country.currentAccount = country.exports - country.imports;
+    }
+    // Alliance affects risk premium and sanctions
+    if (easyConfig.alliance === 'sanctioned') {
+      global.sanctionsActive = true;
+      global.riskPremium += 0.03;
+      global.exportDemandMultiplier *= 0.85;
+    } else if (easyConfig.alliance === 'bloc') {
+      global.riskPremium = Math.max(0, global.riskPremium - 0.01);
+      global.exportDemandMultiplier *= 1.05;
+    }
+    // Recalculate deficit
+    country.deficit = country.expenditure - country.taxRevenue;
+  }
+
+  return {
+    turn: 0,
+    country,
+    global,
+    scenario: def.params,
+    events,
+  };
+}

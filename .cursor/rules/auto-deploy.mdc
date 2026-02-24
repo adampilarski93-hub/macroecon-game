@@ -1,0 +1,16 @@
+---
+description: Automatically commit and push changes to trigger Netlify deploy
+alwaysApply: true
+---
+
+# Auto-Deploy After Edits
+
+After making any code or content changes to this project, automatically:
+
+1. **Stage** all changes: `git add -A`
+2. **Commit** with a descriptive message summarizing what was changed
+3. **Push** to origin: `git push`
+
+This triggers Netlify to deploy the updates. Do this at the end of the session when edits are complete — do not ask the user; just run the commands.
+
+Use PowerShell-compatible syntax (e.g. `;` instead of `&&` for command chaining).
