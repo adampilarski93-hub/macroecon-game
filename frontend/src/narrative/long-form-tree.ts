@@ -1,13 +1,14 @@
-/**
+﻿/**
  * Creates a long-form decision tree. Supports both linear chains and branching.
  * - Linear: each decision leads to the next; final decision routes to endings.
  * - Branching: choices can specify nextBlock, nextArc, or endingIndex to create different paths.
- * - shuffleBlocks: phase-aware shuffle — randomize only within the same phase to preserve
+ * - shuffleBlocks: phase-aware shuffle â€” randomize only within the same phase to preserve
  *   macroeconomic causality and heterodox theoretical progression (e.g., Hudson's debt jubilee
- *   → public banking → resisting deflation; Phillips curve before turning point).
+ *   â†’ public banking â†’ resisting deflation; Phillips curve before turning point).
  * - blockPool: show a random subset of blocks per playthrough (e.g., 3 of 5).
  */
 import type { GenericNarrativeNode, GenericNarrativeChoice } from './scenario-types';
+import type { LearnMoreContent } from '../components/ChoiceCard';
 
 export interface DecisionChoice {
   id: string;
@@ -20,6 +21,7 @@ export interface DecisionChoice {
   nextArc?: string;
   /** If set, go directly to this ending. For terminal blocks. */
   endingIndex?: number;
+  learnMore?: LearnMoreContent;
   /** Optional requirements to see this choice */
   minStats?: Record<string, number>;
 }
@@ -29,6 +31,7 @@ export interface DecisionBlock {
   title: string;
   narrative: string;
   choices: DecisionChoice[];
+  tooltipDefinitions?: Record<string, string>;
 }
 
 export interface ScenarioArc {
@@ -103,7 +106,7 @@ export function createArcBasedTree(
       }
     }
     // Phase-aware shuffle: preserve macroeconomic causality and heterodox theoretical progression.
-    // Blocks are grouped by phase; phases stay in ascending order (crisis → stabilization → turning point → legacy).
+    // Blocks are grouped by phase; phases stay in ascending order (crisis â†’ stabilization â†’ turning point â†’ legacy).
     // Only blocks within the same phase are shuffled, so e.g. Phillips-curve content stays before "declare victory."
     else if (options?.shuffleBlocks && blocks.length > 2) {
       const [first, ...rest] = blocks;

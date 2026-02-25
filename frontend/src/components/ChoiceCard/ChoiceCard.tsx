@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+﻿import React, { useState, useCallback } from 'react';
 
 // ============================================================================
 // TypeScript Interfaces
@@ -56,8 +56,8 @@ const EffectBadge: React.FC<EffectBadgeProps> = ({ label, value }) => {
   };
 
   const formatValue = (val: number): string => {
-    if (val > 0) return +;
-    if (val < 0) return ${val};
+    if (val > 0) return `+${val}`;
+    if (val < 0) return `${val}`;
     return '0';
   };
 
@@ -132,7 +132,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({
   return (
     <div
       role="article"
-      aria-label={Choice: }
+      aria-label={`Choice: ${text.slice(0, 50)}${text.length > 50 ? "..." : ""}`}
       data-choice-id={id}
       onClick={handleCardClick}
       style={{
@@ -151,7 +151,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({
             data-expand-button
             onClick={toggleLearnMore}
             aria-expanded={isLearnMoreExpanded}
-            aria-controls={learn-more-}
+            aria-controls={`learn-more-${id}`}
             style={{
               ...styles.expandButton,
               ...(isLearnMoreExpanded ? styles.expandButtonActive : {}),
@@ -178,7 +178,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({
       {/* Expandable "Learn More" Section */}
       {hasLearnMore && (
         <div
-          id={learn-more-}
+          id={`learn-more-${id}`}
           data-nested-section
           style={{
             ...styles.learnMoreSection,
@@ -223,7 +223,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({
                 data-expand-button
                 onClick={togglePerspectives}
                 aria-expanded={isPerspectivesExpanded}
-                aria-controls={perspectives-}
+                aria-controls={`perspectives-${id}`}
                 style={{
                   ...styles.perspectivesButton,
                   ...(isPerspectivesExpanded ? styles.perspectivesButtonActive : {}),
@@ -236,7 +236,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({
               </button>
 
               <div
-                id={perspectives-}
+                id={`perspectives-${id}`}
                 style={{
                   ...styles.perspectivesSection,
                   ...(isPerspectivesExpanded ? styles.perspectivesExpanded : {}),
