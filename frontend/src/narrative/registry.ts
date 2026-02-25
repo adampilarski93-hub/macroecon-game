@@ -17,6 +17,7 @@ const COMMON_STAT_COLORS: Record<string, string> = {
   publicSupport: '#ec4899',
   debtBurden: '#ef4444',
   priceStability: '#3b82f6',
+  wageShare: '#f97316',
   employment: '#14b8a6',
   sovereignty: '#f59e0b',
   externalBalance: '#a855f7',
