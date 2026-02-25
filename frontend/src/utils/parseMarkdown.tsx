@@ -2,7 +2,6 @@ import React from 'react';
 
 /**
  * Parse markdown bold syntax (**text**) and return React nodes with <strong> elements
- * Also handles nested content within tooltips
  */
 export function parseMarkdown(text: string): React.ReactNode[] {
   if (!text) return [];
@@ -15,28 +14,27 @@ export function parseMarkdown(text: string): React.ReactNode[] {
     if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
       const content = part.slice(2, -2);
       return (
-        <strong key={\old-\\} className="markdown-bold">
+        <strong key={'bold-' + index} className="markdown-bold">
           {content}
         </strong>
       );
     }
-    // Return plain text as string (can be combined with other strings by React)
+    // Return plain text as string
     return part;
   });
 }
 
 /**
  * Process React nodes and apply markdown parsing to text content
- * This handles cases where we have mixed content (tooltips + bold)
  */
 export function applyMarkdownToNodes(nodes: React.ReactNode[]): React.ReactNode[] {
   return nodes.map((node, index) => {
-    // If it's a string, apply markdown parsing
+    // If it is a string, apply markdown parsing
     if (typeof node === 'string') {
-      return <React.Fragment key={\md-\\}>{parseMarkdown(node)}</React.Fragment>;
+      return <React.Fragment key={'md-' + index}>{parseMarkdown(node)}</React.Fragment>;
     }
     
-    // If it's a React element with children, recursively process
+    // If it is a React element with children, recursively process
     if (React.isValidElement(node) && node.props.children) {
       const children = Array.isArray(node.props.children) 
         ? node.props.children 
@@ -50,7 +48,7 @@ export function applyMarkdownToNodes(nodes: React.ReactNode[]): React.ReactNode[
         const combinedText = children.join('');
         return React.cloneElement(node, {
           ...node.props,
-          key: \cloned-\\,
+          key: 'cloned-' + index,
           children: parseMarkdown(combinedText),
         });
       }
@@ -58,7 +56,7 @@ export function applyMarkdownToNodes(nodes: React.ReactNode[]): React.ReactNode[
       // Recursively process mixed children
       return React.cloneElement(node, {
         ...node.props,
-        key: \cloned-\\,
+        key: 'cloned-' + index,
         children: applyMarkdownToNodes(children),
       });
     }
