@@ -57,8 +57,6 @@ How do you frame your initial response?`,
  */
 const monetaristArc: ScenarioArc = {
   id: 'monetarist',
-  // Block pool: show 2 of 4 middle blocks per playthrough for replay variety
-  // (indices 1, 2, 3 are middle; index 0 is entry, index 4-5 are turning point/ending)
   blockPool: [1, 2, 3],
   blockPoolCount: 2,
   blocks: [
@@ -150,7 +148,6 @@ What legacy do you choose to emphasize?`,
  */
 const keynesianArc: ScenarioArc = {
   id: 'keynesian',
-  // Block pool: show 2 of 4 middle blocks per playthrough for replay variety
   blockPool: [1, 2, 3],
   blockPoolCount: 2,
   blocks: [
@@ -242,7 +239,6 @@ How do you frame your legacy?`,
  */
 const structuralistArc: ScenarioArc = {
   id: 'structuralist',
-  // Block pool: show 2 of 4 middle blocks per playthrough for replay variety
   blockPool: [1, 2, 3],
   blockPoolCount: 2,
   blocks: [

@@ -462,17 +462,19 @@ const risingIndustrializer: ScenarioDef = {
   },
 };
 
-/** Tutorial: calm economy to learn basic concepts and how policy levers work. */
+/** Tutorial: Learn game mechanics through 5 economic traditions. */
 const tutorialScenario: ScenarioDef = {
   id: 'tutorial',
-  name: 'Learning the Basics',
-  description: 'A calm economy with no crisis. Use this scenario to learn how the economy works: what GDP, inflation, unemployment, and debt mean, and how your policy choices affect them. Try different tools and click Advance turn to see what happens.',
+  name: 'Tutorial: How to Play',
+  description: 'Learn Macro Planner through a guided narrative. Choose from 5 economic traditions (Neoclassical, Post-Keynesian, Marxian, Structuralist, Development Economics) to understand different perspectives on the same challenges. Then practice with the simulation mode to master the mechanics.',
   difficulty: 'easy',
   objectives: {
     maxTurns: 16,
     goals: [
-      { metric: 'approval', target: 0.50, compare: 'above', label: 'Keep approval above 50%', description: 'Keep your citizens happy.' },
-      { metric: 'unemploymentRate', target: 0.08, compare: 'below', label: 'Keep unemployment below 8%', description: 'Make sure people have jobs.' },
+      { metric: 'approval', target: 0.45, compare: 'above', label: 'Keep approval above 45%', description: 'Maintain public support through your decisions.' },
+      { metric: 'unemploymentRate', target: 0.08, compare: 'below', label: 'Keep unemployment below 8%', description: 'Ensure adequate employment.' },
+      { metric: 'inflationRate', target: 0.08, compare: 'below', label: 'Keep inflation below 8%', description: 'Maintain price stability.' },
+      { metric: 'debtToGdp', target: 0.60, compare: 'below', label: 'Keep debt below 60% of GDP', description: 'Manage fiscal sustainability.' },
     ],
   },
   params: {

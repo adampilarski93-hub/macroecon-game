@@ -127,14 +127,14 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
     );
   },
   tutorial: (scenarioId) => {
-    const { getNode } = createTutorialTree({ shuffle: true });
+    const { getNode } = createTutorialTree({ shuffle: false });
     return makeConfig(
       'tutorial',
-      'Learning the Basics',
+      'Tutorial: How to Play',
       'Republic of Calmwater',
-      ['economicStrength', 'publicSupport', 'debtBurden'],
-      { economicStrength: 'Economic Strength', publicSupport: 'Public Support', debtBurden: 'Debt Burden' },
-      { economicStrength: 55, publicSupport: 60, debtBurden: 35 },
+      ['economicStrength', 'publicSupport', 'debtBurden', 'priceStability', 'wageShare'],
+      { economicStrength: 'Economic Strength', publicSupport: 'Public Support', debtBurden: 'Debt Burden', priceStability: 'Price Stability', wageShare: 'Wage Share' },
+      { economicStrength: 55, publicSupport: 60, debtBurden: 35, priceStability: 50, wageShare: 45 },
       getNode,
     );
   },
