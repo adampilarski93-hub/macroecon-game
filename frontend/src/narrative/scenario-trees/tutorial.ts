@@ -1142,7 +1142,7 @@ export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number
   // All arcs: intro -> [chosen path] -> synthesis -> endings
   return createArcBasedTree(
     [
-      { id: 'intro', blocks: [introBlock] },
+      { id: 'start', blocks: [introBlock] },
       neoclassicalArc,
       postKeynesianArc,
       marxianArc,
