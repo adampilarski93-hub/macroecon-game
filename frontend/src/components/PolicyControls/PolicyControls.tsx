@@ -36,7 +36,7 @@ interface PolicyControlsProps {
   state: SimulationState;
   onStep: (actions: PolicyActions) => Promise<void>;
   loading: boolean;
-  mode?: 'easy' | 'advanced';
+  mode?: 'easy' | 'guided' | 'advanced';
   gameOver?: boolean;
 }
 
@@ -147,6 +147,109 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
         Use the tools below to steer the economy. Each option has a <strong>?</strong> — hover over it to learn what it does.
       </p>
       <form onSubmit={handleSubmit}>
+        {/* GUIDED MODE: 5 Strategic Levers with Heterodox Context */}
+        {mode === 'guided' && (
+          <section className="policy-school guided-mode">
+            <h3>Guided Simulation � Key Policy Levers</h3>
+            <p className="guided-intro">
+              Adjust these five strategic levers to shape your economy. Each represents a major policy domain grounded in heterodox economic traditions.
+            </p>
+
+            {/* Lever 1: Fiscal Stance */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">1</span>
+                Fiscal Stance: Government Role in the Economy
+                <PolicyHelp text="Post-Keynesian tradition: government spending creates effective demand and drives growth through the multiplier. 'Stimulative' = high spending, boosts growth but adds debt. 'Austere' = reduces debt but may cause recession. 'Balanced' = middle path." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickStateRole} onChange={(e) => handleQuickStateRole(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickStateRole < 0.33 ? 'active' : ''}>Austere</span>
+                  <span className={quickStateRole >= 0.33 && quickStateRole <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickStateRole > 0.66 ? 'active' : ''}>Stimulative</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 2: Central Bank */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">2</span>
+                Central Bank: Inflation vs Employment
+                <PolicyHelp text="Monetarist vs Post-Keynesian debate: Should the central bank prioritize price stability or employment? 'Hawkish' = fight inflation even at cost of jobs. 'Dovish' = support employment, accept some inflation. 'Balanced' = dual mandate." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickCbStance} onChange={(e) => handleQuickCbStance(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickCbStance < 0.33 ? 'active' : ''}>Dovish</span>
+                  <span className={quickCbStance >= 0.33 && quickCbStance <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickCbStance > 0.66 ? 'active' : ''}>Hawkish</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 3: Labor Policy */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">3</span>
+                Labor Standards: Flexibility vs Protection
+                <PolicyHelp text="Institutional tradition (Polanyi): labor is embedded in social relations. 'Protective' = strong unions, minimum wages, job security. 'Flexible' = easier to hire/fire, lower regulation � helps business competitiveness. 'Mixed' = balance." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickRegulation} onChange={(e) => handleQuickRegulation(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickRegulation < 0.33 ? 'active' : ''}>Flexible</span>
+                  <span className={quickRegulation >= 0.33 && quickRegulation <= 0.66 ? 'active' : ''}>Mixed</span>
+                  <span className={quickRegulation > 0.66 ? 'active' : ''}>Protective</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 4: Trade */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">4</span>
+                Global Integration: Open vs Protected
+                <PolicyHelp text="Structuralist tradition (Prebisch): free trade benefits industrialized core at expense of periphery. 'Open' = low tariffs, capital mobility. 'Protected' = tariffs, capital controls. 'Strategic' = selective openness." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickTrade} onChange={(e) => handleQuickTrade(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickTrade < 0.33 ? 'active' : ''}>Protected</span>
+                  <span className={quickTrade >= 0.33 && quickTrade <= 0.66 ? 'active' : ''}>Strategic</span>
+                  <span className={quickTrade > 0.66 ? 'active' : ''}>Open</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 5: Distribution */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">5</span>
+                Economic Distribution: Capital vs Labor
+                <PolicyHelp text="Piketty's r > g: returns to capital grow faster than economy, concentrating wealth. 'Pro-labor' = wealth taxes, high wages, social spending. 'Pro-capital' = low taxes, deregulation. 'Balanced' = middle ground." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={(incomeTaxRate - s.minTaxRate) / (s.maxTaxRate - s.minTaxRate)} onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (v < 0.33) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.25)); setSocialSpendingShare(0.25); setProfitWindfallTaxRate(0); }
+                  else if (v > 0.66) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.65)); setSocialSpendingShare(0.5); setProfitWindfallTaxRate(0.12); }
+                  else { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.45)); setSocialSpendingShare(0.35); setProfitWindfallTaxRate(0.05); }
+                }} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={incomeTaxRate < (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 ? 'active' : ''}>Pro-Capital</span>
+                  <span className={incomeTaxRate >= (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 && incomeTaxRate <= (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Balanced</span>
+                  <span className={incomeTaxRate > (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Pro-Labor</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="guided-tip">
+              <strong>Tip:</strong> Each lever combines multiple policy instruments. For finer control, use Full Simulation mode.
+            </div>
+          </section>
+        )}
         {/* ── EASY MODE: Quick-set sliders only ── */}
         {mode === 'easy' && (
           <section className="policy-school quick-set">
@@ -182,6 +285,109 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
           </section>
         )}
 
+        {/* GUIDED MODE: 5 Strategic Levers with Heterodox Context */}
+        {mode === 'guided' && (
+          <section className="policy-school guided-mode">
+            <h3>Guided Simulation � Key Policy Levers</h3>
+            <p className="guided-intro">
+              Adjust these five strategic levers to shape your economy. Each represents a major policy domain grounded in heterodox economic traditions.
+            </p>
+
+            {/* Lever 1: Fiscal Stance */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">1</span>
+                Fiscal Stance: Government Role in the Economy
+                <PolicyHelp text="Post-Keynesian tradition: government spending creates effective demand and drives growth through the multiplier. 'Stimulative' = high spending, boosts growth but adds debt. 'Austere' = reduces debt but may cause recession. 'Balanced' = middle path." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickStateRole} onChange={(e) => handleQuickStateRole(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickStateRole < 0.33 ? 'active' : ''}>Austere</span>
+                  <span className={quickStateRole >= 0.33 && quickStateRole <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickStateRole > 0.66 ? 'active' : ''}>Stimulative</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 2: Central Bank */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">2</span>
+                Central Bank: Inflation vs Employment
+                <PolicyHelp text="Monetarist vs Post-Keynesian debate: Should the central bank prioritize price stability or employment? 'Hawkish' = fight inflation even at cost of jobs. 'Dovish' = support employment, accept some inflation. 'Balanced' = dual mandate." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickCbStance} onChange={(e) => handleQuickCbStance(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickCbStance < 0.33 ? 'active' : ''}>Dovish</span>
+                  <span className={quickCbStance >= 0.33 && quickCbStance <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickCbStance > 0.66 ? 'active' : ''}>Hawkish</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 3: Labor Policy */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">3</span>
+                Labor Standards: Flexibility vs Protection
+                <PolicyHelp text="Institutional tradition (Polanyi): labor is embedded in social relations. 'Protective' = strong unions, minimum wages, job security. 'Flexible' = easier to hire/fire, lower regulation � helps business competitiveness. 'Mixed' = balance." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickRegulation} onChange={(e) => handleQuickRegulation(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickRegulation < 0.33 ? 'active' : ''}>Flexible</span>
+                  <span className={quickRegulation >= 0.33 && quickRegulation <= 0.66 ? 'active' : ''}>Mixed</span>
+                  <span className={quickRegulation > 0.66 ? 'active' : ''}>Protective</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 4: Trade */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">4</span>
+                Global Integration: Open vs Protected
+                <PolicyHelp text="Structuralist tradition (Prebisch): free trade benefits industrialized core at expense of periphery. 'Open' = low tariffs, capital mobility. 'Protected' = tariffs, capital controls. 'Strategic' = selective openness." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickTrade} onChange={(e) => handleQuickTrade(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickTrade < 0.33 ? 'active' : ''}>Protected</span>
+                  <span className={quickTrade >= 0.33 && quickTrade <= 0.66 ? 'active' : ''}>Strategic</span>
+                  <span className={quickTrade > 0.66 ? 'active' : ''}>Open</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 5: Distribution */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">5</span>
+                Economic Distribution: Capital vs Labor
+                <PolicyHelp text="Piketty's r > g: returns to capital grow faster than economy, concentrating wealth. 'Pro-labor' = wealth taxes, high wages, social spending. 'Pro-capital' = low taxes, deregulation. 'Balanced' = middle ground." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={(incomeTaxRate - s.minTaxRate) / (s.maxTaxRate - s.minTaxRate)} onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (v < 0.33) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.25)); setSocialSpendingShare(0.25); setProfitWindfallTaxRate(0); }
+                  else if (v > 0.66) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.65)); setSocialSpendingShare(0.5); setProfitWindfallTaxRate(0.12); }
+                  else { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.45)); setSocialSpendingShare(0.35); setProfitWindfallTaxRate(0.05); }
+                }} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={incomeTaxRate < (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 ? 'active' : ''}>Pro-Capital</span>
+                  <span className={incomeTaxRate >= (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 && incomeTaxRate <= (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Balanced</span>
+                  <span className={incomeTaxRate > (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Pro-Labor</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="guided-tip">
+              <strong>Tip:</strong> Each lever combines multiple policy instruments. For finer control, use Full Simulation mode.
+            </div>
+          </section>
+        )}
         {/* ── ADVANCED MODE or fine-tune toggle ── */}
         {mode === 'easy' && (
           <button
@@ -199,7 +405,110 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
               <p className="easy-help">Adjust individual levers for more control. These override the quick-set sliders above.</p>
             )}
 
-            {/* ── Fiscal & Monetary (no duplicates) ── */}
+            {/* GUIDED MODE: 5 Strategic Levers with Heterodox Context */}
+        {mode === 'guided' && (
+          <section className="policy-school guided-mode">
+            <h3>Guided Simulation � Key Policy Levers</h3>
+            <p className="guided-intro">
+              Adjust these five strategic levers to shape your economy. Each represents a major policy domain grounded in heterodox economic traditions.
+            </p>
+
+            {/* Lever 1: Fiscal Stance */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">1</span>
+                Fiscal Stance: Government Role in the Economy
+                <PolicyHelp text="Post-Keynesian tradition: government spending creates effective demand and drives growth through the multiplier. 'Stimulative' = high spending, boosts growth but adds debt. 'Austere' = reduces debt but may cause recession. 'Balanced' = middle path." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickStateRole} onChange={(e) => handleQuickStateRole(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickStateRole < 0.33 ? 'active' : ''}>Austere</span>
+                  <span className={quickStateRole >= 0.33 && quickStateRole <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickStateRole > 0.66 ? 'active' : ''}>Stimulative</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 2: Central Bank */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">2</span>
+                Central Bank: Inflation vs Employment
+                <PolicyHelp text="Monetarist vs Post-Keynesian debate: Should the central bank prioritize price stability or employment? 'Hawkish' = fight inflation even at cost of jobs. 'Dovish' = support employment, accept some inflation. 'Balanced' = dual mandate." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickCbStance} onChange={(e) => handleQuickCbStance(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickCbStance < 0.33 ? 'active' : ''}>Dovish</span>
+                  <span className={quickCbStance >= 0.33 && quickCbStance <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickCbStance > 0.66 ? 'active' : ''}>Hawkish</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 3: Labor Policy */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">3</span>
+                Labor Standards: Flexibility vs Protection
+                <PolicyHelp text="Institutional tradition (Polanyi): labor is embedded in social relations. 'Protective' = strong unions, minimum wages, job security. 'Flexible' = easier to hire/fire, lower regulation � helps business competitiveness. 'Mixed' = balance." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickRegulation} onChange={(e) => handleQuickRegulation(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickRegulation < 0.33 ? 'active' : ''}>Flexible</span>
+                  <span className={quickRegulation >= 0.33 && quickRegulation <= 0.66 ? 'active' : ''}>Mixed</span>
+                  <span className={quickRegulation > 0.66 ? 'active' : ''}>Protective</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 4: Trade */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">4</span>
+                Global Integration: Open vs Protected
+                <PolicyHelp text="Structuralist tradition (Prebisch): free trade benefits industrialized core at expense of periphery. 'Open' = low tariffs, capital mobility. 'Protected' = tariffs, capital controls. 'Strategic' = selective openness." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickTrade} onChange={(e) => handleQuickTrade(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickTrade < 0.33 ? 'active' : ''}>Protected</span>
+                  <span className={quickTrade >= 0.33 && quickTrade <= 0.66 ? 'active' : ''}>Strategic</span>
+                  <span className={quickTrade > 0.66 ? 'active' : ''}>Open</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 5: Distribution */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">5</span>
+                Economic Distribution: Capital vs Labor
+                <PolicyHelp text="Piketty's r > g: returns to capital grow faster than economy, concentrating wealth. 'Pro-labor' = wealth taxes, high wages, social spending. 'Pro-capital' = low taxes, deregulation. 'Balanced' = middle ground." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={(incomeTaxRate - s.minTaxRate) / (s.maxTaxRate - s.minTaxRate)} onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (v < 0.33) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.25)); setSocialSpendingShare(0.25); setProfitWindfallTaxRate(0); }
+                  else if (v > 0.66) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.65)); setSocialSpendingShare(0.5); setProfitWindfallTaxRate(0.12); }
+                  else { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.45)); setSocialSpendingShare(0.35); setProfitWindfallTaxRate(0.05); }
+                }} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={incomeTaxRate < (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 ? 'active' : ''}>Pro-Capital</span>
+                  <span className={incomeTaxRate >= (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 && incomeTaxRate <= (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Balanced</span>
+                  <span className={incomeTaxRate > (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Pro-Labor</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="guided-tip">
+              <strong>Tip:</strong> Each lever combines multiple policy instruments. For finer control, use Full Simulation mode.
+            </div>
+          </section>
+        )}
+        {/* ── Fiscal & Monetary (no duplicates) ── */}
             <section className="policy-school" data-school="mainstream">
               <h3>Fiscal & Monetary</h3>
               <div className="control-group">
@@ -239,7 +548,110 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
               </div>
             </section>
 
-            {/* ── Trade & External ── */}
+            {/* GUIDED MODE: 5 Strategic Levers with Heterodox Context */}
+        {mode === 'guided' && (
+          <section className="policy-school guided-mode">
+            <h3>Guided Simulation � Key Policy Levers</h3>
+            <p className="guided-intro">
+              Adjust these five strategic levers to shape your economy. Each represents a major policy domain grounded in heterodox economic traditions.
+            </p>
+
+            {/* Lever 1: Fiscal Stance */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">1</span>
+                Fiscal Stance: Government Role in the Economy
+                <PolicyHelp text="Post-Keynesian tradition: government spending creates effective demand and drives growth through the multiplier. 'Stimulative' = high spending, boosts growth but adds debt. 'Austere' = reduces debt but may cause recession. 'Balanced' = middle path." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickStateRole} onChange={(e) => handleQuickStateRole(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickStateRole < 0.33 ? 'active' : ''}>Austere</span>
+                  <span className={quickStateRole >= 0.33 && quickStateRole <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickStateRole > 0.66 ? 'active' : ''}>Stimulative</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 2: Central Bank */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">2</span>
+                Central Bank: Inflation vs Employment
+                <PolicyHelp text="Monetarist vs Post-Keynesian debate: Should the central bank prioritize price stability or employment? 'Hawkish' = fight inflation even at cost of jobs. 'Dovish' = support employment, accept some inflation. 'Balanced' = dual mandate." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickCbStance} onChange={(e) => handleQuickCbStance(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickCbStance < 0.33 ? 'active' : ''}>Dovish</span>
+                  <span className={quickCbStance >= 0.33 && quickCbStance <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickCbStance > 0.66 ? 'active' : ''}>Hawkish</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 3: Labor Policy */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">3</span>
+                Labor Standards: Flexibility vs Protection
+                <PolicyHelp text="Institutional tradition (Polanyi): labor is embedded in social relations. 'Protective' = strong unions, minimum wages, job security. 'Flexible' = easier to hire/fire, lower regulation � helps business competitiveness. 'Mixed' = balance." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickRegulation} onChange={(e) => handleQuickRegulation(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickRegulation < 0.33 ? 'active' : ''}>Flexible</span>
+                  <span className={quickRegulation >= 0.33 && quickRegulation <= 0.66 ? 'active' : ''}>Mixed</span>
+                  <span className={quickRegulation > 0.66 ? 'active' : ''}>Protective</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 4: Trade */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">4</span>
+                Global Integration: Open vs Protected
+                <PolicyHelp text="Structuralist tradition (Prebisch): free trade benefits industrialized core at expense of periphery. 'Open' = low tariffs, capital mobility. 'Protected' = tariffs, capital controls. 'Strategic' = selective openness." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickTrade} onChange={(e) => handleQuickTrade(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickTrade < 0.33 ? 'active' : ''}>Protected</span>
+                  <span className={quickTrade >= 0.33 && quickTrade <= 0.66 ? 'active' : ''}>Strategic</span>
+                  <span className={quickTrade > 0.66 ? 'active' : ''}>Open</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 5: Distribution */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">5</span>
+                Economic Distribution: Capital vs Labor
+                <PolicyHelp text="Piketty's r > g: returns to capital grow faster than economy, concentrating wealth. 'Pro-labor' = wealth taxes, high wages, social spending. 'Pro-capital' = low taxes, deregulation. 'Balanced' = middle ground." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={(incomeTaxRate - s.minTaxRate) / (s.maxTaxRate - s.minTaxRate)} onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (v < 0.33) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.25)); setSocialSpendingShare(0.25); setProfitWindfallTaxRate(0); }
+                  else if (v > 0.66) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.65)); setSocialSpendingShare(0.5); setProfitWindfallTaxRate(0.12); }
+                  else { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.45)); setSocialSpendingShare(0.35); setProfitWindfallTaxRate(0.05); }
+                }} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={incomeTaxRate < (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 ? 'active' : ''}>Pro-Capital</span>
+                  <span className={incomeTaxRate >= (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 && incomeTaxRate <= (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Balanced</span>
+                  <span className={incomeTaxRate > (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Pro-Labor</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="guided-tip">
+              <strong>Tip:</strong> Each lever combines multiple policy instruments. For finer control, use Full Simulation mode.
+            </div>
+          </section>
+        )}
+        {/* ── Trade & External ── */}
             <section className="policy-school" data-school="structuralist">
               <h3>Trade & External</h3>
               <div className="control-group">
@@ -275,7 +687,110 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
               </div>
             </section>
 
-            {/* ── Regulation & Coordination ── */}
+            {/* GUIDED MODE: 5 Strategic Levers with Heterodox Context */}
+        {mode === 'guided' && (
+          <section className="policy-school guided-mode">
+            <h3>Guided Simulation � Key Policy Levers</h3>
+            <p className="guided-intro">
+              Adjust these five strategic levers to shape your economy. Each represents a major policy domain grounded in heterodox economic traditions.
+            </p>
+
+            {/* Lever 1: Fiscal Stance */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">1</span>
+                Fiscal Stance: Government Role in the Economy
+                <PolicyHelp text="Post-Keynesian tradition: government spending creates effective demand and drives growth through the multiplier. 'Stimulative' = high spending, boosts growth but adds debt. 'Austere' = reduces debt but may cause recession. 'Balanced' = middle path." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickStateRole} onChange={(e) => handleQuickStateRole(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickStateRole < 0.33 ? 'active' : ''}>Austere</span>
+                  <span className={quickStateRole >= 0.33 && quickStateRole <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickStateRole > 0.66 ? 'active' : ''}>Stimulative</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 2: Central Bank */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">2</span>
+                Central Bank: Inflation vs Employment
+                <PolicyHelp text="Monetarist vs Post-Keynesian debate: Should the central bank prioritize price stability or employment? 'Hawkish' = fight inflation even at cost of jobs. 'Dovish' = support employment, accept some inflation. 'Balanced' = dual mandate." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickCbStance} onChange={(e) => handleQuickCbStance(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickCbStance < 0.33 ? 'active' : ''}>Dovish</span>
+                  <span className={quickCbStance >= 0.33 && quickCbStance <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickCbStance > 0.66 ? 'active' : ''}>Hawkish</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 3: Labor Policy */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">3</span>
+                Labor Standards: Flexibility vs Protection
+                <PolicyHelp text="Institutional tradition (Polanyi): labor is embedded in social relations. 'Protective' = strong unions, minimum wages, job security. 'Flexible' = easier to hire/fire, lower regulation � helps business competitiveness. 'Mixed' = balance." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickRegulation} onChange={(e) => handleQuickRegulation(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickRegulation < 0.33 ? 'active' : ''}>Flexible</span>
+                  <span className={quickRegulation >= 0.33 && quickRegulation <= 0.66 ? 'active' : ''}>Mixed</span>
+                  <span className={quickRegulation > 0.66 ? 'active' : ''}>Protective</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 4: Trade */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">4</span>
+                Global Integration: Open vs Protected
+                <PolicyHelp text="Structuralist tradition (Prebisch): free trade benefits industrialized core at expense of periphery. 'Open' = low tariffs, capital mobility. 'Protected' = tariffs, capital controls. 'Strategic' = selective openness." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickTrade} onChange={(e) => handleQuickTrade(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickTrade < 0.33 ? 'active' : ''}>Protected</span>
+                  <span className={quickTrade >= 0.33 && quickTrade <= 0.66 ? 'active' : ''}>Strategic</span>
+                  <span className={quickTrade > 0.66 ? 'active' : ''}>Open</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 5: Distribution */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">5</span>
+                Economic Distribution: Capital vs Labor
+                <PolicyHelp text="Piketty's r > g: returns to capital grow faster than economy, concentrating wealth. 'Pro-labor' = wealth taxes, high wages, social spending. 'Pro-capital' = low taxes, deregulation. 'Balanced' = middle ground." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={(incomeTaxRate - s.minTaxRate) / (s.maxTaxRate - s.minTaxRate)} onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (v < 0.33) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.25)); setSocialSpendingShare(0.25); setProfitWindfallTaxRate(0); }
+                  else if (v > 0.66) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.65)); setSocialSpendingShare(0.5); setProfitWindfallTaxRate(0.12); }
+                  else { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.45)); setSocialSpendingShare(0.35); setProfitWindfallTaxRate(0.05); }
+                }} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={incomeTaxRate < (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 ? 'active' : ''}>Pro-Capital</span>
+                  <span className={incomeTaxRate >= (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 && incomeTaxRate <= (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Balanced</span>
+                  <span className={incomeTaxRate > (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Pro-Labor</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="guided-tip">
+              <strong>Tip:</strong> Each lever combines multiple policy instruments. For finer control, use Full Simulation mode.
+            </div>
+          </section>
+        )}
+        {/* ── Regulation & Coordination ── */}
             <section className="policy-school" data-school="keynesian">
               <h3>Regulation & Coordination</h3>
               <div className="control-group">
@@ -301,7 +816,110 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
               </div>
             </section>
 
-            {/* ── State & Planning ── */}
+            {/* GUIDED MODE: 5 Strategic Levers with Heterodox Context */}
+        {mode === 'guided' && (
+          <section className="policy-school guided-mode">
+            <h3>Guided Simulation � Key Policy Levers</h3>
+            <p className="guided-intro">
+              Adjust these five strategic levers to shape your economy. Each represents a major policy domain grounded in heterodox economic traditions.
+            </p>
+
+            {/* Lever 1: Fiscal Stance */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">1</span>
+                Fiscal Stance: Government Role in the Economy
+                <PolicyHelp text="Post-Keynesian tradition: government spending creates effective demand and drives growth through the multiplier. 'Stimulative' = high spending, boosts growth but adds debt. 'Austere' = reduces debt but may cause recession. 'Balanced' = middle path." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickStateRole} onChange={(e) => handleQuickStateRole(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickStateRole < 0.33 ? 'active' : ''}>Austere</span>
+                  <span className={quickStateRole >= 0.33 && quickStateRole <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickStateRole > 0.66 ? 'active' : ''}>Stimulative</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 2: Central Bank */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">2</span>
+                Central Bank: Inflation vs Employment
+                <PolicyHelp text="Monetarist vs Post-Keynesian debate: Should the central bank prioritize price stability or employment? 'Hawkish' = fight inflation even at cost of jobs. 'Dovish' = support employment, accept some inflation. 'Balanced' = dual mandate." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickCbStance} onChange={(e) => handleQuickCbStance(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickCbStance < 0.33 ? 'active' : ''}>Dovish</span>
+                  <span className={quickCbStance >= 0.33 && quickCbStance <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickCbStance > 0.66 ? 'active' : ''}>Hawkish</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 3: Labor Policy */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">3</span>
+                Labor Standards: Flexibility vs Protection
+                <PolicyHelp text="Institutional tradition (Polanyi): labor is embedded in social relations. 'Protective' = strong unions, minimum wages, job security. 'Flexible' = easier to hire/fire, lower regulation � helps business competitiveness. 'Mixed' = balance." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickRegulation} onChange={(e) => handleQuickRegulation(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickRegulation < 0.33 ? 'active' : ''}>Flexible</span>
+                  <span className={quickRegulation >= 0.33 && quickRegulation <= 0.66 ? 'active' : ''}>Mixed</span>
+                  <span className={quickRegulation > 0.66 ? 'active' : ''}>Protective</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 4: Trade */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">4</span>
+                Global Integration: Open vs Protected
+                <PolicyHelp text="Structuralist tradition (Prebisch): free trade benefits industrialized core at expense of periphery. 'Open' = low tariffs, capital mobility. 'Protected' = tariffs, capital controls. 'Strategic' = selective openness." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickTrade} onChange={(e) => handleQuickTrade(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickTrade < 0.33 ? 'active' : ''}>Protected</span>
+                  <span className={quickTrade >= 0.33 && quickTrade <= 0.66 ? 'active' : ''}>Strategic</span>
+                  <span className={quickTrade > 0.66 ? 'active' : ''}>Open</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 5: Distribution */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">5</span>
+                Economic Distribution: Capital vs Labor
+                <PolicyHelp text="Piketty's r > g: returns to capital grow faster than economy, concentrating wealth. 'Pro-labor' = wealth taxes, high wages, social spending. 'Pro-capital' = low taxes, deregulation. 'Balanced' = middle ground." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={(incomeTaxRate - s.minTaxRate) / (s.maxTaxRate - s.minTaxRate)} onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (v < 0.33) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.25)); setSocialSpendingShare(0.25); setProfitWindfallTaxRate(0); }
+                  else if (v > 0.66) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.65)); setSocialSpendingShare(0.5); setProfitWindfallTaxRate(0.12); }
+                  else { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.45)); setSocialSpendingShare(0.35); setProfitWindfallTaxRate(0.05); }
+                }} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={incomeTaxRate < (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 ? 'active' : ''}>Pro-Capital</span>
+                  <span className={incomeTaxRate >= (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 && incomeTaxRate <= (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Balanced</span>
+                  <span className={incomeTaxRate > (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Pro-Labor</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="guided-tip">
+              <strong>Tip:</strong> Each lever combines multiple policy instruments. For finer control, use Full Simulation mode.
+            </div>
+          </section>
+        )}
+        {/* ── State & Planning ── */}
             <section className="policy-school" data-school="marxian">
               <h3>State & Planning</h3>
               <div className="control-group">
@@ -350,6 +968,109 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
           </section>
         )}
 
+        {/* GUIDED MODE: 5 Strategic Levers with Heterodox Context */}
+        {mode === 'guided' && (
+          <section className="policy-school guided-mode">
+            <h3>Guided Simulation � Key Policy Levers</h3>
+            <p className="guided-intro">
+              Adjust these five strategic levers to shape your economy. Each represents a major policy domain grounded in heterodox economic traditions.
+            </p>
+
+            {/* Lever 1: Fiscal Stance */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">1</span>
+                Fiscal Stance: Government Role in the Economy
+                <PolicyHelp text="Post-Keynesian tradition: government spending creates effective demand and drives growth through the multiplier. 'Stimulative' = high spending, boosts growth but adds debt. 'Austere' = reduces debt but may cause recession. 'Balanced' = middle path." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickStateRole} onChange={(e) => handleQuickStateRole(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickStateRole < 0.33 ? 'active' : ''}>Austere</span>
+                  <span className={quickStateRole >= 0.33 && quickStateRole <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickStateRole > 0.66 ? 'active' : ''}>Stimulative</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 2: Central Bank */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">2</span>
+                Central Bank: Inflation vs Employment
+                <PolicyHelp text="Monetarist vs Post-Keynesian debate: Should the central bank prioritize price stability or employment? 'Hawkish' = fight inflation even at cost of jobs. 'Dovish' = support employment, accept some inflation. 'Balanced' = dual mandate." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickCbStance} onChange={(e) => handleQuickCbStance(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickCbStance < 0.33 ? 'active' : ''}>Dovish</span>
+                  <span className={quickCbStance >= 0.33 && quickCbStance <= 0.66 ? 'active' : ''}>Balanced</span>
+                  <span className={quickCbStance > 0.66 ? 'active' : ''}>Hawkish</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 3: Labor Policy */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">3</span>
+                Labor Standards: Flexibility vs Protection
+                <PolicyHelp text="Institutional tradition (Polanyi): labor is embedded in social relations. 'Protective' = strong unions, minimum wages, job security. 'Flexible' = easier to hire/fire, lower regulation � helps business competitiveness. 'Mixed' = balance." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickRegulation} onChange={(e) => handleQuickRegulation(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickRegulation < 0.33 ? 'active' : ''}>Flexible</span>
+                  <span className={quickRegulation >= 0.33 && quickRegulation <= 0.66 ? 'active' : ''}>Mixed</span>
+                  <span className={quickRegulation > 0.66 ? 'active' : ''}>Protective</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 4: Trade */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">4</span>
+                Global Integration: Open vs Protected
+                <PolicyHelp text="Structuralist tradition (Prebisch): free trade benefits industrialized core at expense of periphery. 'Open' = low tariffs, capital mobility. 'Protected' = tariffs, capital controls. 'Strategic' = selective openness." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={quickTrade} onChange={(e) => handleQuickTrade(Number(e.target.value))} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={quickTrade < 0.33 ? 'active' : ''}>Protected</span>
+                  <span className={quickTrade >= 0.33 && quickTrade <= 0.66 ? 'active' : ''}>Strategic</span>
+                  <span className={quickTrade > 0.66 ? 'active' : ''}>Open</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Lever 5: Distribution */}
+            <div className="control-group guided-lever">
+              <label className="guided-label">
+                <span className="lever-number">5</span>
+                Economic Distribution: Capital vs Labor
+                <PolicyHelp text="Piketty's r > g: returns to capital grow faster than economy, concentrating wealth. 'Pro-labor' = wealth taxes, high wages, social spending. 'Pro-capital' = low taxes, deregulation. 'Balanced' = middle ground." />
+              </label>
+              <div className="guided-slider-wrap">
+                <input type="range" min={0} max={1} step={0.1} value={(incomeTaxRate - s.minTaxRate) / (s.maxTaxRate - s.minTaxRate)} onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (v < 0.33) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.25)); setSocialSpendingShare(0.25); setProfitWindfallTaxRate(0); }
+                  else if (v > 0.66) { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.65)); setSocialSpendingShare(0.5); setProfitWindfallTaxRate(0.12); }
+                  else { setIncomeTaxRate(lerp(s.minTaxRate, s.maxTaxRate, 0.45)); setSocialSpendingShare(0.35); setProfitWindfallTaxRate(0.05); }
+                }} className="guided-slider" />
+                <div className="guided-labels">
+                  <span className={incomeTaxRate < (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 ? 'active' : ''}>Pro-Capital</span>
+                  <span className={incomeTaxRate >= (s.minTaxRate + s.maxTaxRate) / 2 - 0.02 && incomeTaxRate <= (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Balanced</span>
+                  <span className={incomeTaxRate > (s.minTaxRate + s.maxTaxRate) / 2 + 0.02 ? 'active' : ''}>Pro-Labor</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="guided-tip">
+              <strong>Tip:</strong> Each lever combines multiple policy instruments. For finer control, use Full Simulation mode.
+            </div>
+          </section>
+        )}
         {/* Policy Impact Preview */}
         <PolicyImpactPreview
           state={state}

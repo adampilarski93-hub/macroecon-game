@@ -76,7 +76,7 @@ export interface SimulationState {
   events: SimulationEvent[];
 }
 
-export type GameMode = 'easy' | 'advanced';
+export type GameMode = 'easy' | 'guided' | 'advanced';
 
 export type IdeologyPreset = 'socialist' | 'mixed' | 'capitalist';
 

@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../state/gameStore';
 import { IconScenarioEconomy, IconScenarioStagflation, IconLoading, IconInfo } from '../components/Icons';
@@ -195,13 +195,34 @@ export function ScenarioSelect() {
         <div className="scenario-card-actions">
           {hasNarrative && (
             <button type="button" className="scenario-btn-narrative" onClick={() => navigate(`/narrative/${scenarioId}`)}>
-              Easy Mode
+              Story Mode
             </button>
           )}
           {!isNarrativeOnly && (
-            <button type="button" className="scenario-btn-primary" onClick={() => handleSelect(scenarioId)} disabled={loading}>
-              Hard Mode
-            </button>
+            <>
+              <button
+                type="button"
+                className="scenario-btn-guided"
+                onClick={() => {
+                  useGameStore.getState().setMode('guided');
+                  handleSelect(scenarioId);
+                }}
+                disabled={loading}
+              >
+                Guided Simulation
+              </button>
+              <button
+                type="button"
+                className="scenario-btn-primary"
+                onClick={() => {
+                  useGameStore.getState().setMode('advanced');
+                  handleSelect(scenarioId);
+                }}
+                disabled={loading}
+              >
+                Full Simulation
+              </button>
+            </>
           )}
         </div>
       </article>
