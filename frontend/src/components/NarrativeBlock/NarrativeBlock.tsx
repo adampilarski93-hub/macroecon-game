@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { ChoiceCard, ChoiceCardProps, LearnMoreContent } from '../ChoiceCard';
 import { parseTooltipText, TooltipStyles } from '../Tooltip';
+import { parseMarkdown } from '../../utils/parseMarkdown';
 
 // ============================================================================
 // TypeScript Interfaces
@@ -51,19 +52,19 @@ function parseNarrativeSections(narrative: string): ParsedNarrative {
   };
 
   // Find **Brief:** section
-  const briefMatch = narrative.match(/\*\*Brief:\*\*\s*([\s\S]*?)(?=\*\*Detailed:|\*\*Scholar Context:|$)/i);
+  const briefMatch = narrative.match(/\*\*Brief:\*\*\s*([\s\S]*?)(?=\*\*Detailed:|\*\*Scholar Context:|\$)/i);
   if (briefMatch) {
     sections.brief = briefMatch[1].trim();
   }
 
   // Find **Detailed:** section
-  const detailedMatch = narrative.match(/\*\*Detailed:\*\*\s*([\s\S]*?)(?=\*\*Scholar Context:|$)/i);
+  const detailedMatch = narrative.match(/\*\*Detailed:\*\*\s*([\s\S]*?)(?=\*\*Scholar Context:|\$)/i);
   if (detailedMatch) {
     sections.detailed = detailedMatch[1].trim();
   }
 
   // Find **Scholar Context:** section
-  const scholarMatch = narrative.match(/\*\*Scholar Context:\*\*\s*([\s\S]*?)$/i);
+  const scholarMatch = narrative.match(/\*\*Scholar Context:\*\*\s*([\s\S]*?)\$/i);
   if (scholarMatch) {
     sections.scholarContext = scholarMatch[1].trim();
   }
@@ -90,20 +91,6 @@ function getFirstSentences(text: string, count: number): string {
 function countSentences(text: string): number {
   const sentences = text.match(/[^.!?]+[.!?]+\s*/g);
   return sentences ? sentences.length : text.length > 0 ? 1 : 0;
-}
-
-/**
- * Render markdown-style bold text (**text**) as React elements
- */
-function renderBoldText(text: string): React.ReactNode[] {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
-  return parts.map((part, index) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      const boldContent = part.slice(2, -2);
-      return <strong key={index}>{boldContent}</strong>;
-    }
-    return <span key={index}>{part}</span>;
-  });
 }
 
 // ============================================================================
@@ -143,7 +130,7 @@ const ExpandButton: React.FC<ExpandButtonProps> = ({
         ...styles.expandIcon,
         transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
       }}>
-        {isScholar ? (isExpanded ? '?' : '+') : (isExpanded ? '?' : '?')}
+        {isScholar ? (isExpanded ? '×' : '+') : (isExpanded ? '?' : '?')}
       </span>
       <span>{isExpanded ? (activeLabel || label) : label}</span>
     </button>
@@ -199,35 +186,23 @@ export const NarrativeBlock: React.FC<NarrativeBlockProps> = ({
     }
   }, [selectedChoiceId, onChoiceMade]);
 
-  // Parse tooltips with additional definitions
+  // Parse tooltips with additional definitions and markdown formatting
   const parseTooltips = useCallback((text: string): React.ReactNode => {
     // First, add any additional tooltip definitions to the text
     let processedText = text;
     Object.entries(tooltipDefinitions).forEach(([term, definition]) => {
       // Only add if not already present in [[TERM|...]] format
-      const pattern = new RegExp(`\\[\\[${term}\\|`, 'i');
+      const pattern = new RegExp(\\\[\\[\\\|\, 'i');
       if (!pattern.test(processedText) && processedText.includes(term)) {
         // Wrap standalone term occurrences (but not in other tooltips)
-        const standalonePattern = new RegExp(`(?<!\\|)\\b(${term})\\b(?!\\|)`, 'gi');
-        processedText = processedText.replace(standalonePattern, `[[$1|${definition}]]`);
+        const standalonePattern = new RegExp(\(?<!\\|)\\b(\)\\b(?!\\|)\, 'gi');
+        processedText = processedText.replace(standalonePattern, \[[\|\]]\);
       }
     });
     
+    // parseTooltipText now includes markdown parsing
     return parseTooltipText(processedText);
   }, [tooltipDefinitions]);
-
-  // Render text with bold formatting and tooltips
-  const renderNarrativeText = useCallback((text: string): React.ReactNode => {
-    const tooltipNodes = parseTooltips(text);
-    
-    // Process the tooltip nodes to add bold formatting within text segments
-    return React.Children.map(tooltipNodes, (node, index) => {
-      if (typeof node === 'string') {
-        return <span key={index}>{renderBoldText(node)}</span>;
-      }
-      return node;
-    });
-  }, [parseTooltips]);
 
   // Calculate detailed section preview
   const detailedSentenceCount = countSentences(parsedNarrative.detailed);
@@ -243,7 +218,7 @@ export const NarrativeBlock: React.FC<NarrativeBlockProps> = ({
         {/* Header */}
         <header style={styles.header}>
           <span style={styles.phaseBadge}>Phase {phase}</span>
-          <h1 style={styles.title}>{title}</h1>
+          <h1 style={styles.title}>{parseMarkdown(title)}</h1>
         </header>
 
         {/* Narrative Content */}
@@ -252,7 +227,7 @@ export const NarrativeBlock: React.FC<NarrativeBlockProps> = ({
           {parsedNarrative.brief && (
             <div style={styles.briefSection}>
               <p style={styles.briefText}>
-                {renderNarrativeText(parsedNarrative.brief)}
+                {parseTooltips(parsedNarrative.brief)}
               </p>
             </div>
           )}
@@ -263,7 +238,7 @@ export const NarrativeBlock: React.FC<NarrativeBlockProps> = ({
               {!isDetailedExpanded ? (
                 <>
                   <p style={styles.previewText}>
-                    {renderNarrativeText(detailedPreview)}
+                    {parseTooltips(detailedPreview)}
                     {hasMoreDetailed && <span style={styles.ellipsis}>...</span>}
                   </p>
                   {hasMoreDetailed && (
@@ -277,7 +252,7 @@ export const NarrativeBlock: React.FC<NarrativeBlockProps> = ({
               ) : (
                 <>
                   <p style={styles.fullText}>
-                    {renderNarrativeText(parsedNarrative.detailed)}
+                    {parseTooltips(parsedNarrative.detailed)}
                   </p>
                   <ExpandButton
                     isExpanded={true}
@@ -309,7 +284,7 @@ export const NarrativeBlock: React.FC<NarrativeBlockProps> = ({
               >
                 <div style={styles.scholarInner}>
                   <p style={styles.scholarText}>
-                    {renderNarrativeText(parsedNarrative.scholarContext)}
+                    {parseTooltips(parsedNarrative.scholarContext)}
                   </p>
                 </div>
               </div>
@@ -319,7 +294,7 @@ export const NarrativeBlock: React.FC<NarrativeBlockProps> = ({
 
         {/* Choice Cards */}
         <div style={styles.choicesSection}>
-          <h2 style={styles.choicesHeading}>Choose Your Path</h2>
+          <h2 style={styles.choicesHeading}>{parseMarkdown("Choose Your Path")}</h2>
           <div style={styles.choicesList}>
             {choices.map((choice) => (
               <ChoiceCard
@@ -540,7 +515,7 @@ const styles: Record<string, React.CSSProperties> = {
 };
 
 // Mobile responsive styles via media query simulation
-const mobileStyles = `
+const mobileStyles = \
   @media (max-width: 640px) {
     .narrative-block-container {
       padding: 16px;
@@ -556,7 +531,7 @@ const mobileStyles = `
       font-size: 16px;
     }
   }
-`;
+\;
 
 // ============================================================================
 // Export

@@ -4282,3 +4282,28 @@ header p {
   color: #92400e;
   margin-top: 1rem;
 }
+
+/* Markdown bold styling */
+.markdown-bold {
+  font-weight: 600;
+  color: inherit;
+}
+
+/* Accentuated bold for narrative content */
+.narrative-bold {
+  font-weight: 700;
+  color: #1e40af;
+}
+
+/* Bold within tooltip triggers */
+.tooltip-trigger .markdown-bold {
+  font-weight: 700;
+  color: inherit;
+}
+
+/* Bold within tooltip content - slightly highlighted */
+.tooltip-content .markdown-bold,
+.tooltip-popup .markdown-bold {
+  font-weight: 600;
+  color: #fbbf24;
+}

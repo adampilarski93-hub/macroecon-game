@@ -1,4 +1,5 @@
-﻿import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { parseMarkdown, applyMarkdownToNodes } from '../../utils/parseMarkdown';
 
 // Tooltip marker pattern: [[TERM|definition]]
 const TOOLTIP_PATTERN = /\[\[([^|\]]+)\|([^\]]+)\]\]/g;
@@ -98,7 +99,7 @@ const TooltipTrigger: React.FC<TooltipTriggerProps> = ({ term, definition }) => 
     <span className="tooltip-container">
       <span
         ref={triggerRef}
-        className={`tooltip-trigger ${isVisible ? 'active' : ''}`}
+        className={\	ooltip-trigger \\}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onClick={handleClick}
@@ -106,20 +107,20 @@ const TooltipTrigger: React.FC<TooltipTriggerProps> = ({ term, definition }) => 
         tabIndex={0}
         role="button"
         aria-expanded={isVisible}
-        aria-describedby={isVisible ? `tooltip-${term.replace(/\s+/g, '-')}` : undefined}
+        aria-describedby={isVisible ? \	ooltip-\\ : undefined}
       >
-        {term}
+        {parseMarkdown(term)}
       </span>
       {isVisible && (
         <div
           ref={tooltipRef}
-          id={`tooltip-${term.replace(/\s+/g, '-')}`}
+          id={\	ooltip-\\}
           className="tooltip-popup"
           role="tooltip"
         >
           <div className="tooltip-content">
-            <strong className="tooltip-term">{term}</strong>
-            <p className="tooltip-definition">{definition}</p>
+            <strong className="tooltip-term">{parseMarkdown(term)}</strong>
+            <p className="tooltip-definition">{parseMarkdown(definition)}</p>
           </div>
           <div className="tooltip-arrow" />
         </div>
@@ -130,6 +131,7 @@ const TooltipTrigger: React.FC<TooltipTriggerProps> = ({ term, definition }) => 
 
 /**
  * Parse text containing [[TERM|definition]] markers and return React nodes
+ * Also applies markdown bold parsing to all text segments
  */
 export function parseTooltipText(text: string): React.ReactNode[] {
   const segments: ParsedSegment[] = [];
@@ -144,12 +146,13 @@ export function parseTooltipText(text: string): React.ReactNode[] {
     const [fullMatch, term, definition] = match;
     const matchIndex = match.index;
 
-    // Add text before this match
+    // Add text before this match (with markdown parsing)
     if (matchIndex > lastIndex) {
+      const textBefore = text.slice(lastIndex, matchIndex);
       segments.push({
         type: 'text',
-        content: text.slice(lastIndex, matchIndex),
-        key: `text-${keyCounter++}`,
+        content: textBefore,
+        key: \	ext-\\,
       });
     }
 
@@ -158,29 +161,32 @@ export function parseTooltipText(text: string): React.ReactNode[] {
       type: 'tooltip',
       content: term.trim(),
       definition: definition.trim(),
-      key: `tooltip-${keyCounter++}`,
+      key: \	ooltip-\\,
     });
 
     lastIndex = matchIndex + fullMatch.length;
   }
 
-  // Add remaining text after last match
+  // Add remaining text after last match (with markdown parsing)
   if (lastIndex < text.length) {
+    const textAfter = text.slice(lastIndex);
     segments.push({
       type: 'text',
-      content: text.slice(lastIndex),
-      key: `text-${keyCounter++}`,
+      content: textAfter,
+      key: \	ext-\\,
     });
   }
 
-  // If no matches, return the original text as a single segment
+  // If no matches, return the original text with markdown parsing
   if (segments.length === 0) {
-    return [text];
+    return parseMarkdown(text);
   }
 
-  return segments.map((segment) => {
+  // Build React nodes from segments
+  const nodes = segments.map((segment) => {
     if (segment.type === 'text') {
-      return <span key={segment.key}>{segment.content}</span>;
+      // Apply markdown parsing to text segments
+      return <span key={segment.key}>{parseMarkdown(segment.content)}</span>;
     } else {
       return (
         <TooltipTrigger
@@ -191,6 +197,8 @@ export function parseTooltipText(text: string): React.ReactNode[] {
       );
     }
   });
+
+  return nodes;
 }
 
 /**
@@ -200,7 +208,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ content, className = '' }) => 
   const parsedContent = parseTooltipText(content);
 
   return (
-    <span className={`tooltip-wrapper ${className}`}>
+    <span className={\	ooltip-wrapper \\}>
       {parsedContent}
     </span>
   );
@@ -211,7 +219,7 @@ export default Tooltip;
 
 // CSS-in-JS styles component
 export const TooltipStyles: React.FC = () => (
-  <style>{`
+  <style>{\
     .tooltip-wrapper {
       display: inline;
     }
@@ -317,6 +325,22 @@ export const TooltipStyles: React.FC = () => (
       border-top: 6px solid #334155;
     }
 
+    /* Markdown bold styling */
+    .markdown-bold {
+      font-weight: 600;
+      color: inherit;
+    }
+
+    .tooltip-trigger .markdown-bold {
+      color: inherit;
+      font-weight: 700;
+    }
+
+    .tooltip-content .markdown-bold {
+      color: #fbbf24;
+      font-weight: 600;
+    }
+
     /* Mobile adjustments */
     @media (max-width: 768px) {
       .tooltip-popup {
@@ -370,5 +394,5 @@ export const TooltipStyles: React.FC = () => (
         transition: none;
       }
     }
-  `}</style>
+  \}</style>
 );
