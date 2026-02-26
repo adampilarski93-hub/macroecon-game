@@ -190,6 +190,36 @@ What do you do?`,
     ],
   },
   {
+    phase: 3,
+    title: 'The Surplus and the Sales Effort',
+    narrative: `**Sweezy & Baran's Monopoly Capital**: Calmwater's AI sector produces enough for everyone, but three companies control it all. Their margins are 60%, but they aren't hiring or expanding—they're buying back stock and running ad campaigns to keep you scrolling.
+
+**The Surplus Problem**: displaced workers produce nothing, AI produces everything, but the surplus has nowhere to go. The system must absorb it—through marketing, financial speculation, or waste.
+
+**The Sales Effort**: Tech firms spend billions on "growth hacking" not to inform you, but to manufacture demand. The new surplus requires new ways to absorb it.`,
+    choices: [
+      {
+        id: 'tax_engagement',
+        text: 'Tax engagement-based advertising to fund UBI',
+        consequence: 'Redirect the sales effort surplus to displaced workers. Platforms threaten to leave.',
+        effects: { wageShare: 15, economicStrength: -5, publicSupport: 10 }
+      },
+      {
+        id: 'subsidize_marketing',
+        text: 'Subsidize AI marketing to "create jobs"',
+        consequence: 'Classic surplus absorption—absorbs capital without meeting real needs.',
+        effects: { economicStrength: 5, wageShare: -5, publicSupport: -10 }
+      },
+      {
+        id: 'break_platforms',
+        text: 'Break up AI monopolies, force open APIs',
+        consequence: 'Restore competition. Forces reinvestment. Risk of capital flight.',
+        effects: { economicStrength: -8, wageShare: 20, publicSupport: 15 }
+      }
+    ]
+  },
+
+  {
     phase: 4,
     title: 'The Reckoning',
     narrative: `A year has passed. You've made it this far. The economy has not recovered the way the optimists hoped. The "creative destruction" narrative — that AI would destroy jobs and create better ones — has not played out. The intelligence premium has been repriced. You've seen friends downshift, move in with family, or leave the industry entirely.
