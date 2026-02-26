@@ -1,5 +1,6 @@
 import type { DecisionBlock, LongFormEnding, ScenarioArc } from '../long-form-tree';
 import { createArcBasedTree } from '../long-form-tree';
+import { salesEffortBlock } from './sales-effort-block';
 
 /**
  * Stagflation — Federated States of Norden
@@ -297,6 +298,8 @@ Do you impose temporary price caps on essentials?`,
         { id: 'no_controls', text: 'Market pricing with subsidies', consequence: 'You use transfers instead.', effects: { publicSupport: 5, debtBurden: 8, economicStrength: 3 } },
       ],
     },
+    salesEffortBlock,
+
     {
       phase: 4,
       title: 'Countervailing Power',

@@ -1,5 +1,6 @@
 import type { DecisionBlock, LongFormEnding, ScenarioArc } from '../long-form-tree';
 import { createArcBasedTree } from '../long-form-tree';
+import { salesEffortBlock } from './sales-effort-block';
 
 /**
  * Tutorial — Republic of Calmwater (Mechanics-Focused, Multi-Path)
@@ -582,6 +583,7 @@ The Marxian analysis:
       },
     ],
   },
+  salesEffortBlock,
   {
     phase: 4,
     title: 'Marxian Synthesis',
