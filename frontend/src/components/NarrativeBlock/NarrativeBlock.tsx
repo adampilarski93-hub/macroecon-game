@@ -102,7 +102,7 @@ function renderBoldText(text: string): React.ReactNode[] {
       const boldContent = part.slice(2, -2);
       return <strong key={index}>{boldContent}</strong>;
     }
-      return <strong key={index} className="markdown-bold">{boldContent}</strong>;
+      return <span key={index}>{part}</span>;
   });
 }
 
@@ -556,3 +556,5 @@ const mobileStyles = `
 // ============================================================================
 
 export default NarrativeBlock;
+
+
