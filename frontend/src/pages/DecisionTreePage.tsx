@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { parseMarkdown } from '../utils/parseMarkdown';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { GenericStats, GenericNarrativeChoice, GenericNarrativeNode } from '../narrative/scenario-types';
 import type { SimulationState } from '../engine/state';
@@ -94,7 +95,9 @@ function StatDelta({
 }
 
 function renderNarrative(text: string) {
-  return text.split('\n\n').map((para, i) => <p key={i}>{para}</p>);
+  return text.split('\n\n').map((para, i) => (
+    <p key={i}>{parseMarkdown(para)}</p>
+  ));
 }
 
 export function DecisionTreePage() {
@@ -429,8 +432,8 @@ export function DecisionTreePage() {
                       disabled={!available || transitioning}
                       onClick={() => handleChoice(choice)}
                     >
-                      <span className="narr-choice-text">{choice.text}</span>
-                      <span className="narr-choice-consequence">{choice.consequence}</span>
+                      <span className="narr-choice-text">{parseMarkdown(choice.text)}</span>
+                      <span className="narr-choice-consequence">{parseMarkdown(choice.consequence)}</span>
                       <StatDelta effects={choice.effects} statLabels={statLabels} />
                     </button>
                   );
