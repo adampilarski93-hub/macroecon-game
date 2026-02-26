@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { parseMarkdown } from '../../utils/parseMarkdown';
 
 // Tooltip marker pattern: [[TERM|definition]]
@@ -130,6 +130,7 @@ const TooltipTrigger: React.FC<TooltipTriggerProps> = ({ term, definition }) => 
 
 /**
  * Parse text containing [[TERM|definition]] markers and return React nodes
+ * Also applies markdown bold parsing (**text**) to all text segments
  */
 export function parseTooltipText(text: string): React.ReactNode[] {
   const segments: ParsedSegment[] = [];
@@ -144,7 +145,7 @@ export function parseTooltipText(text: string): React.ReactNode[] {
     const [fullMatch, term, definition] = match;
     const matchIndex = match.index;
 
-    // Add text before this match
+    // Add text before this match (with markdown bold parsing)
     if (matchIndex > lastIndex) {
       segments.push({
         type: 'text',
@@ -164,7 +165,7 @@ export function parseTooltipText(text: string): React.ReactNode[] {
     lastIndex = matchIndex + fullMatch.length;
   }
 
-  // Add remaining text after last match
+  // Add remaining text after last match (with markdown bold parsing)
   if (lastIndex < text.length) {
     segments.push({
       type: 'text',
@@ -173,14 +174,15 @@ export function parseTooltipText(text: string): React.ReactNode[] {
     });
   }
 
-  // If no matches, return the original text as a single segment
+  // If no matches, return the entire text parsed for markdown bold
   if (segments.length === 0) {
-    return [text];
+    return [parseMarkdown(text)];
   }
 
   return segments.map((segment) => {
     if (segment.type === 'text') {
-      return <span key={segment.key}>{segment.content}</span>;
+      // Apply markdown bold parsing to text segments
+      return <span key={segment.key}>{parseMarkdown(segment.content)}</span>;
     } else {
       return (
         <TooltipTrigger
@@ -306,7 +308,7 @@ export const TooltipStyles: React.FC = () => (
     }
 
     .tooltip-arrow::after {
-      content: '';
+      content: "";
       position: absolute;
       top: -7px;
       left: -6px;

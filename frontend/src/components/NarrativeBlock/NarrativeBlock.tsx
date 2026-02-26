@@ -102,7 +102,7 @@ function renderBoldText(text: string): React.ReactNode[] {
       const boldContent = part.slice(2, -2);
       return <strong key={index}>{boldContent}</strong>;
     }
-    return <span key={index}>{part}</span>;
+      return <strong key={index} className="markdown-bold">{boldContent}</strong>;
   });
 }
 
@@ -217,18 +217,11 @@ export const NarrativeBlock: React.FC<NarrativeBlockProps> = ({
   }, [tooltipDefinitions]);
 
   // Render text with bold formatting and tooltips
+  // Render text with bold formatting and tooltips
   const renderNarrativeText = useCallback((text: string): React.ReactNode => {
-    const tooltipNodes = parseTooltips(text);
-    
-    // Process the tooltip nodes to add bold formatting within text segments
-    return React.Children.map(tooltipNodes, (node, index) => {
-      if (typeof node === 'string') {
-        return <span key={index}>{renderBoldText(node)}</span>;
-      }
-      return node;
-    });
+    // parseTooltips now applies parseMarkdown to all text segments
+    return parseTooltips(text);
   }, [parseTooltips]);
-
   // Calculate detailed section preview
   const detailedSentenceCount = countSentences(parsedNarrative.detailed);
   const detailedPreview = parsedNarrative.detailed 
