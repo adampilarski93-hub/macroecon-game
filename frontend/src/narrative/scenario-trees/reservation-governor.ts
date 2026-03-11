@@ -22,9 +22,9 @@ const blocks: DecisionBlock[] = [
     title: 'The Energy Question',
     narrative: `Your reservation sits on coal. A power plant and mine have employed tribal members for decades — but the plant is ageing, and utilities are shifting to renewables. Andrew Curley writes that tribal leaders have used coal development as a form of "carbon sovereignty," working within colonial structures to assert self-determination. Now that era is ending. Do you fight to extend the coal operations, pivot to renewables, or seek a just transition fund from the federal government?`,
     choices: [
-      { id: 'extend', text: 'Fight to extend coal operations', consequence: 'You buy time.', effects: { economicStrength: 10, sovereignty: 5, culturalIntegrity: -10 }, nextBlock: 5 },
-      { id: 'renewables', text: 'Pivot to solar and wind', consequence: 'You plan the transition.', effects: { sovereignty: 8, economicStrength: 3, fiscalHealth: -5 }, nextBlock: 6 },
-      { id: 'transition', text: 'Seek federal just transition funding', consequence: 'You negotiate.', effects: { fiscalHealth: 10, sovereignty: -10, publicSupport: 5 }, nextBlock: 6 },
+      { id: 'extend', text: 'Fight to extend coal operations', consequence: 'You buy time.', effects: { economicStrength: 10, sovereignty: 5, culturalIntegrity: -10 }, nextBlock: 2 },
+      { id: 'renewables', text: 'Pivot to solar and wind', consequence: 'You plan the transition.', effects: { sovereignty: 8, economicStrength: 3, fiscalHealth: -5 }, nextBlock: 3 },
+      { id: 'transition', text: 'Seek federal just transition funding', consequence: 'You negotiate.', effects: { fiscalHealth: 10, sovereignty: -10, publicSupport: 5 }, nextBlock: 3 },
     ],
   },
   {
