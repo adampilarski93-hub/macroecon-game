@@ -150,6 +150,17 @@ export interface GameHistoryEntry {
   causalExplanation?: string;
 }
 
+export interface DecompositionDriver {
+  label: string;
+  value: number;
+}
+
+export interface SimulatorDiagnostics {
+  growth: DecompositionDriver[];
+  inflation: DecompositionDriver[];
+  debt: DecompositionDriver[];
+}
+
 export interface GameResult {
   won: boolean;
   score: number;

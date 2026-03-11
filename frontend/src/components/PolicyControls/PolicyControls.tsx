@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { SimulationState, PolicyActions } from '../../types';
 import { IconPolicy } from '../Icons';
+import { useGameStore } from '../../state/gameStore';
 
 function lerp(min: number, max: number, t: number) {
   return min + (max - min) * t;
@@ -41,6 +42,8 @@ interface PolicyControlsProps {
 }
 
 export function PolicyControls({ state, onStep, loading, mode = 'advanced', gameOver }: PolicyControlsProps) {
+  const simulatorPolicyLag = useGameStore((gs) => gs.simulatorPolicyLag);
+  const setSimulatorPolicyLag = useGameStore((gs) => gs.setSimulatorPolicyLag);
   const s = state.scenario;
   const c = state.country;
   const [incomeTaxRate, setIncomeTaxRate] = useState(c.gdp ? c.taxRevenue / c.gdp : 0.2);
@@ -305,6 +308,23 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
               <p className="easy-help">
                 Simulator mode uses the same policy levers with deterministic stepping and explicit diagnostics. Random shocks are disabled so policy effects are easier to inspect.
               </p>
+            )}
+            {mode === 'simulator' && (
+              <div className="control-group">
+                <label>
+                  Policy lag (fraction of last turn carried forward)
+                  <PolicyHelp text="Explicit policy lag for simulator runs. At 0.0, policy is applied immediately. At 1.0, this turn mostly inherits last turn's settings." />
+                  <input
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.05}
+                    value={simulatorPolicyLag}
+                    onChange={(e) => setSimulatorPolicyLag(Number(e.target.value))}
+                  />
+                  <span className="control-value">{simulatorPolicyLag.toFixed(2)}</span>
+                </label>
+              </div>
             )}
 
         {/* ── Fiscal & Monetary (no duplicates) ── */}

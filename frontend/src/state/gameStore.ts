@@ -11,6 +11,7 @@ import type {
   LLMConfig,
   ChatMessage,
   GameHistoryEntry,
+  SimulatorDiagnostics,
 } from '../types';
 import { scenarios as localScenarios, createInitialState, getScenarioObjectives } from '../scenarios';
 import { step as engineStep } from '../engine/step';
@@ -83,6 +84,8 @@ interface GameState {
   autoPlaying: boolean;
   autoPlayLog: string[];
   causalExplanation: { headline: string; details: string[] } | null;
+  simulatorPolicyLag: number;
+  simulatorDiagnostics: SimulatorDiagnostics | null;
 
   /* actions */
   fetchScenarios: () => Promise<void>;
@@ -98,9 +101,75 @@ interface GameState {
   resetGame: () => void;
   startAutoPlay: () => Promise<void>;
   stopAutoPlay: () => void;
+  setSimulatorPolicyLag: (value: number) => void;
 }
 
 const API = '/api';
+
+function laggedActions(current: PolicyActions, previous: PolicyActions, lag: number): PolicyActions {
+  const l = Math.max(0, Math.min(1, lag));
+  const numericKeys: (keyof PolicyActions)[] = [
+    'incomeTaxRate',
+    'tariffRate',
+    'spendingShareOfGdp',
+    'policyRate',
+    'infrastructureShare',
+    'socialSpendingShare',
+    'profitWindfallTaxRate',
+    'priceControlStrength',
+    'capitalControlStrength',
+    'incomesPolicyStrength',
+    'financialRegulationStrength',
+    'domesticDebtShare',
+    'basicGoodsGuarantee',
+    'planningIntensity',
+    'publicBankingStrength',
+    'debtRestructuringStance',
+    'multiYearAgendaStrength',
+  ];
+
+  const out: PolicyActions = { ...current };
+  numericKeys.forEach((k) => {
+    const c = current[k];
+    if (typeof c === 'number') {
+      const p = typeof previous[k] === 'number' ? (previous[k] as number) : c;
+      (out as Record<string, number | string | undefined>)[k as string] = c * (1 - l) + p * l;
+    }
+  });
+  return out;
+}
+
+function buildSimulatorDiagnostics(actions: PolicyActions): SimulatorDiagnostics {
+  const spending = actions.spendingShareOfGdp ?? 0.25;
+  const tax = actions.incomeTaxRate ?? 0.2;
+  const infra = actions.infrastructureShare ?? 0;
+  const planning = actions.planningIntensity ?? 0;
+  const tariff = actions.tariffRate ?? 0.1;
+  const policyRate = actions.policyRate ?? 0.03;
+  const priceControls = actions.priceControlStrength ?? 0;
+  const windfall = actions.profitWindfallTaxRate ?? 0;
+
+  return {
+    growth: [
+      { label: 'Fiscal demand', value: (spending - 0.25) * 2 },
+      { label: 'Tax drag', value: -(tax - 0.2) },
+      { label: 'Infrastructure', value: infra * 1.5 },
+      { label: 'Planning intensity', value: planning * 0.5 },
+      { label: 'Trade drag', value: -tariff * 0.5 },
+    ],
+    inflation: [
+      { label: 'Rate pressure', value: (policyRate - 0.03) * -3 },
+      { label: 'Price controls', value: -priceControls * 2 },
+      { label: 'Demand pressure', value: (spending - 0.3) },
+      { label: 'Tariff pass-through', value: tariff * 0.6 },
+    ],
+    debt: [
+      { label: 'Primary gap', value: (spending - tax) * 10 },
+      { label: 'Windfall tax relief', value: -windfall * 5 },
+      { label: 'Rate burden proxy', value: policyRate * 5 },
+    ],
+  };
+}
 
 const FALLBACK_SCENARIOS: ScenarioSummary[] = [
   { id: 'tutorial', name: 'Learning the Basics', description: 'A calm economy with no crisis. Use this scenario to learn how the economy works: what GDP, inflation, unemployment, and debt mean, and how your policy choices affect them. Try different tools and click Advance turn to see what happens.', difficulty: 'easy' },
@@ -142,6 +211,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   autoPlaying: false,
   autoPlayLog: [],
   causalExplanation: null,
+  simulatorPolicyLag: 0.4,
+  simulatorDiagnostics: null,
 
   fetchScenarios: async () => {
     set({ loading: true, error: null });
@@ -234,7 +305,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   step: async (actions: PolicyActions) => {
-    const { sessionId, state: s, serverConnected, llmConfig, mode } = get();
+    const { sessionId, state: s, serverConnected, llmConfig, mode, simulatorPolicyLag } = get();
     if (!sessionId || !s) return;
 
     // Don't allow advancing past game over
@@ -242,12 +313,14 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     set({ loading: true, error: null, briefingLoading: true });
 
+    const prevActions = get().history[get().history.length - 1]?.actions ?? {};
+    const effectiveActions = mode === 'simulator' ? laggedActions(actions, prevActions, simulatorPolicyLag) : actions;
     let next: SimulationState;
 
     if (serverConnected === false && sessionId === 'local') {
       next = engineStep(
         s as import('../engine/state').SimulationState,
-        actions as import('../engine/state').PolicyActions,
+        effectiveActions as import('../engine/state').PolicyActions,
         mode === 'simulator' ? () => 1 : undefined,
       ) as unknown as SimulationState;
     } else {
@@ -255,7 +328,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         const r = await fetch(`${API}/step`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sessionId, turnIndex: s.turn, actions }),
+          body: JSON.stringify({ sessionId, turnIndex: s.turn, actions: effectiveActions }),
         });
         if (!r.ok) {
           const data = await r.json().catch(() => ({}));
@@ -282,7 +355,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     const historyEntry: GameHistoryEntry = {
       turn: next.turn,
       state: next,
-      actions: actions as PolicyActions,
+      actions: effectiveActions as PolicyActions,
       causalExplanation: `${causal.headline}. ${causal.details.join(' ')}`,
     };
     const newHistory = [...get().history, historyEntry];
@@ -293,10 +366,11 @@ export const useGameStore = create<GameState>((set, get) => ({
       advisory,
       loading: false,
       causalExplanation: causal,
+      simulatorDiagnostics: mode === 'simulator' ? buildSimulatorDiagnostics(effectiveActions) : null,
     });
 
     // Generate turn briefing (async, doesn't block)
-    generateTurnBriefing(llmConfig, s, next, actions).then((briefing) => {
+    generateTurnBriefing(llmConfig, s, next, effectiveActions).then((briefing) => {
       set({ turnBriefing: briefing, briefingLoading: false });
     }).catch(() => set({ briefingLoading: false }));
 
@@ -461,6 +535,10 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({ autoPlaying: false });
   },
 
+  setSimulatorPolicyLag: (value: number) => {
+    set({ simulatorPolicyLag: Math.max(0, Math.min(1, value)) });
+  },
+
   resetGame: () => {
     set({
       sessionId: null,
@@ -477,6 +555,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       autoPlaying: false,
       autoPlayLog: [],
       causalExplanation: null,
+      simulatorDiagnostics: null,
     });
   },
 }));

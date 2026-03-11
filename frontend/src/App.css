@@ -1191,6 +1191,27 @@ header p {
 .all-levers-section {
   animation: fadeIn 0.3s ease-out;
 }
+.sim-diagnostics {
+  margin: 10px 0 14px;
+  padding: 10px 12px;
+  border: 1px solid #2c3a52;
+  border-radius: 10px;
+  background: #101826;
+}
+.sim-diagnostics h3 { margin: 0 0 8px; font-size: 0.95rem; }
+.sim-diagnostics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.sim-diagnostics-grid h4 { margin: 0 0 6px; font-size: 0.85rem; color: #9db2d2; }
+.sim-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.8rem;
+  padding: 2px 0;
+}
 .all-levers-section .policy-school {
   border-bottom: 1px solid var(--border);
   padding-bottom: 0.75rem;

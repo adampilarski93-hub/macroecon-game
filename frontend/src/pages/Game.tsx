@@ -9,6 +9,7 @@ import { TurnBriefing } from '../components/TurnBriefing';
 import { AdvisorChat } from '../components/AdvisorChat';
 import { GameOver } from '../components/GameOver';
 import { LLMSettings } from '../components/LLMSettings';
+import { SimulatorDiagnostics } from '../components/SimulatorDiagnostics';
 import { getScenarioObjectives } from '../scenarios';
 
 export function Game() {
@@ -36,6 +37,7 @@ export function Game() {
     autoPlaying,
     autoPlayLog,
     causalExplanation,
+    simulatorDiagnostics,
     startAutoPlay,
     stopAutoPlay,
   } = useGameStore();
@@ -148,6 +150,7 @@ export function Game() {
           </span>
         </div>
       )}
+      {mode === 'simulator' && <SimulatorDiagnostics diagnostics={simulatorDiagnostics} />}
 
       <main className="game-main">
         <section className="dashboard-section">
