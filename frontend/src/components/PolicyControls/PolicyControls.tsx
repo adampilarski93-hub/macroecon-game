@@ -36,7 +36,7 @@ interface PolicyControlsProps {
   state: SimulationState;
   onStep: (actions: PolicyActions) => Promise<void>;
   loading: boolean;
-  mode?: 'easy' | 'guided' | 'advanced';
+  mode?: 'easy' | 'guided' | 'advanced' | 'simulator';
   gameOver?: boolean;
 }
 
@@ -296,10 +296,15 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
           </button>
         )}
 
-        {(mode === 'advanced' || showAdvanced) && (
+        {(mode === 'advanced' || mode === 'simulator' || showAdvanced) && (
           <section className="all-levers-section">
             {mode === 'easy' && (
               <p className="easy-help">Adjust individual levers for more control. These override the quick-set sliders above.</p>
+            )}
+            {mode === 'simulator' && (
+              <p className="easy-help">
+                Simulator mode uses the same policy levers with deterministic stepping and explicit diagnostics. Random shocks are disabled so policy effects are easier to inspect.
+              </p>
             )}
 
         {/* ── Fiscal & Monetary (no duplicates) ── */}

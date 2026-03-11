@@ -84,6 +84,15 @@ export function Game() {
             &larr;
           </button>
           <h1>{state.scenario.countryName}</h1>
+          <span className="turn-badge" style={{ marginLeft: 10 }}>
+            {mode === 'simulator'
+              ? 'Full Simulation'
+              : mode === 'advanced'
+                ? 'Guided Simulation'
+                : mode === 'guided'
+                  ? 'Guided (Legacy)'
+                  : 'Easy Mode'}
+          </span>
         </div>
         <div className="game-header-right">
           <span className="turn-badge">
@@ -123,6 +132,22 @@ export function Game() {
 
       {/* Turn briefing */}
       <TurnBriefing text={turnBriefing} loading={briefingLoading} causalExplanation={causalExplanation} />
+      {mode === 'simulator' && (
+        <div className="objectives-bar">
+          <span className="obj-pill obj-pill-met" title="Simulator uses deterministic local stepping.">
+            ✓ Deterministic run
+          </span>
+          <span className="obj-pill" title="r-g proxy: policy rate minus GDP growth.">
+            r-g: {((state.country.policyRate - state.country.gdpGrowth) * 100).toFixed(2)} pts
+          </span>
+          <span className="obj-pill" title="Current account as % of GDP.">
+            CA/GDP: {state.country.gdp !== 0 ? ((state.country.currentAccount / state.country.gdp) * 100).toFixed(2) : '0.00'}%
+          </span>
+          <span className="obj-pill" title="Fiscal deficit as % of GDP.">
+            Deficit/GDP: {state.country.gdp !== 0 ? ((state.country.deficit / state.country.gdp) * 100).toFixed(2) : '0.00'}%
+          </span>
+        </div>
+      )}
 
       <main className="game-main">
         <section className="dashboard-section">

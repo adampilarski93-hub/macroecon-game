@@ -234,7 +234,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   step: async (actions: PolicyActions) => {
-    const { sessionId, state: s, serverConnected, llmConfig } = get();
+    const { sessionId, state: s, serverConnected, llmConfig, mode } = get();
     if (!sessionId || !s) return;
 
     // Don't allow advancing past game over
@@ -248,6 +248,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       next = engineStep(
         s as import('../engine/state').SimulationState,
         actions as import('../engine/state').PolicyActions,
+        mode === 'simulator' ? () => 1 : undefined,
       ) as unknown as SimulationState;
     } else {
       try {

@@ -204,7 +204,7 @@ export function ScenarioSelect() {
                 type="button"
                 className="scenario-btn-guided"
                 onClick={() => {
-                  useGameStore.getState().setMode('guided');
+                  useGameStore.getState().setMode('advanced');
                   handleSelect(scenarioId);
                 }}
                 disabled={loading}
@@ -215,7 +215,7 @@ export function ScenarioSelect() {
                 type="button"
                 className="scenario-btn-primary"
                 onClick={() => {
-                  useGameStore.getState().setMode('advanced');
+                  useGameStore.getState().setMode('simulator');
                   handleSelect(scenarioId);
                 }}
                 disabled={loading}
