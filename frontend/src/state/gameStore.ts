@@ -17,6 +17,7 @@ import { scenarios as localScenarios, createInitialState, getScenarioObjectives 
 import { step as engineStep } from '../engine/step';
 import { getAdvisory } from '../engine/advisor';
 import { generateCausalExplanation } from '../engine/explainer';
+import { computeSimulatorDiagnostics } from '../engine/simulatorDiagnostics';
 import {
   loadLLMConfig,
   saveLLMConfig,
@@ -137,38 +138,6 @@ function laggedActions(current: PolicyActions, previous: PolicyActions, lag: num
     }
   });
   return out;
-}
-
-function buildSimulatorDiagnostics(actions: PolicyActions): SimulatorDiagnostics {
-  const spending = actions.spendingShareOfGdp ?? 0.25;
-  const tax = actions.incomeTaxRate ?? 0.2;
-  const infra = actions.infrastructureShare ?? 0;
-  const planning = actions.planningIntensity ?? 0;
-  const tariff = actions.tariffRate ?? 0.1;
-  const policyRate = actions.policyRate ?? 0.03;
-  const priceControls = actions.priceControlStrength ?? 0;
-  const windfall = actions.profitWindfallTaxRate ?? 0;
-
-  return {
-    growth: [
-      { label: 'Fiscal demand', value: (spending - 0.25) * 2 },
-      { label: 'Tax drag', value: -(tax - 0.2) },
-      { label: 'Infrastructure', value: infra * 1.5 },
-      { label: 'Planning intensity', value: planning * 0.5 },
-      { label: 'Trade drag', value: -tariff * 0.5 },
-    ],
-    inflation: [
-      { label: 'Rate pressure', value: (policyRate - 0.03) * -3 },
-      { label: 'Price controls', value: -priceControls * 2 },
-      { label: 'Demand pressure', value: (spending - 0.3) },
-      { label: 'Tariff pass-through', value: tariff * 0.6 },
-    ],
-    debt: [
-      { label: 'Primary gap', value: (spending - tax) * 10 },
-      { label: 'Windfall tax relief', value: -windfall * 5 },
-      { label: 'Rate burden proxy', value: policyRate * 5 },
-    ],
-  };
 }
 
 const FALLBACK_SCENARIOS: ScenarioSummary[] = [
@@ -366,7 +335,12 @@ export const useGameStore = create<GameState>((set, get) => ({
       advisory,
       loading: false,
       causalExplanation: causal,
-      simulatorDiagnostics: mode === 'simulator' ? buildSimulatorDiagnostics(effectiveActions) : null,
+      simulatorDiagnostics: mode === 'simulator'
+        ? computeSimulatorDiagnostics(
+            s as import('../engine/state').SimulationState,
+            effectiveActions as import('../engine/state').PolicyActions,
+          )
+        : null,
     });
 
     // Generate turn briefing (async, doesn't block)

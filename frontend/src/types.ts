@@ -153,6 +153,7 @@ export interface GameHistoryEntry {
 export interface DecompositionDriver {
   label: string;
   value: number;
+  equation?: string;
 }
 
 export interface SimulatorDiagnostics {
