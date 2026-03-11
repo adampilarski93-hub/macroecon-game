@@ -157,18 +157,6 @@ function seededTurnRng(turn: number, seed: number): () => number {
   };
 }
 
-const FALLBACK_SCENARIOS: ScenarioSummary[] = [
-  { id: 'tutorial', name: 'Learning the Basics', description: 'A calm economy with no crisis. Use this scenario to learn how the economy works: what GDP, inflation, unemployment, and debt mean, and how your policy choices affect them. Try different tools and click Advance turn to see what happens.', difficulty: 'easy' },
-  { id: 'emerging-debt-crisis', name: 'Emerging Debt Crisis', description: 'You lead a middle-income country with high public debt and a current account deficit. Global interest rates are rising. Balance fiscal consolidation with growth.', difficulty: 'hard' },
-  { id: 'stagflation', name: 'Stagflation', description: 'A developed economy faces rising inflation and slowing growth. You must tighten policy without tipping the economy into recession.', difficulty: 'medium' },
-  { id: 'rust-belt', name: 'Rust Belt Revival', description: 'A once-industrial powerhouse has seen factories close and jobs move away. Services dominate now, but unemployment is high and growth is weak. Revive industry or lean into services—and manage inflation from energy and imports.', difficulty: 'medium' },
-  { id: 'independence-underdevelopment', name: 'Independence & Underdevelopment', description: 'Your country has just won independence. The economy is still dominated by agriculture; industry is small and the tax base is weak. Build industry, raise revenue, and meet people\'s expectations without breaking the budget.', difficulty: 'hard' },
-  { id: 'commodity-pressure', name: 'Commodity Shock & Development Squeeze', description: 'Your developing economy depends on commodity exports or key imports. World prices are volatile and the exchange rate is under pressure. Manage inflation, debt, and the current account while keeping growth and stability.', difficulty: 'hard' },
-  { id: 'rising-industrializer', name: 'Rising Industrializer', description: 'Your economy is shifting from farm to factory. Growth is strong but uneven: inflation can spike, debt can build, and the exchange rate is sensitive. Balance industrialisation with stability and shared gains.', difficulty: 'medium' },
-  { id: 'sanctions-isolation', name: 'Under Sanctions', description: 'Your country faces international sanctions. Trade and finance are restricted, the risk premium is high, and you must stabilise the economy and protect living standards with limited external options.', difficulty: 'hard' },
-  { id: 'chokepoint-closure', name: 'Chokepoint Crisis', description: 'A critical maritime trade hub is shut down, disrupting oil and container flows. Manage inflation, shortages, and growth while global trade reroutes.', difficulty: 'hard' },
-];
-
 export const useGameStore = create<GameState>((set, get) => ({
   sessionId: null,
   state: null,
@@ -178,7 +166,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   loading: false,
   error: null,
   serverConnected: null,
-  mode: 'easy',
+  mode: 'guided',
   easyConfig: {
     ideology: 'mixed',
     tradePosture: 'balanced',
@@ -233,7 +221,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     const { mode, easyConfig } = get();
     if (get().serverConnected === false) {
       set({ loading: true, error: null });
-      const state = createInitialState(scenarioId, mode === 'easy' ? easyConfig : undefined);
+      const state = createInitialState(scenarioId);
       if (!state) {
         set({ error: 'Unknown scenario', loading: false });
         return;

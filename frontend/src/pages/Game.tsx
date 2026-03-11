@@ -89,13 +89,7 @@ export function Game() {
           </button>
           <h1>{state.scenario.countryName}</h1>
           <span className="turn-badge" style={{ marginLeft: 10 }}>
-            {mode === 'simulator'
-              ? 'Full Simulation'
-              : mode === 'guided'
-                ? 'Guided Simulation'
-                : mode === 'advanced'
-                  ? 'Advanced (Legacy)'
-                  : 'Easy Mode'}
+            {mode === 'simulator' ? 'Full Simulation' : 'Guided Simulation'}
           </span>
         </div>
         <div className="game-header-right">

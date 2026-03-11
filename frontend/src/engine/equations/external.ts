@@ -1,5 +1,3 @@
-import type { GlobalState, ScenarioParams } from '../state';
-
 /**
  * Terms of trade evolution. Prebisch-Singer: commodity exporters face
  * secular decline. Tariffs and capital controls partially insulate.
@@ -20,27 +18,6 @@ export function nextTermsOfTrade(
   const insulation = 1 - 0.3 * tariffRate - 0.2 * capitalControlStrength;
   const change = (drift + commodityEffect) * Math.max(0.3, insulation);
   return Math.max(0.5, Math.min(1.5, prevToT + change));
-}
-
-/**
- * Value transfer: surplus extracted through unequal exchange.
- * Positive = value flowing out of the country.
- */
-export function valueTransfer(
-  exports: number,
-  termsOfTrade: number,
-): number {
-  // When ToT < 1, exports are undervalued relative to imports
-  return exports * Math.max(0, 1 - termsOfTrade);
-}
-
-export function exports(previousExports: number, global: GlobalState, termsOfTrade: number = 1): number {
-  return previousExports * (1 + global.worldGrowth) * global.exportDemandMultiplier * termsOfTrade;
-}
-
-export function imports(gdp: number, tariffRate: number, params: ScenarioParams): number {
-  const propensity = 0.25 * Math.pow(1 + tariffRate, -params.tradeElasticity * 0.4);
-  return propensity * gdp;
 }
 
 export function exchangeRateChange(

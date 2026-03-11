@@ -158,9 +158,9 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       'commodity-pressure',
       'Commodity Shock & Development Squeeze',
       'Republic of Kemet',
-      ['economicStrength', 'publicSupport', 'debtBurden', 'priceStability', 'externalBalance'],
-      { economicStrength: 'Economic Strength', publicSupport: 'Public Support', debtBurden: 'Debt Burden', priceStability: 'Price Stability', externalBalance: 'External Balance' },
-      { economicStrength: 45, publicSupport: 40, debtBurden: 50, priceStability: 35, externalBalance: 40 },
+      ['economicStrength', 'publicSupport', 'debtBurden', 'priceStability', 'externalBalance', 'employment'],
+      { economicStrength: 'Economic Strength', publicSupport: 'Public Support', debtBurden: 'Debt Burden', priceStability: 'Price Stability', externalBalance: 'External Balance', employment: 'Employment' },
+      { economicStrength: 45, publicSupport: 40, debtBurden: 50, priceStability: 35, externalBalance: 40, employment: 45 },
       getNode,
     );
   },

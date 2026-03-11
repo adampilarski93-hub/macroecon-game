@@ -22,6 +22,20 @@
   --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Global keyboard focus styles */
+:focus-visible {
+  outline: 2px solid var(--accent, #2dd4bf);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent, #2dd4bf);
+  outline-offset: 2px;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -1313,7 +1327,7 @@ header p {
 .control-group select:hover,
 .control-group select:focus {
   border-color: var(--accent);
-  outline: none;
+  outline: 2px solid transparent;
 }
 
 /* Policy help — click to open */
@@ -1880,7 +1894,7 @@ header p {
 }
 .chat-input-row input:focus {
   border-color: var(--accent);
-  outline: none;
+  outline: 2px solid transparent;
 }
 .chat-input-row input:disabled {
   opacity: 0.5;
@@ -2783,7 +2797,7 @@ header p {
 }
 .settings-field input:focus {
   border-color: var(--accent);
-  outline: none;
+  outline: 2px solid transparent;
 }
 .settings-field small {
   font-size: 0.75rem;

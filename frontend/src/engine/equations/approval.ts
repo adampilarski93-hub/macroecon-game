@@ -53,15 +53,3 @@ export function approvalBreakdown(
     eliteSupport,
   };
 }
-
-/**
- * Legacy single-value approval for backward compatibility.
- */
-export function approval(
-  country: CountryState,
-  socialSpendingShare: number,
-  basicGoodsGuarantee: number = 0,
-  multiYearAgendaStrength: number = 0,
-): number {
-  return approvalBreakdown(country, socialSpendingShare, basicGoodsGuarantee, multiYearAgendaStrength).overall;
-}
