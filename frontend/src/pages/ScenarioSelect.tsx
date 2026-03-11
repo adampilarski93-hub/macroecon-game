@@ -204,7 +204,7 @@ export function ScenarioSelect() {
                 type="button"
                 className="scenario-btn-guided"
                 onClick={() => {
-                  useGameStore.getState().setMode('advanced');
+                  useGameStore.getState().setMode('guided');
                   handleSelect(scenarioId);
                 }}
                 disabled={loading}

@@ -1214,6 +1214,12 @@ header p {
   font-size: 0.75rem;
   cursor: pointer;
 }
+.sim-run-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 6px 0 10px;
+}
 .sim-diagnostics-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

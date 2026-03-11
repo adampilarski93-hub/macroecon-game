@@ -88,6 +88,8 @@ interface GameState {
   causalExplanation: { headline: string; details: string[] } | null;
   simulatorPolicyLag: number;
   simulatorDiagnostics: SimulatorDiagnostics | null;
+  simulatorSeed: number;
+  simulatorBaseline: SimulationState | null;
 
   /* actions */
   fetchScenarios: () => Promise<void>;
@@ -104,6 +106,9 @@ interface GameState {
   startAutoPlay: () => Promise<void>;
   stopAutoPlay: () => void;
   setSimulatorPolicyLag: (value: number) => void;
+  setSimulatorSeed: (value: number) => void;
+  captureSimulatorBaseline: () => void;
+  clearSimulatorBaseline: () => void;
   setSimulatorScenarioParams: (patch: Partial<Pick<ScenarioParams, 'consumptionPropensity' | 'investmentInterestElasticity' | 'phillipsCurveSlope' | 'tradeElasticity' | 'debtSustainabilityThreshold'>>) => void;
 }
 
@@ -140,6 +145,16 @@ function laggedActions(current: PolicyActions, previous: PolicyActions, lag: num
     }
   });
   return out;
+}
+
+function seededTurnRng(turn: number, seed: number): () => number {
+  let s = (turn * 2654435761 + (seed >>> 0)) >>> 0;
+  return () => {
+    s ^= s << 13;
+    s ^= s >> 17;
+    s ^= s << 5;
+    return (s >>> 0) / 4294967296;
+  };
 }
 
 const FALLBACK_SCENARIOS: ScenarioSummary[] = [
@@ -184,6 +199,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   causalExplanation: null,
   simulatorPolicyLag: 0.4,
   simulatorDiagnostics: null,
+  simulatorSeed: 42,
+  simulatorBaseline: null,
 
   fetchScenarios: async () => {
     set({ loading: true, error: null });
@@ -276,7 +293,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   step: async (actions: PolicyActions) => {
-    const { sessionId, state: s, serverConnected, llmConfig, mode, simulatorPolicyLag } = get();
+    const { sessionId, state: s, serverConnected, llmConfig, mode, simulatorPolicyLag, simulatorSeed } = get();
     if (!sessionId || !s) return;
 
     // Don't allow advancing past game over
@@ -292,7 +309,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       next = engineStep(
         s as import('../engine/state').SimulationState,
         effectiveActions as import('../engine/state').PolicyActions,
-        mode === 'simulator' ? () => 1 : undefined,
+        mode === 'simulator' ? seededTurnRng(s.turn, simulatorSeed) : undefined,
       ) as unknown as SimulationState;
     } else {
       try {
@@ -515,6 +532,20 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({ simulatorPolicyLag: Math.max(0, Math.min(1, value)) });
   },
 
+  setSimulatorSeed: (value: number) => {
+    set({ simulatorSeed: Math.max(1, Math.floor(value)) });
+  },
+
+  captureSimulatorBaseline: () => {
+    const current = get().state;
+    if (!current) return;
+    set({ simulatorBaseline: JSON.parse(JSON.stringify(current)) as SimulationState });
+  },
+
+  clearSimulatorBaseline: () => {
+    set({ simulatorBaseline: null });
+  },
+
   setSimulatorScenarioParams: (patch) => {
     const current = get().state;
     if (!current) return;
@@ -546,6 +577,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       autoPlayLog: [],
       causalExplanation: null,
       simulatorDiagnostics: null,
+      simulatorBaseline: null,
     });
   },
 }));

@@ -11,6 +11,7 @@ import { GameOver } from '../components/GameOver';
 import { LLMSettings } from '../components/LLMSettings';
 import { SimulatorDiagnostics } from '../components/SimulatorDiagnostics';
 import { SimulatorModelPanel } from '../components/SimulatorModelPanel';
+import { SimulatorRunManager } from '../components/SimulatorRunManager';
 import { getScenarioObjectives } from '../scenarios';
 
 export function Game() {
@@ -90,10 +91,10 @@ export function Game() {
           <span className="turn-badge" style={{ marginLeft: 10 }}>
             {mode === 'simulator'
               ? 'Full Simulation'
-              : mode === 'advanced'
+              : mode === 'guided'
                 ? 'Guided Simulation'
-                : mode === 'guided'
-                  ? 'Guided (Legacy)'
+                : mode === 'advanced'
+                  ? 'Advanced (Legacy)'
                   : 'Easy Mode'}
           </span>
         </div>
@@ -152,6 +153,7 @@ export function Game() {
         </div>
       )}
       {mode === 'simulator' && <SimulatorModelPanel state={state} />}
+      {mode === 'simulator' && <SimulatorRunManager state={state} />}
       {mode === 'simulator' && <SimulatorDiagnostics diagnostics={simulatorDiagnostics} />}
 
       <main className="game-main">

@@ -36,6 +36,35 @@ export function SimulatorModelPanel({ state }: Props) {
   const setParams = useGameStore((s) => s.setSimulatorScenarioParams);
   const [showTheory, setShowTheory] = useState(false);
   const p = state.scenario;
+  const applyPreset = (preset: 'neoclassical' | 'post-keynesian' | 'structuralist') => {
+    if (preset === 'neoclassical') {
+      setParams({
+        consumptionPropensity: 0.64,
+        investmentInterestElasticity: 2.4,
+        phillipsCurveSlope: 0.42,
+        tradeElasticity: 1.55,
+        debtSustainabilityThreshold: 0.75,
+      });
+      return;
+    }
+    if (preset === 'post-keynesian') {
+      setParams({
+        consumptionPropensity: 0.86,
+        investmentInterestElasticity: 1.05,
+        phillipsCurveSlope: 0.2,
+        tradeElasticity: 0.9,
+        debtSustainabilityThreshold: 1.2,
+      });
+      return;
+    }
+    setParams({
+      consumptionPropensity: 0.78,
+      investmentInterestElasticity: 1.3,
+      phillipsCurveSlope: 0.17,
+      tradeElasticity: 1.7,
+      debtSustainabilityThreshold: 0.92,
+    });
+  };
 
   return (
     <section className="sim-diagnostics">
@@ -44,6 +73,11 @@ export function SimulatorModelPanel({ state }: Props) {
         <button type="button" className="sim-eq-toggle" onClick={() => setShowTheory((v) => !v)}>
           {showTheory ? 'Hide theory' : 'Show theory'}
         </button>
+      </div>
+      <div className="sim-run-actions">
+        <button type="button" className="sim-eq-toggle" onClick={() => applyPreset('neoclassical')}>Neoclassical preset</button>
+        <button type="button" className="sim-eq-toggle" onClick={() => applyPreset('post-keynesian')}>Post-Keynesian preset</button>
+        <button type="button" className="sim-eq-toggle" onClick={() => applyPreset('structuralist')}>Structuralist preset</button>
       </div>
 
       <Row
