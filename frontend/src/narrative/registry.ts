@@ -7,6 +7,7 @@ import { createNarrativeTree as createIndependenceTree } from './scenario-trees/
 import { createNarrativeTree as createCommodityTree } from './scenario-trees/commodity-pressure';
 import { createNarrativeTree as createRisingTree } from './scenario-trees/rising-industrializer';
 import { createNarrativeTree as createSanctionsTree } from './scenario-trees/sanctions-isolation';
+import { createNarrativeTree as createChokepointTree } from './scenario-trees/chokepoint-closure';
 import { createNarrativeTree as createGulfMigrantTree } from './scenario-trees/gulf-migrant';
 import { createNarrativeTree as createPlurinationalTree } from './scenario-trees/plurinational-path';
 import { createNarrativeTree as createReservationGovernorTree } from './scenario-trees/reservation-governor';
@@ -184,6 +185,24 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       ['economicStrength', 'publicSupport', 'sovereignty', 'internationalStanding'],
       { economicStrength: 'Economic Strength', publicSupport: 'Public Support', sovereignty: 'Sovereignty', internationalStanding: 'International Standing' },
       { economicStrength: 40, publicSupport: 38, sovereignty: 45, internationalStanding: 30 },
+      getNode,
+    );
+  },
+  'chokepoint-closure': (scenarioId) => {
+    const { getNode } = createChokepointTree({ shuffle: true });
+    return makeConfig(
+      'chokepoint-closure',
+      'Chokepoint Crisis',
+      'Maritime Republic of Selene',
+      ['economicStrength', 'publicSupport', 'priceStability', 'externalBalance', 'internationalStanding'],
+      {
+        economicStrength: 'Economic Strength',
+        publicSupport: 'Public Support',
+        priceStability: 'Price Stability',
+        externalBalance: 'External Balance',
+        internationalStanding: 'International Standing',
+      },
+      { economicStrength: 45, publicSupport: 44, priceStability: 40, externalBalance: 38, internationalStanding: 42 },
       getNode,
     );
   },
