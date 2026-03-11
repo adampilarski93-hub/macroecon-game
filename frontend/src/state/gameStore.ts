@@ -166,6 +166,7 @@ const FALLBACK_SCENARIOS: ScenarioSummary[] = [
   { id: 'commodity-pressure', name: 'Commodity Shock & Development Squeeze', description: 'Your developing economy depends on commodity exports or key imports. World prices are volatile and the exchange rate is under pressure. Manage inflation, debt, and the current account while keeping growth and stability.', difficulty: 'hard' },
   { id: 'rising-industrializer', name: 'Rising Industrializer', description: 'Your economy is shifting from farm to factory. Growth is strong but uneven: inflation can spike, debt can build, and the exchange rate is sensitive. Balance industrialisation with stability and shared gains.', difficulty: 'medium' },
   { id: 'sanctions-isolation', name: 'Under Sanctions', description: 'Your country faces international sanctions. Trade and finance are restricted, the risk premium is high, and you must stabilise the economy and protect living standards with limited external options.', difficulty: 'hard' },
+  { id: 'chokepoint-closure', name: 'Chokepoint Crisis', description: 'A critical maritime trade hub is shut down, disrupting oil and container flows. Manage inflation, shortages, and growth while global trade reroutes.', difficulty: 'hard' },
 ];
 
 export const useGameStore = create<GameState>((set, get) => ({

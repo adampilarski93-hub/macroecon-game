@@ -188,6 +188,28 @@ const sanctionsIsolation: ScenarioDef = {
   initialGlobal: { worldGrowth: 0.02, worldRate: 0.05, commodityPriceIndex: 1.2, exportDemandMultiplier: 0.75, sanctionsActive: true, riskPremium: 0.06 },
 };
 
+const chokepointClosure: ScenarioDef = {
+  id: 'chokepoint-closure',
+  name: 'Chokepoint Crisis',
+  description: 'A critical maritime trade hub is shut down, disrupting oil and container flows.',
+  difficulty: 'hard',
+  params: {
+    scenarioId: 'chokepoint-closure', countryName: 'Maritime Republic of Selene', periodsPerYear: 4,
+    minTaxRate: 0.1, maxTaxRate: 0.42, minSpendingShare: 0.18, maxSpendingShare: 0.48,
+    minPolicyRate: 0.02, maxPolicyRate: 0.2, consumptionPropensity: 0.74,
+    investmentInterestElasticity: 1.9, phillipsCurveSlope: 0.3, tradeElasticity: 1.4, debtSustainabilityThreshold: 0.75,
+  },
+  initialCountry: {
+    gdp: 1800, gdpGrowth: 0.015,
+    sectors: { agriculture: { output: 180, laborShare: 0.14, capitalStock: 120, tfp: 1.0 }, manufacturing: { output: 760, laborShare: 0.36, capitalStock: 520, tfp: 1.05 }, services: { output: 860, laborShare: 0.50, capitalStock: 430, tfp: 1.06 } },
+    laborForce: 900, employed: 846, unemployed: 54, unemploymentRate: 0.06, inflationRate: 0.06, inflationTarget: 0.03,
+    exchangeRate: 1.0, taxRevenue: 396, expenditure: 450, deficit: 54, publicDebt: 1170, debtToGdp: 0.65, policyRate: 0.08,
+    exports: 620, imports: 700, currentAccount: -80, fxReserves: 150, inflationExpectations: 0.065, institutionQuality: 0.62,
+    approval: 0.44, workerSupport: 0.43, eliteSupport: 0.46, wageShare: 0.49, termsOfTrade: 0.9, financialFragility: 0.22, profitRate: 0.11,
+  },
+  initialGlobal: { worldGrowth: 0.018, worldRate: 0.05, commodityPriceIndex: 1.28, exportDemandMultiplier: 0.9, sanctionsActive: false, riskPremium: 0.03 },
+};
+
 export const scenarios: ScenarioDef[] = [
   tutorialScenario,
   emergingDebtCrisis,
@@ -197,6 +219,7 @@ export const scenarios: ScenarioDef[] = [
   commodityPressure,
   risingIndustrializer,
   sanctionsIsolation,
+  chokepointClosure,
 ];
 
 export function createInitialState(scenarioId: string): SimulationState | null {

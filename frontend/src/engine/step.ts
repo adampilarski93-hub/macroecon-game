@@ -623,6 +623,66 @@ function generateDynamicEvents(
     }
   }
 
+  /* ──────── CHOKEPOINT CLOSURE ──────── */
+  if (sid === 'chokepoint-closure') {
+    if (!hasEvent(events, 'chokepoint-closure-initial') && state.turn >= 1) {
+      push(events, {
+        id: 'chokepoint-closure-initial',
+        turn: nextTurn,
+        type: 'shock',
+        title: 'Critical Sea Lane Shut Down',
+        description: 'A major maritime chokepoint has been closed by conflict, disrupting a large share of global oil and container flows. Freight rates jump, insurers raise premia, and import costs rise sharply. This is a classic geopolitical supply shock: inflation rises even as growth slows.',
+      });
+      g = {
+        ...g,
+        commodityPriceIndex: g.commodityPriceIndex * 1.35,
+        exportDemandMultiplier: g.exportDemandMultiplier * 0.84,
+        riskPremium: g.riskPremium + 0.018,
+      };
+    }
+
+    if (!hasEvent(events, 'chokepoint-rerouting') && state.turn > 4 && (planningIntensity > 0.35 || infrastructureShare > 0.35 || capitalControlStrength > 0.4)) {
+      push(events, {
+        id: 'chokepoint-rerouting',
+        turn: nextTurn,
+        type: 'milestone',
+        title: 'Emergency Rerouting Network Built',
+        description: 'Public coordination with ports, logistics firms, and regional partners is easing bottlenecks. Rerouting through longer sea paths is costly, but inventories are rebuilding and panic in wholesale markets is cooling.',
+      });
+      g = {
+        ...g,
+        exportDemandMultiplier: g.exportDemandMultiplier * 1.07,
+        riskPremium: Math.max(0, g.riskPremium - 0.008),
+      };
+    }
+
+    if (!hasEvent(events, 'chokepoint-energy-rationing') && state.turn > 3 && basicGoodsGuarantee < 0.25 && priceControlStrength < 0.2 && rng() < 0.4) {
+      push(events, {
+        id: 'chokepoint-energy-rationing',
+        turn: nextTurn,
+        type: 'warning',
+        title: 'Fuel and Transport Rationing Pressures',
+        description: 'Without targeted protection, high fuel import costs are spilling into transport and food distribution. Households face shortages and firms cut shifts. Some analysts argue that strategic buffering and targeted subsidies can prevent supply shocks from becoming social crises.',
+      });
+      newCountry.approval = Math.max(0, newCountry.approval - 0.06);
+    }
+
+    if (!hasEvent(events, 'chokepoint-reopening') && state.turn > 8 && rng() < 0.35) {
+      push(events, {
+        id: 'chokepoint-reopening',
+        turn: nextTurn,
+        type: 'policy_effect',
+        title: 'Partial Maritime Reopening',
+        description: 'A mediated ceasefire and naval escort arrangement allow limited transit through the chokepoint. Shipping costs remain elevated, but the worst bottlenecks begin to unwind.',
+      });
+      g = {
+        ...g,
+        commodityPriceIndex: g.commodityPriceIndex * 0.88,
+        exportDemandMultiplier: g.exportDemandMultiplier * 1.05,
+      };
+    }
+  }
+
   /* ──────── HIGH DEBT ──────── */
 
   // REBALANCED: No arbitrary debt panic. Debt sustainability depends on context.

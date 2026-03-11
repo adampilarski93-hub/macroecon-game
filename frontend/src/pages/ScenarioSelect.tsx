@@ -109,7 +109,7 @@ export function ScenarioSelect() {
       title: 'Tackle a Challenge: Put Your Skills to the Test',
       subtitle: 'Complex scenarios for experienced players',
       icon: IconChallenge,
-      scenarioIds: ['rust-belt', 'commodity-pressure'],
+      scenarioIds: ['rust-belt', 'commodity-pressure', 'chokepoint-closure'],
     },
   };
 
@@ -162,6 +162,7 @@ export function ScenarioSelect() {
     'commodity-pressure': IconScenarioEconomy,
     'rising-industrializer': IconScenarioEconomy,
     'sanctions-isolation': IconScenarioStagflation,
+    'chokepoint-closure': IconScenarioStagflation,
   };
 
   const renderScenarioCard = (scenarioId: string, isNarrativeOnly = false) => {

@@ -281,6 +281,61 @@ export function step(
     events.push({ id: 'geo-creditors-default', turn: nextTurn, type: 'warning', title: 'Creditors React to Default', description: 'Debt restructuring raised borrowing costs.' });
     newGlobal = { ...newGlobal, riskPremium: newGlobal.riskPremium + 0.028 };
   }
+  if (sid === 'chokepoint-closure') {
+    if (!state.events.some((e) => e.id === 'chokepoint-closure-initial') && state.turn >= 1) {
+      events.push({
+        id: 'chokepoint-closure-initial',
+        turn: nextTurn,
+        type: 'shock',
+        title: 'Critical Sea Lane Shut Down',
+        description: 'A major maritime chokepoint has been closed, disrupting global oil and container flows. Freight and insurance costs spike.',
+      });
+      newGlobal = {
+        ...newGlobal,
+        commodityPriceIndex: newGlobal.commodityPriceIndex * 1.35,
+        exportDemandMultiplier: newGlobal.exportDemandMultiplier * 0.84,
+        riskPremium: newGlobal.riskPremium + 0.018,
+      };
+    }
+    if (!state.events.some((e) => e.id === 'chokepoint-rerouting') && state.turn > 4 && (planningIntensity > 0.35 || infrastructureShare > 0.35 || capitalControlStrength > 0.4)) {
+      events.push({
+        id: 'chokepoint-rerouting',
+        turn: nextTurn,
+        type: 'milestone',
+        title: 'Emergency Rerouting Network Built',
+        description: 'Ports and logistics coordination ease bottlenecks; trade is still costly but less chaotic.',
+      });
+      newGlobal = {
+        ...newGlobal,
+        exportDemandMultiplier: newGlobal.exportDemandMultiplier * 1.07,
+        riskPremium: Math.max(0, newGlobal.riskPremium - 0.008),
+      };
+    }
+    if (!state.events.some((e) => e.id === 'chokepoint-energy-rationing') && state.turn > 3 && basicGoodsGuarantee < 0.25 && priceControlStrength < 0.2) {
+      events.push({
+        id: 'chokepoint-energy-rationing',
+        turn: nextTurn,
+        type: 'warning',
+        title: 'Fuel and Transport Rationing Pressures',
+        description: 'High import costs spill into transport and food distribution; shortages and social strain emerge.',
+      });
+      newCountry.approval = Math.max(0, newCountry.approval - 0.06);
+    }
+    if (!state.events.some((e) => e.id === 'chokepoint-reopening') && state.turn > 8) {
+      events.push({
+        id: 'chokepoint-reopening',
+        turn: nextTurn,
+        type: 'policy_effect',
+        title: 'Partial Maritime Reopening',
+        description: 'A mediated arrangement allows limited transit; the worst bottlenecks begin to unwind.',
+      });
+      newGlobal = {
+        ...newGlobal,
+        commodityPriceIndex: newGlobal.commodityPriceIndex * 0.9,
+        exportDemandMultiplier: newGlobal.exportDemandMultiplier * 1.05,
+      };
+    }
+  }
 
   /* ── Commodity price cycling (endogenous global) ── */
   const rng = _rng ?? (() => {
