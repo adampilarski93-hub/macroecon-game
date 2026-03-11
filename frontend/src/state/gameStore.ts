@@ -12,6 +12,7 @@ import type {
   ChatMessage,
   GameHistoryEntry,
   SimulatorDiagnostics,
+  ScenarioParams,
 } from '../types';
 import { scenarios as localScenarios, createInitialState, getScenarioObjectives } from '../scenarios';
 import { step as engineStep } from '../engine/step';
@@ -103,6 +104,7 @@ interface GameState {
   startAutoPlay: () => Promise<void>;
   stopAutoPlay: () => void;
   setSimulatorPolicyLag: (value: number) => void;
+  setSimulatorScenarioParams: (patch: Partial<Pick<ScenarioParams, 'consumptionPropensity' | 'investmentInterestElasticity' | 'phillipsCurveSlope' | 'tradeElasticity' | 'debtSustainabilityThreshold'>>) => void;
 }
 
 const API = '/api';
@@ -511,6 +513,20 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   setSimulatorPolicyLag: (value: number) => {
     set({ simulatorPolicyLag: Math.max(0, Math.min(1, value)) });
+  },
+
+  setSimulatorScenarioParams: (patch) => {
+    const current = get().state;
+    if (!current) return;
+    set({
+      state: {
+        ...current,
+        scenario: {
+          ...current.scenario,
+          ...patch,
+        },
+      },
+    });
   },
 
   resetGame: () => {

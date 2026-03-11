@@ -58,6 +58,11 @@ export interface ScenarioParams {
   maxSpendingShare: number;
   minPolicyRate: number;
   maxPolicyRate: number;
+  consumptionPropensity: number;
+  investmentInterestElasticity: number;
+  phillipsCurveSlope: number;
+  tradeElasticity: number;
+  debtSustainabilityThreshold: number;
 }
 
 export interface SimulationEvent {

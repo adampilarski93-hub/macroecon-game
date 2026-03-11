@@ -10,6 +10,7 @@ import { AdvisorChat } from '../components/AdvisorChat';
 import { GameOver } from '../components/GameOver';
 import { LLMSettings } from '../components/LLMSettings';
 import { SimulatorDiagnostics } from '../components/SimulatorDiagnostics';
+import { SimulatorModelPanel } from '../components/SimulatorModelPanel';
 import { getScenarioObjectives } from '../scenarios';
 
 export function Game() {
@@ -150,6 +151,7 @@ export function Game() {
           </span>
         </div>
       )}
+      {mode === 'simulator' && <SimulatorModelPanel state={state} />}
       {mode === 'simulator' && <SimulatorDiagnostics diagnostics={simulatorDiagnostics} />}
 
       <main className="game-main">
