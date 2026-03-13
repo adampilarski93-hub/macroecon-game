@@ -12,6 +12,7 @@ import { createNarrativeTree as createGulfMigrantTree } from './scenario-trees/g
 import { createNarrativeTree as createPlurinationalTree } from './scenario-trees/plurinational-path';
 import { createNarrativeTree as createReservationGovernorTree } from './scenario-trees/reservation-governor';
 import { createNarrativeTree as createAiDisplacedTree } from './scenario-trees/ai-displaced';
+import { createNarrativeTree as createSovereigntyTree } from './scenario-trees/sovereignty-path';
 
 const COMMON_STAT_COLORS: Record<string, string> = {
   economicStrength: '#22c55e',
@@ -33,6 +34,8 @@ const COMMON_STAT_COLORS: Record<string, string> = {
   culturalIntegrity: '#8b5cf6',
   fiscalHealth: '#14b8a6',
   employability: '#3b82f6',
+  infrastructure: '#6366f1',
+  humanDevelopment: '#a855f7',
 };
 
 type EvaluateEndingFn = ScenarioNarrativeConfig['evaluateEnding'];
@@ -270,6 +273,41 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
           : `The old order returned. But hope persists. The fight for a sovereign, plurinational future goes on.`,
       };
     },
+    );
+  },
+  'sovereignty-path': (_scenarioId) => {
+    const { getNode } = createSovereigntyTree();
+    return makeConfig(
+      'sovereignty-path',
+      'Sovereignty Path',
+      'Republic of Uhuru',
+      ['sovereignty', 'economicStrength', 'publicSupport', 'debtBurden', 'infrastructure', 'humanDevelopment', 'internationalStanding'],
+      { sovereignty: 'Sovereignty', economicStrength: 'Economic Strength', publicSupport: 'Public Support', debtBurden: 'Debt Burden', infrastructure: 'Infrastructure', humanDevelopment: 'Human Development', internationalStanding: 'International Standing' },
+      { sovereignty: 40, economicStrength: 25, publicSupport: 65, debtBurden: 30, infrastructure: 15, humanDevelopment: 30, internationalStanding: 40 },
+      getNode,
+      [],
+      {},
+      (stats) => {
+        const sov = stats.sovereignty ?? 40;
+        const econ = stats.economicStrength ?? 25;
+        const support = stats.publicSupport ?? 50;
+        const debt = stats.debtBurden ?? 30;
+        const infra = stats.infrastructure ?? 15;
+        const hdi = stats.humanDevelopment ?? 30;
+        const intl = stats.internationalStanding ?? 40;
+        const score = Math.round(
+          sov * 0.2 + econ * 0.15 + support * 0.15 +
+          (100 - debt) * 0.1 + infra * 0.15 + hdi * 0.15 + intl * 0.1,
+        );
+        const won = sov >= 45 && econ >= 35 && support >= 40;
+        return {
+          won,
+          score: Math.min(100, Math.max(0, score)),
+          summary: won
+            ? `You charted a sovereign path. Through debt refusal, South-South cooperation, and strategic planning, your nation built genuine independence.`
+            : `The pressures of debt, dependency, and external interference proved too strong. But the seeds of sovereignty have been planted.`,
+        };
+      },
     );
   },
   'reservation-governor': (scenarioId) => {

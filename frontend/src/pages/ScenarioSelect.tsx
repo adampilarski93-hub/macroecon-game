@@ -195,7 +195,7 @@ export function ScenarioSelect() {
         </ul>
         <div className="scenario-card-actions">
           {hasNarrative && (
-            <button type="button" className="scenario-btn-narrative" onClick={() => navigate(scenarioId === 'sovereignty-path' ? '/sovereignty' : `/narrative/${scenarioId}`)}>
+            <button type="button" className="scenario-btn-narrative" onClick={() => navigate(`/narrative/${scenarioId}`)}>
               Story Mode
             </button>
           )}

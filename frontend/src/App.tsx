@@ -2,7 +2,6 @@ import { Component, type ReactNode } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { ScenarioSelect } from './pages/ScenarioSelect';
 import { Game } from './pages/Game';
-import { SovereigntyPath } from './pages/SovereigntyPath';
 import { DecisionTreePage } from './pages/DecisionTreePage';
 import './App.css';
 
@@ -45,7 +44,6 @@ function App() {
         <Routes>
           <Route path="/" element={<ScenarioSelect />} />
           <Route path="/game" element={<Game />} />
-          <Route path="/sovereignty" element={<SovereigntyPath />} />
           <Route path="/narrative/:scenarioId" element={<DecisionTreePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
