@@ -89,9 +89,9 @@ function createSeededRng(seed: number): () => number {
 export function createArcBasedTree(
   arcs: ScenarioArc[],
   endings: LongFormEnding[],
-  routeLastToEndings: (choiceIndex: number) => number,
+  _routeLastToEndings: (choiceIndex: number) => number, // ignored; last-block choices route to partial, DecisionTreePage uses evaluateEnding for stat-based ending
   options?: CreateTreeOptions,
-): { nodes: GenericNarrativeNode[]; getNode: (id: string) => GenericNarrativeNode | undefined } {
+): { nodes: GenericNarrativeNode[]; getNode: (id: string) => GenericNarrativeNode | undefined; endings: LongFormEnding[] } {
   const nodes: GenericNarrativeNode[] = [];
   const rng = options?.seed !== undefined && options.seed !== 0
     ? createSeededRng(options.seed)
@@ -252,7 +252,7 @@ export function createArcBasedTree(
 export function createLongFormTree(
   blocks: DecisionBlock[],
   endings: LongFormEnding[],
-  routeLastToEndings: (choiceIndex: number) => number,
+  routeLastToEndings: (choiceIndex: number) => number, // kept for API compatibility; ignored (stat-based routing used instead)
   options?: CreateTreeOptions,
 ) {
   const arc: ScenarioArc = { id: 'start', blocks };

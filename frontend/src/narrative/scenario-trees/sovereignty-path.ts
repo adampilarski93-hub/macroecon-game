@@ -1,5 +1,5 @@
 import { narrativeNodes } from '../decisions';
-import type { GenericNarrativeNode } from '../long-form-tree';
+import type { GenericNarrativeNode } from '../scenario-types';
 
 /**
  * Sovereignty Path — adapter that wraps the legacy decision tree
@@ -25,8 +25,25 @@ export function createNarrativeTree(_options?: { shuffle?: boolean; seed?: numbe
     endingNarrative: n.endingNarrative,
   }));
 
+  const endingNodes = nodes.filter(
+    (n) => n.isEnding && n.endingType && n.endingTitle && n.endingNarrative,
+  );
+  const byType = (t: string) =>
+    endingNodes.find((n) => n.endingType === t) ?? endingNodes[0];
+  const endings = [
+    byType('victory'),
+    byType('partial_victory'),
+    byType('defeat'),
+  ].map((n) => ({
+    id: n!.id,
+    endingType: n!.endingType!,
+    title: n!.endingTitle!,
+    endingNarrative: n!.endingNarrative!,
+  }));
+
   return {
     nodes,
     getNode: (id: string) => nodes.find((n) => n.id === id),
+    endings,
   };
 }
