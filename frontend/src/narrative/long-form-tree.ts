@@ -72,6 +72,10 @@ export interface CreateTreeOptions {
   shuffleBlocks?: boolean;
   /** Random seed for reproducible shuffling (0 = use Math.random) */
   seed?: number;
+  /** For createLongFormTree: indices of middle blocks eligible for random sub-selection */
+  blockPool?: number[];
+  /** For createLongFormTree: how many pool blocks to include per playthrough */
+  blockPoolCount?: number;
 }
 
 /** Simple seeded RNG for reproducible shuffles */
@@ -98,19 +102,40 @@ export function createArcBasedTree(
   for (const arc of arcs) {
     let blocks = arc.blocks;
 
-    // Block pool: pick a random subset of blocks (e.g., 3 of 5 middle blocks)
+    // Block pool: pick a random subset of pool blocks; non-pool middle blocks are always kept.
+    // After selection, nextBlock references are remapped to the new index space.
     if (arc.blockPool && arc.blockPool.length > 0) {
       const poolIndices = shuffle(arc.blockPool, rng);
       const count = arc.blockPoolCount ?? Math.max(1, poolIndices.length - 1);
-      const picked = poolIndices.slice(0, count).sort((a, b) => a - b);
-      const first = arc.blocks[0];
-      const last = arc.blocks[arc.blocks.length - 1];
-      const middle = picked.map((i) => arc.blocks[i]).filter(Boolean);
-      if (first && last && arc.blocks.length > 2) {
-        blocks = [first, ...middle, last];
-      } else {
-        blocks = middle.length > 0 ? [first ?? middle[0], ...middle.slice(1), last ?? middle[middle.length - 1]] : arc.blocks;
+      const pickedSet = new Set(poolIndices.slice(0, count));
+      const poolSet = new Set(arc.blockPool);
+
+      const keptOriginalIndices: number[] = [];
+      for (let i = 0; i < arc.blocks.length; i++) {
+        if (i === 0 || i === arc.blocks.length - 1) {
+          keptOriginalIndices.push(i);
+        } else if (!poolSet.has(i)) {
+          keptOriginalIndices.push(i);
+        } else if (pickedSet.has(i)) {
+          keptOriginalIndices.push(i);
+        }
       }
+
+      const indexMap = new Map<number, number>();
+      keptOriginalIndices.forEach((oldIdx, newIdx) => indexMap.set(oldIdx, newIdx));
+
+      blocks = keptOriginalIndices.map((oldIdx) => {
+        const block = arc.blocks[oldIdx];
+        const needsRemap = block.choices.some((c) => c.nextBlock !== undefined);
+        if (!needsRemap) return block;
+        return {
+          ...block,
+          choices: block.choices.map((c) => ({
+            ...c,
+            nextBlock: c.nextBlock !== undefined ? indexMap.get(c.nextBlock) : undefined,
+          })),
+        };
+      });
     }
     // Phase-aware shuffle: preserve macroeconomic causality and heterodox theoretical progression.
     // Blocks are grouped by phase; phases stay in ascending order (crisis → stabilization → turning point → legacy).
@@ -230,5 +255,8 @@ export function createLongFormTree(
   routeLastToEndings: (choiceIndex: number) => number,
   options?: CreateTreeOptions,
 ) {
-  return createArcBasedTree([{ id: 'start', blocks }], endings, routeLastToEndings, options);
+  const arc: ScenarioArc = { id: 'start', blocks };
+  if (options?.blockPool) arc.blockPool = options.blockPool;
+  if (options?.blockPoolCount !== undefined) arc.blockPoolCount = options.blockPoolCount;
+  return createArcBasedTree([arc], endings, routeLastToEndings, options);
 }

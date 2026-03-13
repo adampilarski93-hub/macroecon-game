@@ -234,6 +234,11 @@ export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number
     blocks,
     endings,
     (i) => (i === 2 ? 0 : 1), // both→victory, survivor/fighter→partial
-    { shuffleBlocks: options?.shuffle ?? true, seed: options?.seed },
+    {
+      shuffleBlocks: options?.shuffle ?? true,
+      seed: options?.seed,
+      blockPool: [1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+      blockPoolCount: 10,
+    },
   );
 }
