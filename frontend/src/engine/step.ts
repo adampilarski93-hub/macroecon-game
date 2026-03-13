@@ -797,7 +797,7 @@ export function step(
   // Debt restructuring: short-term pain, but reasonable stance
   riskPremium += 0.015 * debtRestructuringStance;
 
-  const newDebt = nextDebt(country.publicDebt, deficit, policyRate, riskPremium, debtRestructuringStance);
+  const newDebt = nextDebt(country.publicDebt, deficit, policyRate, riskPremium, debtRestructuringStance, scenario.periodsPerYear ?? 4);
   const debtToGdp = y > 0 ? newDebt / y : 0;
 
   /* ── Production (updated with planning/infra bonuses) ── */
@@ -805,10 +805,13 @@ export function step(
   const gdpGrowth = previousGdp > 0 ? (y - previousGdp) / previousGdp : 0;
 
   /* ── Employment ── */
-  // Okun's law: unemployment responds to growth gap
-  // Planning can directly create employment (public works, SOEs)
+  // Full Okun's law: unemployment responds to growth in both directions
+  // Contraction raises unemployment sharply; expansion lowers it gradually
   const planningEmploymentBonus = planningIntensity * 0.02;
-  const baseEmployment = country.laborForce * (1 - 0.05 - 0.25 * Math.max(0, -gdpGrowth) + planningEmploymentBonus);
+  const okunEffect = gdpGrowth >= 0
+    ? 0.12 * gdpGrowth   // recovery: each 1pp growth cuts ~0.12pp unemployment
+    : 0.25 * gdpGrowth;  // contraction: each 1pp decline raises ~0.25pp unemployment
+  const baseEmployment = country.laborForce * (1 - 0.05 + okunEffect + planningEmploymentBonus);
   const employed = Math.min(country.laborForce, Math.max(0, baseEmployment));
   const unemployed = Math.max(0, country.laborForce - employed);
   const unemploymentRate = country.laborForce > 0 ? unemployed / country.laborForce : 0.05;

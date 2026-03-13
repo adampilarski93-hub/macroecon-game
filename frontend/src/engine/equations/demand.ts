@@ -125,8 +125,12 @@ export function equilibriumY(
     const m = importPropensity * y;
     const yNew = c + i + g + xBase - m;
     if (Math.abs(yNew - y) < 1e-6) break;
-    y = yNew;
+    // Dampen step to prevent divergence when marginal propensities sum > 1
+    y = 0.5 * y + 0.5 * yNew;
   }
+  // Hard bound: GDP cannot exceed 3× previous or fall below 10% of previous
+  y = Math.min(y, yPrev * 3);
+  y = Math.max(y, yPrev * 0.1);
 
   const c = consumption(y, taxRate, params);
   const i = investment(y, policyRate, piE, params, finReg, planning, capacityUtil, pubBank, taxRate);

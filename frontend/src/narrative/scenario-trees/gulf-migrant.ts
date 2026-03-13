@@ -233,7 +233,7 @@ export function createNarrativeTree(options?: { shuffle?: boolean; seed?: number
   return createLongFormTree(
     blocks,
     endings,
-    (i) => (i === 0 ? 2 : i === 1 ? 1 : 0), // survivor->defeat, fighter->partial, both->victory
+    (i) => (i === 2 ? 0 : 1), // both→victory, survivor/fighter→partial
     { shuffleBlocks: options?.shuffle ?? true, seed: options?.seed },
   );
 }

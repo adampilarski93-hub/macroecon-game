@@ -29,10 +29,13 @@ export function nextDebt(
   deficit: number,
   policyRate: number,
   riskPremium: number,
-  debtRestructuringStance: number = 0
+  debtRestructuringStance: number = 0,
+  periodsPerYear: number = 4,
 ): number {
   let effectiveRate = policyRate + riskPremium;
   effectiveRate *= 1 - 0.35 * Math.min(1, Math.max(0, debtRestructuringStance));
-  const interestPayment = currentDebt * effectiveRate;
+  // Convert annual rate to per-period rate
+  const periodRate = effectiveRate / periodsPerYear;
+  const interestPayment = currentDebt * periodRate;
   return currentDebt + deficit + interestPayment;
 }

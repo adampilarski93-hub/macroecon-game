@@ -65,7 +65,7 @@ export function computeSimulatorDiagnostics(
   const exp = expenditure(y, spendShare);
   const deficit = exp - rev;
   const riskPremium = g.riskPremium;
-  const newDebt = nextDebt(c.publicDebt, deficit, policyRate, riskPremium, debtRestructure);
+  const newDebt = nextDebt(c.publicDebt, deficit, policyRate, riskPremium, debtRestructure, s.periodsPerYear ?? 4);
   const interestPayment = Math.max(0, newDebt - c.publicDebt - deficit);
 
   return {

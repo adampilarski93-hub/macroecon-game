@@ -258,28 +258,51 @@ export function ScenarioSelect() {
 
   return (
     <div className="page scenario-select">
-      <header>
+      <div className="hero-section">
         <h1>Macro Planner</h1>
-        <p>Choose your path. Each scenario teaches different lessons about economics, policy, and power.</p>
-      </header>
+        <p className="hero-subtitle">
+          An interactive macroeconomic simulation and narrative game. Explore heterodox economics, manage crises, and shape policy across diverse scenarios.
+        </p>
+        <div className="hero-modes">
+          <div className="hero-mode-card">
+            <h3>Story Mode</h3>
+            <p>Narrative-driven decisions with branching paths. No simulation — just choices and consequences.</p>
+          </div>
+          <div className="hero-mode-card">
+            <h3>Guided Simulation</h3>
+            <p>5 strategic policy levers with economic context. Learn by doing with real-time feedback.</p>
+          </div>
+          <div className="hero-mode-card">
+            <h3>Full Simulation</h3>
+            <p>17+ individual policy controls, equation decomposition, and deterministic runs. For serious analysis.</p>
+          </div>
+        </div>
+        <button type="button" className="hero-tutorial-btn" onClick={() => navigate('/narrative/tutorial')}>
+          Start with the Tutorial
+        </button>
+      </div>
+
       {error && <div className="error">{error}</div>}
 
-      <section className="turn-selector">
-        <div className="turn-selector-header">
-          <label className="turn-toggle">
-            <input type="checkbox" checked={useCustomTurns} onChange={(e) => { setUseCustomTurns(e.target.checked); setCustomMaxTurns(e.target.checked ? sliderValue : 0); }} />
-            Custom game length
-          </label>
-          {useCustomTurns && <span className="turn-value">{sliderValue} turns</span>}
-        </div>
-        {useCustomTurns && (
-          <div className="turn-slider-row">
-            <span className="turn-label-min">20</span>
-            <input type="range" min={20} max={200} step={5} value={sliderValue} onChange={(e) => { const v = Number(e.target.value); setSliderValue(v); setCustomMaxTurns(v); }} className="turn-slider" />
-            <span className="turn-label-max">200</span>
+      <details className="turn-selector-wrap">
+        <summary>Custom game length</summary>
+        <section className="turn-selector">
+          <div className="turn-selector-header">
+            <label className="turn-toggle">
+              <input type="checkbox" checked={useCustomTurns} onChange={(e) => { setUseCustomTurns(e.target.checked); setCustomMaxTurns(e.target.checked ? sliderValue : 0); }} />
+              Override default turns
+            </label>
+            {useCustomTurns && <span className="turn-value">{sliderValue} turns</span>}
           </div>
-        )}
-      </section>
+          {useCustomTurns && (
+            <div className="turn-slider-row">
+              <span className="turn-label-min">20</span>
+              <input type="range" min={20} max={200} step={5} value={sliderValue} onChange={(e) => { const v = Number(e.target.value); setSliderValue(v); setCustomMaxTurns(v); }} className="turn-slider" />
+              <span className="turn-label-max">200</span>
+            </div>
+          )}
+        </section>
+      </details>
 
       {loading && !scenarios.length ? (
         <div className="loading-scenarios"><IconLoading /><span>Loading scenarios...</span></div>
