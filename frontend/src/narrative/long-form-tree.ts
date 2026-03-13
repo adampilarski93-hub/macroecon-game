@@ -178,12 +178,12 @@ export function createArcBasedTree(
         } else if (c.nextBlock !== undefined) {
           nextNode = blockId(arc.id, c.nextBlock);
         } else if (isLastInArc) {
-          // If it's the last block in the last arc, route to endings
+          // If it's the last block in the last arc, route to the partial ending.
+          // DecisionTreePage uses evaluateEnding(stats) to pick which ending text to show.
           const isLastArc = arcs.indexOf(arc) === arcs.length - 1;
           if (isLastArc) {
-            const endingIdx = routeLastToEndings(choiceIdx);
-            const ending = endings[endingIdx];
-            nextNode = `outcome_${ending.id}`;
+            const partialEnding = endings[1] ?? endings[0];
+            nextNode = `outcome_${partialEnding.id}`;
           } else {
             // Default to next arc in list if exists
             const nextArcIdx = arcs.indexOf(arc) + 1;
@@ -246,7 +246,7 @@ export function createArcBasedTree(
   }
 
   const getNode = (id: string) => nodes.find((n) => n.id === id);
-  return { nodes, getNode };
+  return { nodes, getNode, endings };
 }
 
 export function createLongFormTree(

@@ -51,6 +51,7 @@ function makeConfig(
   earlyEndNodeIds: string[] = [],
   earlyEndText: Record<string, { title: string; text: string }> = {},
   customEvaluateEnding?: EvaluateEndingFn,
+  endings?: ScenarioNarrativeConfig['endings'],
 ): ScenarioNarrativeConfig {
   const statColors: Record<string, string> = {};
   for (const k of statOrder) {
@@ -89,6 +90,7 @@ function makeConfig(
     getNode,
     checkEarlyEnd: () => null,
     evaluateEnding: customEvaluateEnding ?? defaultEvaluateEnding,
+    endings,
   };
 }
 
@@ -96,7 +98,7 @@ type ConfigFactory = (scenarioId: string) => ScenarioNarrativeConfig;
 
 export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig | ConfigFactory> = {
   'emerging-debt-crisis': (scenarioId) => {
-    const { getNode } = createEmergingTree({ shuffle: true });
+    const { getNode, endings } = createEmergingTree({ shuffle: true });
     return makeConfig(
       'emerging-debt-crisis',
       'Emerging Debt Crisis',
@@ -105,10 +107,14 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       { economicStrength: 'Economic Strength', publicSupport: 'Public Support', debtBurden: 'Debt Burden' },
       { economicStrength: 50, publicSupport: 50, debtBurden: 50 },
       getNode,
+      [],
+      {},
+      undefined,
+      endings,
     );
   },
   stagflation: (scenarioId) => {
-    const { getNode } = createStagflationTree({ shuffle: true });
+    const { getNode, endings } = createStagflationTree({ shuffle: true });
     return makeConfig(
       'stagflation',
       'Stagflation',
@@ -117,10 +123,14 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       { economicStrength: 'Growth', publicSupport: 'Public Support', priceStability: 'Price Stability' },
       { economicStrength: 45, publicSupport: 45, priceStability: 40 },
       getNode,
+      [],
+      {},
+      undefined,
+      endings,
     );
   },
   'rust-belt': (scenarioId) => {
-    const { getNode } = createRustBeltTree({ shuffle: true });
+    const { getNode, endings } = createRustBeltTree({ shuffle: true });
     return makeConfig(
       'rust-belt',
       'Rust Belt Revival',
@@ -129,10 +139,14 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       { economicStrength: 'Economic Strength', publicSupport: 'Public Support', debtBurden: 'Debt Burden', employment: 'Employment' },
       { economicStrength: 45, publicSupport: 50, debtBurden: 45, employment: 45 },
       getNode,
+      [],
+      {},
+      undefined,
+      endings,
     );
   },
   tutorial: (scenarioId) => {
-    const { getNode } = createTutorialTree({ shuffle: false });
+    const { getNode, endings } = createTutorialTree({ shuffle: false });
     return makeConfig(
       'tutorial',
       'Tutorial: How to Play',
@@ -141,10 +155,14 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       { economicStrength: 'Economic Strength', publicSupport: 'Public Support', debtBurden: 'Debt Burden', priceStability: 'Price Stability', wageShare: 'Wage Share' },
       { economicStrength: 55, publicSupport: 60, debtBurden: 35, priceStability: 50, wageShare: 45 },
       getNode,
+      [],
+      {},
+      undefined,
+      endings,
     );
   },
   'independence-underdevelopment': (scenarioId) => {
-    const { getNode } = createIndependenceTree({ shuffle: true });
+    const { getNode, endings } = createIndependenceTree({ shuffle: true });
     return makeConfig(
       'independence-underdevelopment',
       'Independence & Underdevelopment',
@@ -153,10 +171,14 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       { economicStrength: 'Economic Strength', publicSupport: 'Public Support', debtBurden: 'Debt Burden', sovereignty: 'Sovereignty' },
       { economicStrength: 35, publicSupport: 55, debtBurden: 40, sovereignty: 50 },
       getNode,
+      [],
+      {},
+      undefined,
+      endings,
     );
   },
   'commodity-pressure': (scenarioId) => {
-    const { getNode } = createCommodityTree({ shuffle: true });
+    const { getNode, endings } = createCommodityTree({ shuffle: true });
     return makeConfig(
       'commodity-pressure',
       'Commodity Shock & Development Squeeze',
@@ -165,10 +187,14 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       { economicStrength: 'Economic Strength', publicSupport: 'Public Support', debtBurden: 'Debt Burden', priceStability: 'Price Stability', externalBalance: 'External Balance', employment: 'Employment' },
       { economicStrength: 45, publicSupport: 40, debtBurden: 50, priceStability: 35, externalBalance: 40, employment: 45 },
       getNode,
+      [],
+      {},
+      undefined,
+      endings,
     );
   },
   'rising-industrializer': (scenarioId) => {
-    const { getNode } = createRisingTree({ shuffle: true });
+    const { getNode, endings } = createRisingTree({ shuffle: true });
     return makeConfig(
       'rising-industrializer',
       'Rising Industrializer',
@@ -177,10 +203,14 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       { economicStrength: 'Economic Strength', publicSupport: 'Public Support', debtBurden: 'Debt Burden', priceStability: 'Price Stability' },
       { economicStrength: 55, publicSupport: 55, debtBurden: 45, priceStability: 50 },
       getNode,
+      [],
+      {},
+      undefined,
+      endings,
     );
   },
   'sanctions-isolation': (scenarioId) => {
-    const { getNode } = createSanctionsTree({ shuffle: true });
+    const { getNode, endings } = createSanctionsTree({ shuffle: true });
     return makeConfig(
       'sanctions-isolation',
       'Under Sanctions',
@@ -189,10 +219,14 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       { economicStrength: 'Economic Strength', publicSupport: 'Public Support', sovereignty: 'Sovereignty', internationalStanding: 'International Standing' },
       { economicStrength: 40, publicSupport: 38, sovereignty: 45, internationalStanding: 30 },
       getNode,
+      [],
+      {},
+      undefined,
+      endings,
     );
   },
   'chokepoint-closure': (scenarioId) => {
-    const { getNode } = createChokepointTree({ shuffle: true });
+    const { getNode, endings } = createChokepointTree({ shuffle: true });
     return makeConfig(
       'chokepoint-closure',
       'Chokepoint Crisis',
@@ -207,10 +241,14 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       },
       { economicStrength: 45, publicSupport: 44, priceStability: 40, externalBalance: 38, internationalStanding: 42 },
       getNode,
+      [],
+      {},
+      undefined,
+      endings,
     );
   },
   'gulf-migrant': (scenarioId) => {
-    const { getNode } = createGulfMigrantTree({ shuffle: true });
+    const { getNode, endings } = createGulfMigrantTree({ shuffle: true });
     return makeConfig(
       'gulf-migrant',
       'Gulf Migrant',
@@ -239,10 +277,11 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
           : `The system took its toll. You leave with what you could save. The struggle continues.`,
       };
     },
+    endings,
     );
   },
   'plurinational-path': (scenarioId) => {
-    const { getNode } = createPlurinationalTree({ shuffle: true });
+    const { getNode, endings } = createPlurinationalTree({ shuffle: true });
     return makeConfig(
       'plurinational-path',
       'Plurinational Path',
@@ -273,10 +312,11 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
           : `The old order returned. But hope persists. The fight for a sovereign, plurinational future goes on.`,
       };
     },
+    endings,
     );
   },
   'sovereignty-path': (_scenarioId) => {
-    const { getNode } = createSovereigntyTree();
+    const { getNode, endings } = createSovereigntyTree();
     return makeConfig(
       'sovereignty-path',
       'Sovereignty Path',
@@ -308,10 +348,11 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
             : `The pressures of debt, dependency, and external interference proved too strong. But the seeds of sovereignty have been planted.`,
         };
       },
+    endings,
     );
   },
   'reservation-governor': (scenarioId) => {
-    const { getNode } = createReservationGovernorTree({ shuffle: true });
+    const { getNode, endings } = createReservationGovernorTree({ shuffle: true });
     return makeConfig(
       'reservation-governor',
       'Reservation Governor',
@@ -341,10 +382,11 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
           : `The struggle continues. The people remember. The land remains.`,
       };
     },
+    endings,
     );
   },
   'ai-displaced': (scenarioId) => {
-    const { getNode } = createAiDisplacedTree({ shuffle: true });
+    const { getNode, endings } = createAiDisplacedTree({ shuffle: true });
     return makeConfig(
       'ai-displaced',
       'AI Displaced',
@@ -374,6 +416,7 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
           : `The spiral took its toll. The system replaced you with machines and had no plan for what came next. The fight continues.`,
       };
     },
+    endings,
     );
   },
 };

@@ -100,6 +100,54 @@ function renderNarrative(text: string) {
   ));
 }
 
+const STORAGE_KEY_PREFIX = 'macro-planner-narrative-';
+function getStorageKey(scenarioId: string) {
+  return `${STORAGE_KEY_PREFIX}${scenarioId}`;
+}
+
+type SavedGame = {
+  currentNodeId: string;
+  stats: Record<string, number>;
+  history: { nodeId: string; choiceId: string; title: string; choiceLabel: string; effects: Partial<Record<string, number>> }[];
+  turn: number;
+};
+
+function loadSavedGame(scenarioId: string): SavedGame | null {
+  try {
+    const raw = localStorage.getItem(getStorageKey(scenarioId));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as SavedGame;
+    if (
+      parsed &&
+      typeof parsed.currentNodeId === 'string' &&
+      parsed.stats &&
+      typeof parsed.turn === 'number' &&
+      Array.isArray(parsed.history)
+    ) {
+      return parsed;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function saveGame(scenarioId: string, data: SavedGame): void {
+  try {
+    localStorage.setItem(getStorageKey(scenarioId), JSON.stringify(data));
+  } catch {
+    // Ignore quota/parse errors
+  }
+}
+
+function clearSavedGame(scenarioId: string): void {
+  try {
+    localStorage.removeItem(getStorageKey(scenarioId));
+  } catch {
+    // Ignore
+  }
+}
+
 export function DecisionTreePage() {
   const navigate = useNavigate();
   const { scenarioId } = useParams<{ scenarioId: string }>();
@@ -129,8 +177,13 @@ export function DecisionTreePage() {
     initialSimState: SimulationState | null;
   } | null>(null);
 
+  const [savedGame, setSavedGame] = useState<SavedGame | null | 'loading'>('loading');
+
   useEffect(() => {
-    if (config && !game) {
+    if (!config || !scenarioId) return;
+    const saved = loadSavedGame(scenarioId);
+    setSavedGame(saved);
+    if (!saved) {
       const simState = scenarioId ? initSimulationForNarrative(scenarioId) : null;
       setGame({
         currentNodeId: 'start',
@@ -142,7 +195,103 @@ export function DecisionTreePage() {
         initialSimState: simState,
       });
     }
-  }, [config, game, scenarioId]);
+  }, [config, scenarioId]);
+
+  useEffect(() => {
+    if (scenarioId && game && !game.finished) {
+      const earlyEndNode = config?.earlyEndNodeIds?.includes(game.currentNodeId);
+      const node = earlyEndNode ? null : config?.getNode?.(game.currentNodeId);
+      if (!earlyEndNode && !node?.isEnding) {
+        saveGame(scenarioId, {
+          currentNodeId: game.currentNodeId,
+          stats: game.stats,
+          history: game.history.map((h) => ({
+            nodeId: h.nodeId,
+            choiceId: h.choiceId,
+            title: h.title,
+            choiceLabel: h.choiceLabel,
+            effects: h.effects,
+          })),
+          turn: game.turn,
+        });
+      }
+    }
+  }, [scenarioId, game, config]);
+
+  useEffect(() => {
+    if (scenarioId && config && game) {
+      const earlyEndNode = config.earlyEndNodeIds.includes(game.currentNodeId);
+      const node = earlyEndNode ? null : config.getNode(game.currentNodeId);
+      if (earlyEndNode || node?.isEnding) {
+        clearSavedGame(scenarioId);
+      }
+    }
+  }, [scenarioId, config, game?.currentNodeId]);
+
+  const handleResume = () => {
+    if (!config || !scenarioId || !savedGame || savedGame === 'loading') return;
+    const initialSimState = scenarioId ? initSimulationForNarrative(scenarioId) : null;
+    let simState: SimulationState | null = initialSimState;
+    let accumulatedStats = { ...config.initialStats };
+    const historyWithSim: {
+      nodeId: string;
+      choiceId: string;
+      title: string;
+      choiceLabel: string;
+      effects: Partial<GenericStats>;
+      simState: SimulationState | null;
+    }[] = [];
+    for (const h of savedGame.history) {
+      accumulatedStats = applyEffects(accumulatedStats, h.effects);
+      if (simState) {
+        try {
+          simState = narrativeSimStep(simState, accumulatedStats);
+        } catch {
+          simState = null;
+        }
+      }
+      historyWithSim.push({
+        nodeId: h.nodeId,
+        choiceId: h.choiceId,
+        title: h.title,
+        choiceLabel: h.choiceLabel,
+        effects: h.effects,
+        simState,
+      });
+    }
+    setGame({
+      currentNodeId: savedGame.currentNodeId,
+      stats: savedGame.stats,
+      history: historyWithSim,
+      turn: savedGame.turn,
+      finished: false,
+      simState,
+      initialSimState,
+    });
+    setSavedGame(null);
+  };
+
+  const handleStartFresh = () => {
+    if (scenarioId) clearSavedGame(scenarioId);
+    setSavedGame(null);
+    if (config && scenarioId) {
+      const simState = initSimulationForNarrative(scenarioId);
+      setGame({
+        currentNodeId: 'start',
+        stats: { ...config.initialStats },
+        history: [],
+        turn: 1,
+        finished: false,
+        simState,
+        initialSimState: simState,
+      });
+    }
+  };
+
+  const handleBack = () => {
+    if (scenarioId) clearSavedGame(scenarioId);
+    navigate('/');
+  };
 
   useEffect(() => {
     if (!config || !scenarioId) {
@@ -158,7 +307,32 @@ export function DecisionTreePage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [game?.currentNodeId]);
 
-  if (!config || !game) {
+  if (!config) {
+    return null;
+  }
+
+  if (savedGame && savedGame !== 'loading' && !game) {
+    return (
+      <div className="page narr-page">
+        <div className="narr-resume-overlay">
+          <div className="narr-resume-modal">
+            <h2>Resume your previous game?</h2>
+            <p>You left off at Decision {savedGame.turn}</p>
+            <div className="narr-resume-buttons">
+              <button className="narr-btn-primary" onClick={handleResume}>
+                Resume
+              </button>
+              <button className="narr-btn-secondary" onClick={handleStartFresh}>
+                Start Fresh
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!game) {
     return (
       <div className="page narr-page">
         <div className="loading-scenarios">
@@ -221,11 +395,23 @@ export function DecisionTreePage() {
   const evaluation = isEnding || earlyEndNode ? config.evaluateEnding(game.stats) : null;
   const earlyEndText = config.earlyEndText[game.currentNodeId];
 
+  // When we reached the partial ending (stat-based routing), pick ending text from evaluateEnding.
+  // Victory/defeat nodes are reached via explicit endingIndex, so use node content.
+  const endings = config.endings;
+  const useStatBasedEnding =
+    isEnding &&
+    node?.endingType === 'partial_victory' &&
+    endings &&
+    endings.length >= 3;
+  const statBasedEnding = useStatBasedEnding && evaluation
+    ? (evaluation.won ? endings![0] : evaluation.score >= 45 ? endings![1] : endings![2])
+    : null;
+
   if (!node && !earlyEndNode) {
     return (
       <div className="page narr-page">
         <p>Error: node not found ({game.currentNodeId})</p>
-        <button className="play-again-btn" onClick={() => navigate('/')}>
+        <button className="play-again-btn" onClick={handleBack}>
           Back to menu
         </button>
       </div>
@@ -236,7 +422,7 @@ export function DecisionTreePage() {
     <div className={`page narr-page ${transitioning ? 'narr-transitioning' : ''}`}>
       <header className="narr-header">
         <div className="narr-header-left">
-          <button className="back-btn" onClick={() => navigate('/')} title="Back to scenarios">
+          <button className="back-btn" onClick={handleBack} title="Back to scenarios">
             &larr;
           </button>
           <div>
@@ -351,7 +537,7 @@ export function DecisionTreePage() {
                 </div>
               </div>
 
-              <button className="play-again-btn" onClick={() => navigate('/')}>
+              <button className="play-again-btn" onClick={handleBack}>
                 Try again
               </button>
             </div>
@@ -362,10 +548,10 @@ export function DecisionTreePage() {
                   evaluation?.won ? 'outcome-win' : 'outcome-lose'
                 }`}
               >
-                {node.endingTitle}
+                {statBasedEnding ? statBasedEnding.title : node.endingTitle}
               </h2>
               <div className="narr-narrative-text">
-                {renderNarrative(node.endingNarrative ?? '')}
+                {renderNarrative(statBasedEnding ? statBasedEnding.endingNarrative : (node.endingNarrative ?? ''))}
               </div>
               <div className="narr-ending-score">
                 <div className="narr-score-ring-wrap">
@@ -414,7 +600,7 @@ export function DecisionTreePage() {
                 </div>
               </div>
 
-              <button className="play-again-btn" onClick={() => navigate('/')}>
+              <button className="play-again-btn" onClick={handleBack}>
                 Play again
               </button>
             </div>

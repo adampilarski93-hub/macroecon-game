@@ -34,6 +34,13 @@ export interface GenericNarrativeGameState {
   finished: boolean;
 }
 
+export interface ScenarioEnding {
+  id: string;
+  endingType: 'victory' | 'partial_victory' | 'defeat';
+  title: string;
+  endingNarrative: string;
+}
+
 export interface ScenarioNarrativeConfig {
   scenarioId: string;
   scenarioName: string;
@@ -52,4 +59,6 @@ export interface ScenarioNarrativeConfig {
   checkEarlyEnd: (stats: GenericStats) => string | null;
   /** Evaluate win/loss and score at ending */
   evaluateEnding: (stats: GenericStats) => { won: boolean; score: number; summary: string };
+  /** Endings for stat-based selection when reaching the partial node */
+  endings?: ScenarioEnding[];
 }

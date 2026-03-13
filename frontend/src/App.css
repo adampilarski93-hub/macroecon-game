@@ -3081,6 +3081,62 @@ header p {
   pointer-events: none;
 }
 
+.narr-resume-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: 1.5rem;
+}
+.narr-resume-modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  box-shadow: var(--shadow);
+  max-width: 380px;
+  text-align: center;
+}
+.narr-resume-modal h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+.narr-resume-modal p {
+  margin: 0 0 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+.narr-resume-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.narr-btn-primary,
+.narr-btn-secondary {
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.narr-btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+}
+.narr-btn-primary:hover {
+  filter: brightness(1.1);
+}
+.narr-btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.narr-btn-secondary:hover {
+  background: var(--surface);
+}
+
 .narr-header {
   display: flex;
   justify-content: space-between;
