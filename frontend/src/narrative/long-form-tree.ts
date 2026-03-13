@@ -8,7 +8,14 @@
  * - blockPool: show a random subset of blocks per playthrough (e.g., 3 of 5).
  */
 import type { GenericNarrativeNode, GenericNarrativeChoice } from './scenario-types';
-import type { LearnMoreContent } from '../components/ChoiceCard';
+
+export interface LearnMoreContent {
+  concept: string;
+  explanation: string;
+  thinkers: string[];
+  realWorldExample: string;
+  counterArguments: string;
+}
 
 export interface DecisionChoice {
   id: string;

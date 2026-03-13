@@ -4,7 +4,6 @@ import type {
   PolicyActions,
   ScenarioSummary,
   GameMode,
-  EasyConfig,
   AdvisoryItem,
   GameResult,
   ObjectiveGoal,
@@ -71,7 +70,6 @@ interface GameState {
   error: string | null;
   serverConnected: boolean | null;
   mode: GameMode;
-  easyConfig: EasyConfig;
   customMaxTurns: number;
 
   /* new state */
@@ -99,7 +97,6 @@ interface GameState {
   sendChat: (message: string) => Promise<void>;
   setError: (err: string | null) => void;
   setMode: (mode: GameMode) => void;
-  setEasyConfig: (config: EasyConfig) => void;
   setCustomMaxTurns: (turns: number) => void;
   setLLMConfig: (config: LLMConfig) => void;
   resetGame: () => void;
@@ -167,11 +164,6 @@ export const useGameStore = create<GameState>((set, get) => ({
   error: null,
   serverConnected: null,
   mode: 'guided',
-  easyConfig: {
-    ideology: 'mixed',
-    tradePosture: 'balanced',
-    alliance: 'non_aligned',
-  },
   customMaxTurns: 0, // 0 = use scenario default
 
   /* new state defaults */
@@ -218,7 +210,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   startSimulation: async (scenarioId: string) => {
-    const { mode, easyConfig } = get();
+    const { mode } = get();
     if (get().serverConnected === false) {
       set({ loading: true, error: null });
       const state = createInitialState(scenarioId);
@@ -251,7 +243,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       const r = await fetch(`${API}/start-simulation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scenarioId, mode, easyConfig }),
+        body: JSON.stringify({ scenarioId, mode }),
       });
       if (!r.ok) {
         const data = await r.json().catch(() => ({}));
@@ -457,7 +449,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   setError: (err) => set({ error: err }),
   setMode: (mode) => set({ mode }),
-  setEasyConfig: (config) => set({ easyConfig: config }),
   setCustomMaxTurns: (turns) => set({ customMaxTurns: turns }),
 
   setLLMConfig: (config) => {

@@ -37,11 +37,11 @@ interface PolicyControlsProps {
   state: SimulationState;
   onStep: (actions: PolicyActions) => Promise<void>;
   loading: boolean;
-  mode?: 'easy' | 'guided' | 'advanced' | 'simulator';
+  mode?: 'guided' | 'simulator';
   gameOver?: boolean;
 }
 
-export function PolicyControls({ state, onStep, loading, mode = 'advanced', gameOver }: PolicyControlsProps) {
+export function PolicyControls({ state, onStep, loading, mode = 'guided', gameOver }: PolicyControlsProps) {
   const simulatorPolicyLag = useGameStore((gs) => gs.simulatorPolicyLag);
   const setSimulatorPolicyLag = useGameStore((gs) => gs.setSimulatorPolicyLag);
   const s = state.scenario;
@@ -70,9 +70,6 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
   const [quickRegulation, setQuickRegulation] = useState(0.5);
   const [quickCbStance, setQuickCbStance] = useState(0.5);
   const [quickTrade, setQuickTrade] = useState(0.5);
-
-  // Show/hide advanced section in Easy mode
-  const [showAdvanced, setShowAdvanced] = useState(false);
 
   useEffect(() => {
     if (!c.gdp) return;
@@ -147,13 +144,13 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
         Policy tools
       </h2>
       <p className="policy-controls-intro">
-        Use the tools below to steer the economy. Each option has a <strong>?</strong> — hover over it to learn what it does.
+        Use the tools below to steer the economy. Each option has a <strong>?</strong> � hover over it to learn what it does.
       </p>
       <form onSubmit={handleSubmit}>
         {/* GUIDED MODE: 5 Strategic Levers with Heterodox Context */}
         {mode === 'guided' && (
           <section className="policy-school guided-mode">
-            <h3>Guided Simulation � Key Policy Levers</h3>
+            <h3>Guided Simulation � Key Policy Levers</h3>
             <p className="guided-intro">
               Adjust these five strategic levers to shape your economy. Each represents a major policy domain grounded in heterodox economic traditions.
             </p>
@@ -197,7 +194,7 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
               <label className="guided-label">
                 <span className="lever-number">3</span>
                 Labor Standards: Flexibility vs Protection
-                <PolicyHelp text="Institutional tradition (Polanyi): labor is embedded in social relations. 'Protective' = strong unions, minimum wages, job security. 'Flexible' = easier to hire/fire, lower regulation � helps business competitiveness. 'Mixed' = balance." />
+                <PolicyHelp text="Institutional tradition (Polanyi): labor is embedded in social relations. 'Protective' = strong unions, minimum wages, job security. 'Flexible' = easier to hire/fire, lower regulation � helps business competitiveness. 'Mixed' = balance." />
               </label>
               <div className="guided-slider-wrap">
                 <input type="range" min={0} max={1} step={0.1} value={quickRegulation} onChange={(e) => handleQuickRegulation(Number(e.target.value))} className="guided-slider" />
@@ -253,57 +250,8 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
             </div>
           </section>
         )}
-        {/* ── EASY MODE: Quick-set sliders only ── */}
-        {mode === 'easy' && (
-          <section className="policy-school quick-set">
-            <h3>Your strategy</h3>
-            <div className="control-group">
-              <label>
-                How big a role should the government play?
-                <input type="range" min={0} max={1} step={0.05} value={quickStateRole} onChange={(e) => handleQuickStateRole(Number(e.target.value))} />
-                <span className="control-value">{quickStateRole < 0.33 ? 'Small' : quickStateRole > 0.66 ? 'Big' : 'Mixed'}</span>
-              </label>
-            </div>
-            <div className="control-group">
-              <label>
-                How much should we regulate business and protect workers?
-                <input type="range" min={0} max={1} step={0.05} value={quickRegulation} onChange={(e) => handleQuickRegulation(Number(e.target.value))} />
-                <span className="control-value">{quickRegulation < 0.33 ? 'Light' : quickRegulation > 0.66 ? 'Strong' : 'Mixed'}</span>
-              </label>
-            </div>
-            <div className="control-group">
-              <label>
-                Central bank: help jobs or fight inflation?
-                <input type="range" min={0} max={1} step={0.05} value={quickCbStance} onChange={(e) => handleQuickCbStance(Number(e.target.value))} />
-                <span className="control-value">{quickCbStance < 0.33 ? 'Dovish' : quickCbStance > 0.66 ? 'Hawkish' : 'Mixed'}</span>
-              </label>
-            </div>
-            <div className="control-group">
-              <label>
-                How open should we be to trade?
-                <input type="range" min={0} max={1} step={0.05} value={quickTrade} onChange={(e) => handleQuickTrade(Number(e.target.value))} />
-                <span className="control-value">{quickTrade < 0.33 ? 'Closed' : quickTrade > 0.66 ? 'Open' : 'Mixed'}</span>
-              </label>
-            </div>
-          </section>
-        )}
-
-        {/* ── ADVANCED MODE or fine-tune toggle ── */}
-        {mode === 'easy' && (
-          <button
-            type="button"
-            className="toggle-advanced"
-            onClick={() => setShowAdvanced(!showAdvanced)}
-          >
-            {showAdvanced ? 'Hide detailed controls' : 'Fine-tune individual policies'}
-          </button>
-        )}
-
-        {(mode === 'advanced' || mode === 'simulator' || showAdvanced) && (
+        {mode === 'simulator' && (
           <section className="all-levers-section">
-            {mode === 'easy' && (
-              <p className="easy-help">Adjust individual levers for more control. These override the quick-set sliders above.</p>
-            )}
             {mode === 'simulator' && (
               <p className="easy-help">
                 Simulator mode uses the same policy levers with deterministic stepping and explicit diagnostics. Random shocks are disabled so policy effects are easier to inspect.
@@ -327,7 +275,7 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
               </div>
             )}
 
-        {/* ── Fiscal & Monetary (no duplicates) ── */}
+        {/* ?? Fiscal & Monetary (no duplicates) ?? */}
             <section className="policy-school" data-school="mainstream">
               <h3>Fiscal & Monetary</h3>
               <div className="control-group">
@@ -367,7 +315,7 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
               </div>
             </section>
 
-        {/* ── Trade & External ── */}
+        {/* ?? Trade & External ?? */}
             <section className="policy-school" data-school="structuralist">
               <h3>Trade & External</h3>
               <div className="control-group">
@@ -403,7 +351,7 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
               </div>
             </section>
 
-        {/* ── Regulation & Coordination ── */}
+        {/* ?? Regulation & Coordination ?? */}
             <section className="policy-school" data-school="keynesian">
               <h3>Regulation & Coordination</h3>
               <div className="control-group">
@@ -429,7 +377,7 @@ export function PolicyControls({ state, onStep, loading, mode = 'advanced', game
               </div>
             </section>
 
-        {/* ── State & Planning ── */}
+        {/* ?? State & Planning ?? */}
             <section className="policy-school" data-school="marxian">
               <h3>State & Planning</h3>
               <div className="control-group">
@@ -616,7 +564,7 @@ function PolicyImpactPreview({
   return (
     <div className="policy-impact-preview">
       <h4>
-        <span className="impact-icon">📊</span>
+        <span className="impact-icon">??</span>
         Expected Impact
         <span className="impact-hint">(projected next turn)</span>
       </h4>

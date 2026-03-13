@@ -1,5 +1,5 @@
 import type { SimulationState, CountryState, GlobalState, ScenarioParams, SectorId, SimulationEvent } from '../engine/state';
-import type { ScenarioObjectives, EasyConfig } from '../types';
+import type { ScenarioObjectives } from '../types';
 
 const SECTOR_IDS: SectorId[] = ['agriculture', 'manufacturing', 'services'];
 
@@ -705,7 +705,7 @@ export function getScenarioObjectives(scenarioId: string): ScenarioObjectives | 
   return def?.objectives ?? null;
 }
 
-export function createInitialState(scenarioId: string, easyConfig?: EasyConfig): SimulationState | null {
+export function createInitialState(scenarioId: string): SimulationState | null {
   const def = scenarios.find((s) => s.id === scenarioId);
   if (!def) return null;
 
@@ -759,40 +759,6 @@ export function createInitialState(scenarioId: string, easyConfig?: EasyConfig):
         description: 'This is a learning scenario. The economy is stable so you can experiment. Try this: change one or two policy levers (for example taxes or spending), then click Advance turn. Watch the dashboard: GDP is how much the country produces; inflation is how fast prices rise; unemployment is how many people want work but cannot find it; debt is how much the government owes. The ? next to each policy explains what it does. Have fun exploring.',
       }]
     : [];
-
-  // Apply easy-mode presets to starting conditions
-  if (easyConfig) {
-    // Ideology affects tax, spending, planning
-    if (easyConfig.ideology === 'socialist') {
-      country.taxRevenue *= 1.15;
-      country.expenditure *= 1.1;
-      country.institutionQuality = Math.min(1, country.institutionQuality + 0.05);
-    } else if (easyConfig.ideology === 'capitalist') {
-      country.taxRevenue *= 0.85;
-      country.expenditure *= 0.9;
-    }
-    // Trade posture affects tariffs, openness
-    if (easyConfig.tradePosture === 'closed') {
-      country.imports *= 0.85;
-      country.exports *= 0.92;
-      country.currentAccount = country.exports - country.imports;
-    } else if (easyConfig.tradePosture === 'open') {
-      country.imports *= 1.1;
-      country.exports *= 1.05;
-      country.currentAccount = country.exports - country.imports;
-    }
-    // Alliance affects risk premium and sanctions
-    if (easyConfig.alliance === 'sanctioned') {
-      global.sanctionsActive = true;
-      global.riskPremium += 0.03;
-      global.exportDemandMultiplier *= 0.85;
-    } else if (easyConfig.alliance === 'bloc') {
-      global.riskPremium = Math.max(0, global.riskPremium - 0.01);
-      global.exportDemandMultiplier *= 1.05;
-    }
-    // Recalculate deficit
-    country.deficit = country.expenditure - country.taxRevenue;
-  }
 
   return {
     turn: 0,

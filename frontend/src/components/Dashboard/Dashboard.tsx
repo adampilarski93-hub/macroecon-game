@@ -1,6 +1,5 @@
 import { useRef, useEffect } from 'react';
 import {
-  Line,
   XAxis,
   YAxis,
   Tooltip,

@@ -83,18 +83,6 @@ export interface SimulationState {
 
 export type GameMode = 'guided' | 'simulator';
 
-export type IdeologyPreset = 'socialist' | 'mixed' | 'capitalist';
-
-export type TradePosturePreset = 'closed' | 'balanced' | 'open';
-
-export type AlliancePreset = 'non_aligned' | 'bloc' | 'sanctioned';
-
-export interface EasyConfig {
-  ideology: IdeologyPreset;
-  tradePosture: TradePosturePreset;
-  alliance: AlliancePreset;
-}
-
 export interface PolicyActions {
   incomeTaxRate?: number;
   tariffRate?: number;
