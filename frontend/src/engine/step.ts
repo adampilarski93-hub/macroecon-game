@@ -797,12 +797,18 @@ export function step(
   // Debt restructuring: short-term pain, but reasonable stance
   riskPremium += 0.015 * debtRestructuringStance;
 
-  const newDebt = nextDebt(country.publicDebt, deficit, policyRate, riskPremium, debtRestructuringStance, scenario.periodsPerYear ?? 4);
-  const debtToGdp = y > 0 ? newDebt / y : 0;
-
-  /* ── Production (updated with planning/infra bonuses) ── */
+  /* ── Production (supply-side capacity) ── */
   const sectorOutputs = computeSectorOutputs(country, planningIntensity, infrastructureShare, publicBankingStrength, tariffRate);
-  const gdpGrowth = previousGdp > 0 ? (y - previousGdp) / previousGdp : 0;
+  const supplyCapacity = aggregateGdp(sectorOutputs);
+  
+  // GDP is constrained by both demand (y from equilibrium) and supply capacity
+  // Allow 5% slack above supply capacity for inventory drawdown / overheating
+  const effectiveGdp = Math.min(y, supplyCapacity * 1.05);
+  const gdpGrowth = previousGdp > 0 ? (effectiveGdp - previousGdp) / previousGdp : 0;
+
+  const newDebt = nextDebt(country.publicDebt, deficit, policyRate, riskPremium, debtRestructuringStance, scenario.periodsPerYear ?? 4);
+  // Use effective GDP (supply-constrained) for debt ratio
+  const debtToGdp = effectiveGdp > 0 ? newDebt / effectiveGdp : 0;
 
   /* ── Employment ── */
   // Okun's Law with persistence: unemployment adjusts gradually, not instantaneously
@@ -883,14 +889,21 @@ export function step(
   /* ── Reserves ── */
   const reserveChange = currentAccount * 0.1 - (regime === 'managed' ? Math.abs(erChange) * y * 0.05 : 0);
 
-  // Potential GDP grows at trend rate, adjusted by investment in infrastructure and planning
+  // Potential GDP grows at trend rate with proper period compounding
+  // Annual growth rate converted to per-period rate with compound formula
   const prevPotential = country.potentialGdp || country.gdp;
-  const potentialGrowth = 0.02 + 0.01 * infrastructureShare + 0.005 * planningIntensity;
-  const newPotentialGdp = prevPotential * (1 + potentialGrowth / (scenario.periodsPerYear ?? 4));
+  const annualPotentialGrowth = 0.02 + 0.01 * infrastructureShare + 0.005 * planningIntensity;
+  const periods = scenario.periodsPerYear ?? 4;
+  // Proper compounding: (1 + annual)^(1/periods) - 1 gives per-period rate
+  const perPeriodGrowth = Math.pow(1 + annualPotentialGrowth, 1 / periods) - 1;
+  const newPotentialGdp = prevPotential * (1 + perPeriodGrowth);
+
+  // Recalculate debt-to-GDP with effective GDP
+  const effectiveDebtToGdp = effectiveGdp > 0 ? newDebt / effectiveGdp : 0;
 
   const newCountry: CountryState = {
     ...countryWithPolicy,
-    gdp: y,
+    gdp: effectiveGdp,
     gdpGrowth,
     potentialGdp: newPotentialGdp,
     sectors: { ...country.sectors },
@@ -904,7 +917,7 @@ export function step(
     expenditure: exp,
     deficit,
     publicDebt: newDebt,
-    debtToGdp,
+    debtToGdp: effectiveDebtToGdp,
     exports: x,
     imports: m,
     currentAccount,

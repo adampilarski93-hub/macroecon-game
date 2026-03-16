@@ -1,7 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { SimulationState, PolicyActions } from '../../types';
+import type { CountryState } from '../../engine/state';
 import { IconPolicy } from '../Icons';
 import { useGameStore } from '../../state/gameStore';
+import { equilibriumY } from '../../engine/equations/demand';
+import { nextInflation } from '../../engine/equations/inflation';
+import { exchangeRateChange } from '../../engine/equations/external';
+import { approvalBreakdown } from '../../engine/equations/approval';
 
 function lerp(min: number, max: number, t: number) {
   return min + (max - min) * t;
@@ -461,7 +466,9 @@ export function PolicyControls({ state, onStep, loading, mode = 'guided', gameOv
   );
 }
 
-/** Preview panel showing projected effects of current policy settings */
+/** Preview panel showing projected effects of current policy settings
+ * Uses actual engine calculations for accurate projections
+ */
 function PolicyImpactPreview({
   state,
   policies,
@@ -472,92 +479,151 @@ function PolicyImpactPreview({
   const c = state.country;
   const s = state.scenario;
 
-  // Calculate projected changes based on policy settings
-  const projections = [];
+  // Build policy actions from current policy settings
+  const policyActions: PolicyActions = {
+    incomeTaxRate: policies.incomeTaxRate as number,
+    tariffRate: policies.tariffRate as number,
+    spendingShareOfGdp: policies.spendingShareOfGdp as number,
+    exchangeRateRegime: policies.exchangeRateRegime as 'peg' | 'managed' | 'float',
+    socialSpendingShare: policies.socialSpendingShare as number,
+    profitWindfallTaxRate: policies.profitWindfallTaxRate as number,
+    priceControlStrength: policies.priceControlStrength as number,
+    capitalControlStrength: policies.capitalControlStrength as number,
+    incomesPolicyStrength: policies.incomesPolicyStrength as number,
+    financialRegulationStrength: policies.financialRegulationStrength as number,
+    domesticDebtShare: policies.domesticDebtShare as number,
+    basicGoodsGuarantee: policies.basicGoodsGuarantee as number,
+    planningIntensity: policies.planningIntensity as number,
+    publicBankingStrength: policies.publicBankingStrength as number,
+    debtRestructuringStance: policies.debtRestructuringStance as number,
+    multiYearAgendaStrength: policies.multiYearAgendaStrength as number,
+    infrastructureShare: policies.infrastructureShare as number,
+  };
 
-  // GDP Growth projection
-  const spendingBoost = (policies.spendingShareOfGdp as number - 0.25) * 2;
-  const taxDrag = (policies.incomeTaxRate as number - 0.2) * -1;
-  const infraBoost = (policies.infrastructureShare as number) * 1.5;
-  const planningEffect = (policies.planningIntensity as number) * 0.5;
-  const tradeEffect = (policies.tariffRate as number) * -0.5;
-  const gdpChange = spendingBoost + taxDrag + infraBoost + planningEffect + tradeEffect;
+  // Calculate projected GDP using actual demand equilibrium
+  const { y: projectedGdp } = equilibriumY(
+    c,
+    state.global,
+    s,
+    policyActions,
+    c.gdp
+  );
+  const gdpChange = ((projectedGdp - c.gdp) / c.gdp) * 100;
+
+  // Calculate projected inflation using actual inflation equation
+  const erChange = exchangeRateChange(
+    c.currentAccount,
+    c.gdp,
+    policyActions.exchangeRateRegime ?? 'managed',
+    policyActions.capitalControlStrength ?? 0,
+    c.fxReserves
+  );
+  const projectedInflation = nextInflation(
+    c,
+    state.global,
+    s,
+    erChange,
+    policyActions.priceControlStrength ?? 0,
+    policyActions.incomesPolicyStrength ?? 0,
+    policyActions.basicGoodsGuarantee ?? 0
+  );
+  const inflationChange = (projectedInflation - c.inflationRate) * 100;
+
+  // Calculate projected unemployment using Okun's Law
+  const trendGrowth = 0.02;
+  const gdpGrowth = (projectedGdp - c.gdp) / c.gdp;
+  const okunCoeff = gdpGrowth >= trendGrowth ? 0.4 : 0.5;
+  const planningBonus = (policies.planningIntensity as number) * 0.02;
+  const equilibriumUnemp = Math.max(0.02, 0.05 - okunCoeff * (gdpGrowth - trendGrowth) - planningBonus);
+  const projectedUnemployment = c.unemploymentRate + 0.4 * (equilibriumUnemp - c.unemploymentRate);
+  const unemployChange = (projectedUnemployment - c.unemploymentRate) * 100;
+
+  // Calculate projected debt
+  const projectedDeficit = ((policies.spendingShareOfGdp as number) - (policies.incomeTaxRate as number)) * projectedGdp;
+  const effectiveRate = ((policies.policyRate as number) + state.global.riskPremium) * 
+    (1 - 0.35 * Math.min(1, Math.max(0, policies.debtRestructuringStance as number)));
+  const periodRate = effectiveRate / (s.periodsPerYear ?? 4);
+  const projectedDebt = c.publicDebt + projectedDeficit + c.publicDebt * periodRate;
+  const projectedDebtToGdp = (projectedDebt / projectedGdp) * 100;
+  const currentDebtToGdp = (c.publicDebt / c.gdp) * 100;
+  const debtChange = projectedDebtToGdp - currentDebtToGdp;
+
+  // Build projections array with actual calculated values
+  const projections = [];
 
   if (Math.abs(gdpChange) > 0.1) {
     projections.push({
       indicator: 'GDP Growth',
-      change: gdpChange > 0 ? `+${gdpChange.toFixed(1)}%` : `${gdpChange.toFixed(1)}%`,
-      direction: gdpChange > 0 ? 'up' : 'down',
-      reason: gdpChange > 0 ? 'Stimulus from spending & investment' : 'Contraction from taxes/tariffs',
+      change: `${gdpChange > 0 ? '+' : ''}${gdpChange.toFixed(1)}%`,
+      direction: gdpChange > 0.5 ? 'up' : gdpChange < -0.5 ? 'down' : 'neutral',
+      reason: gdpChange > 1 ? 'Strong stimulus from fiscal expansion' : 
+              gdpChange > 0 ? 'Modest demand boost' :
+              gdpChange > -1 ? 'Slight contraction' : 'Significant demand contraction',
     });
   }
-
-  // Inflation projection
-  const priceControlEffect = -(policies.priceControlStrength as number) * 2;
-  const policyRateEffect = (policies.policyRate as number - 0.03) * -3;
-  const spendPressure = (policies.spendingShareOfGdp as number - 0.3) * 1;
-  const inflationChange = priceControlEffect + policyRateEffect + spendPressure;
 
   if (Math.abs(inflationChange) > 0.2) {
     projections.push({
       indicator: 'Inflation',
-      change: inflationChange > 0 ? `+${inflationChange.toFixed(1)}%` : `${inflationChange.toFixed(1)}%`,
-      direction: inflationChange > 0 ? 'up' : 'down',
-      reason: inflationChange > 0 ? 'Demand pressure from spending' : 'Rate hikes & price controls suppressing prices',
+      change: `${inflationChange > 0 ? '+' : ''}${inflationChange.toFixed(1)}pp`,
+      direction: inflationChange > 0.5 ? 'up' : inflationChange < -0.5 ? 'down' : 'neutral',
+      reason: inflationChange > 1 ? 'Strong demand pressure & cost-push' :
+              inflationChange > 0 ? 'Moderate price pressures' :
+              inflationChange > -1 ? 'Disinflationary pressure' : 'Significant deflation risk',
     });
   }
-
-  // Unemployment projection
-  const socialSpendingJobs = (policies.socialSpendingShare as number) * -1;
-  const policyRateJobs = (policies.policyRate as number - 0.03) * 2;
-  const publicBankingJobs = -(policies.publicBankingStrength as number) * 0.5;
-  const unemployChange = socialSpendingJobs + policyRateJobs + publicBankingJobs;
 
   if (Math.abs(unemployChange) > 0.1) {
     projections.push({
       indicator: 'Unemployment',
-      change: unemployChange > 0 ? `+${unemployChange.toFixed(1)}%` : `${unemployChange.toFixed(1)}%`,
-      direction: unemployChange > 0 ? 'up' : 'down',
-      reason: unemployChange > 0 ? 'Tighter policy reducing job creation' : 'Public support maintaining employment',
+      change: `${unemployChange > 0 ? '+' : ''}${unemployChange.toFixed(1)}pp`,
+      direction: unemployChange > 0.3 ? 'up' : unemployChange < -0.3 ? 'down' : 'neutral',
+      reason: unemployChange > 0.5 ? 'Tighter policy reducing labor demand' :
+              unemployChange > 0 ? 'Moderate job market softening' :
+              unemployChange > -0.5 ? 'Modest employment gains' : 'Strong labor market recovery',
     });
   }
-
-  // Debt projection
-  const spendDebt = ((policies.spendingShareOfGdp as number) - (policies.incomeTaxRate as number)) * 10;
-  const windfallHelp = -(policies.profitWindfallTaxRate as number) * 5;
-  const debtChange = spendDebt + windfallHelp;
 
   if (Math.abs(debtChange) > 1) {
     projections.push({
       indicator: 'Debt/GDP',
-      change: debtChange > 0 ? `+${debtChange.toFixed(1)} pts` : `${debtChange.toFixed(1)} pts`,
-      direction: debtChange > 0 ? 'up' : 'down',
-      reason: debtChange > 0 ? 'Deficit spending increasing debt' : 'Higher revenues reducing debt burden',
+      change: `${debtChange > 0 ? '+' : ''}${debtChange.toFixed(1)} pts`,
+      direction: debtChange > 2 ? 'up' : debtChange < -2 ? 'down' : 'neutral',
+      reason: debtChange > 3 ? 'Rising deficits increasing debt burden' :
+              debtChange > 0 ? 'Modest debt accumulation' :
+              debtChange > -3 ? 'Slight debt reduction' : 'Strong fiscal consolidation',
     });
   }
 
-  // Approval projection
-  const socialApproval = (policies.socialSpendingShare as number) * 3;
-  const basicGoodsApproval = (policies.basicGoodsGuarantee as number) * 2;
-  const multiYearApproval = (policies.multiYearAgendaStrength as number);
-  const debtRestrApproval = -(policies.debtRestructuringStance as number) * 1;
-  const approvalChange = socialApproval + basicGoodsApproval + multiYearApproval + debtRestrApproval;
+  // Calculate approval using actual approval breakdown
+  const approvalResult = approvalBreakdown(
+    { ...c, gdp: projectedGdp, gdpGrowth: gdpChange / 100, unemploymentRate: projectedUnemployment, inflationRate: projectedInflation } as CountryState,
+    policies.socialSpendingShare as number,
+    policies.basicGoodsGuarantee as number,
+    policies.multiYearAgendaStrength as number,
+    policies.incomeTaxRate as number,
+    policies.financialRegulationStrength as number,
+    policies.planningIntensity as number
+  );
+  const approvalChange = (approvalResult.overall - c.approval) * 100;
 
   if (Math.abs(approvalChange) > 0.5) {
     projections.push({
       indicator: 'Public Approval',
-      change: approvalChange > 0 ? `+${approvalChange.toFixed(1)}%` : `${approvalChange.toFixed(1)}%`,
-      direction: approvalChange > 0 ? 'up' : 'down',
-      reason: approvalChange > 0 ? 'Social programs boosting support' : 'Austerity measures reducing popularity',
+      change: `${approvalChange > 0 ? '+' : ''}${approvalChange.toFixed(1)}%`,
+      direction: approvalChange > 1 ? 'up' : approvalChange < -1 ? 'down' : 'neutral',
+      reason: approvalChange > 2 ? 'Strong popular support from social programs' :
+              approvalChange > 0 ? 'Modest approval gains' :
+              approvalChange > -2 ? 'Slight approval decline' : 'Significant political backlash',
     });
   }
 
   if (projections.length === 0) {
     projections.push({
       indicator: 'Stability',
-      change: 'Minimal',
+      change: 'Minimal change',
       direction: 'neutral',
-      reason: 'Current policies maintain status quo',
+      reason: 'Current policies maintain economic trajectory',
     });
   }
 
