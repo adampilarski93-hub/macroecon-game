@@ -10,6 +10,7 @@ export interface SectorState {
 export interface CountryState {
   gdp: number;
   gdpGrowth: number;
+  potentialGdp: number;
   sectors: Record<SectorId, SectorState>;
   laborForce: number;
   employed: number;

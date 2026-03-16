@@ -103,17 +103,18 @@ export function equilibriumY(
   // Export base — affected by world growth, demand multiplier
   const xBase = country.exports * (1 + global.worldGrowth) * global.exportDemandMultiplier;
 
-  // Capacity utilisation estimate
-  const potentialGdp = yPrev * 1.02; // rough potential
-  const capacityUtil = Math.min(1, yPrev / potentialGdp);
+  // Capacity utilisation: tracked potential GDP grows at trend rate (~2%/period)
+  // but is a SEPARATE variable from actual GDP, so recessions open a real gap
+  const potentialGdp = country.potentialGdp || yPrev * 1.02;
+  const capacityUtil = Math.min(1, Math.max(0.5, yPrev / potentialGdp));
 
-  // STATE-DEPENDENT fiscal multiplier effect:
-  // In recession (low capacity): spending has strong multiplier (crowding IN)
-  // At full employment: weaker multiplier (some crowding out)
-  const outputGap = (yPrev - potentialGdp) / potentialGdp;
-  const multiplierAdj = outputGap < -0.02
+  // STATE-DEPENDENT fiscal multiplier:
+  // In recession (negative output gap): spending has strong multiplier (crowding IN)
+  // At full employment (positive gap): weaker multiplier (some crowding out)
+  const outputGap = potentialGdp > 0 ? (yPrev - potentialGdp) / potentialGdp : 0;
+  const multiplierAdj = outputGap < -0.03
     ? 1.3  // recession: multiplier boosted
-    : outputGap > 0.02
+    : outputGap > 0.03
       ? 0.7  // overheating: reduced effectiveness
       : 1.0; // normal
 

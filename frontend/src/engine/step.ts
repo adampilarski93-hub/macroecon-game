@@ -805,16 +805,18 @@ export function step(
   const gdpGrowth = previousGdp > 0 ? (y - previousGdp) / previousGdp : 0;
 
   /* ── Employment ── */
-  // Full Okun's law: unemployment responds to growth in both directions
-  // Contraction raises unemployment sharply; expansion lowers it gradually
+  // Okun's Law with persistence: unemployment adjusts gradually, not instantaneously
+  // Previous unemployment carries forward (hysteresis) with partial adjustment toward equilibrium
+  const prevUnempRate = country.unemploymentRate ?? 0.05;
+  const naturalRate = 0.05;
   const planningEmploymentBonus = planningIntensity * 0.02;
-  const okunEffect = gdpGrowth >= 0
-    ? 0.12 * gdpGrowth   // recovery: each 1pp growth cuts ~0.12pp unemployment
-    : 0.25 * gdpGrowth;  // contraction: each 1pp decline raises ~0.25pp unemployment
-  const baseEmployment = country.laborForce * (1 - 0.05 + okunEffect + planningEmploymentBonus);
-  const employed = Math.min(country.laborForce, Math.max(0, baseEmployment));
+  const trendGrowth = 0.02;
+  const okunCoeff = gdpGrowth >= trendGrowth ? 0.4 : 0.5; // asymmetric: faster rise than fall
+  const equilibriumUnempRate = Math.max(0.02, naturalRate - okunCoeff * (gdpGrowth - trendGrowth) - planningEmploymentBonus);
+  // Partial adjustment: unemployment moves 40% toward equilibrium each period
+  const unemploymentRate = Math.max(0.02, Math.min(0.30, prevUnempRate + 0.4 * (equilibriumUnempRate - prevUnempRate)));
+  const employed = Math.max(0, country.laborForce * (1 - unemploymentRate));
   const unemployed = Math.max(0, country.laborForce - employed);
-  const unemploymentRate = country.laborForce > 0 ? unemployed / country.laborForce : 0.05;
 
   /* ── Institution quality: slowly evolves ── */
   const instImprovement = 0.005 * socialSpendingShare
@@ -881,10 +883,16 @@ export function step(
   /* ── Reserves ── */
   const reserveChange = currentAccount * 0.1 - (regime === 'managed' ? Math.abs(erChange) * y * 0.05 : 0);
 
+  // Potential GDP grows at trend rate, adjusted by investment in infrastructure and planning
+  const prevPotential = country.potentialGdp || country.gdp;
+  const potentialGrowth = 0.02 + 0.01 * infrastructureShare + 0.005 * planningIntensity;
+  const newPotentialGdp = prevPotential * (1 + potentialGrowth / (scenario.periodsPerYear ?? 4));
+
   const newCountry: CountryState = {
     ...countryWithPolicy,
     gdp: y,
     gdpGrowth,
+    potentialGdp: newPotentialGdp,
     sectors: { ...country.sectors },
     employed,
     unemployed,

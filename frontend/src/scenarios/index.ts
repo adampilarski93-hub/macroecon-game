@@ -712,6 +712,7 @@ export function createInitialState(scenarioId: string): SimulationState | null {
   const country: CountryState = {
     gdp: def.initialCountry.gdp ?? 1000,
     gdpGrowth: def.initialCountry.gdpGrowth ?? 0,
+    potentialGdp: def.initialCountry.gdp ?? 1000,
     sectors: (def.initialCountry.sectors ?? emergingDebtCrisis.initialCountry.sectors) as CountryState['sectors'],
     laborForce: def.initialCountry.laborForce ?? 500,
     employed: def.initialCountry.employed ?? 475,
