@@ -23,6 +23,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'accept', text: 'Accept and focus on work', consequence: 'You keep your head down.', effects: { savings: 5, legalStatus: -5 } },
       { id: 'ask', text: 'Ask questions quietly', consequence: 'You probe.', effects: { legalStatus: 3, solidarity: 5 } },
+      { id: 'document', text: 'Document conditions secretly for evidence', consequence: 'You collect what you can.', effects: { legalStatus: 4, dignity: 3 } },
     ],
   },
   {
@@ -32,6 +33,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'challenge', text: 'Challenge the deductions', consequence: 'You speak up.', effects: { dignity: 8, legalStatus: -8, solidarity: 5 } },
       { id: 'silent', text: 'Stay silent, send what you can', consequence: 'You prioritise remittances.', effects: { savings: 5, dignity: -5 } },
+      { id: 'calculate', text: 'Calculate the shortfall and share numbers with trusted coworkers', consequence: 'You build a shared understanding.', effects: { solidarity: 5, legalStatus: 2, savings: 2 } },
     ],
   },
   {
@@ -41,6 +43,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'push', text: 'Push through', consequence: 'You work through the heat.', effects: { savings: 10, health: -15 } },
       { id: 'slow', text: 'Slow down, protect yourself', consequence: 'You pace yourself.', effects: { health: 5, savings: -8 } },
+      { id: 'negotiate_breaks', text: 'Negotiate for water breaks with a small group', consequence: 'You find strength in numbers.', effects: { health: 4, solidarity: 5, savings: 2 } },
     ],
   },
   {
@@ -50,6 +53,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'work', text: 'Keep working', consequence: 'You focus on your own survival.', effects: { savings: 5, solidarity: -5 } },
       { id: 'organise', text: 'Try to organise for safety', consequence: 'You reach out to others.', effects: { solidarity: 12, legalStatus: -10, dignity: 8 } },
+      { id: 'clinic', text: 'Seek treatment at a community clinic off the record', consequence: 'You get care without official channels.', effects: { health: 6, savings: -4, solidarity: 2 } },
     ],
   },
   {
@@ -59,6 +63,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'talk', text: 'Talk to him', consequence: 'You learn your rights.', effects: { legalStatus: 10, dignity: 5 } },
       { id: 'avoid', text: 'Avoid him', consequence: 'You stay away.', effects: { legalStatus: -3, savings: 2 } },
+      { id: 'listen', text: 'Listen from a distance, take notes, share later', consequence: 'You learn without exposing yourself.', effects: { legalStatus: 4, solidarity: 3, dignity: 2 } },
     ],
   },
   {

@@ -281,15 +281,17 @@ const kpis: KpiItem[] = [
                 </span>
               )}
               {/* Progress bar for visual indicator */}
-              <div className="kpi-progress-bar">
-                <div
-                  className="kpi-progress-fill"
-                  style={{ 
-                    width: `${item.progressValue}%`,
-                    background: healthColor,
-                  }}
-                />
-              </div>
+              {item.approvalPct == null && (
+                <div className="kpi-progress-bar">
+                  <div
+                    className="kpi-progress-fill"
+                    style={{ 
+                      width: `${item.progressValue}%`,
+                      background: healthColor,
+                    }}
+                  />
+                </div>
+              )}
               {item.approvalPct != null && (
                 <div className="approval-bar">
                   <div

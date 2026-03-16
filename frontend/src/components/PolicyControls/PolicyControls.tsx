@@ -144,13 +144,13 @@ export function PolicyControls({ state, onStep, loading, mode = 'guided', gameOv
         Policy tools
       </h2>
       <p className="policy-controls-intro">
-        Use the tools below to steer the economy. Each option has a <strong>?</strong> ù hover over it to learn what it does.
+        Use the tools below to steer the economy. Each option has a <strong>?</strong> button ? click it to learn what it does.
       </p>
       <form onSubmit={handleSubmit}>
         {/* GUIDED MODE: 5 Strategic Levers with Heterodox Context */}
         {mode === 'guided' && (
           <section className="policy-school guided-mode">
-            <h3>Guided Simulation ù Key Policy Levers</h3>
+            <h3>Guided Simulation ? Key Policy Levers</h3>
             <p className="guided-intro">
               Adjust these five strategic levers to shape your economy. Each represents a major policy domain grounded in heterodox economic traditions.
             </p>
@@ -194,7 +194,7 @@ export function PolicyControls({ state, onStep, loading, mode = 'guided', gameOv
               <label className="guided-label">
                 <span className="lever-number">3</span>
                 Labor Standards: Flexibility vs Protection
-                <PolicyHelp text="Institutional tradition (Polanyi): labor is embedded in social relations. 'Protective' = strong unions, minimum wages, job security. 'Flexible' = easier to hire/fire, lower regulation ù helps business competitiveness. 'Mixed' = balance." />
+                <PolicyHelp text="Institutional tradition (Polanyi): labor is embedded in social relations. 'Protective' = strong unions, minimum wages, job security. 'Flexible' = easier to hire/fire, lower regulation ? helps business competitiveness. 'Mixed' = balance." />
               </label>
               <div className="guided-slider-wrap">
                 <input type="range" min={0} max={1} step={0.1} value={quickRegulation} onChange={(e) => handleQuickRegulation(Number(e.target.value))} className="guided-slider" />
@@ -564,9 +564,8 @@ function PolicyImpactPreview({
   return (
     <div className="policy-impact-preview">
       <h4>
-        <span className="impact-icon">??</span>
         Expected Impact
-        <span className="impact-hint">(projected next turn)</span>
+        <span className="impact-hint">(approximate direction, not exact)</span>
       </h4>
       <div className="impact-grid">
         {projections.map((proj, idx) => (
