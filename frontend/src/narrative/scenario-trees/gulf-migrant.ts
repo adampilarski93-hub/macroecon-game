@@ -53,7 +53,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'work', text: 'Keep working', consequence: 'You focus on your own survival.', effects: { savings: 5, solidarity: -5 } },
       { id: 'organise', text: 'Try to organise for safety', consequence: 'You reach out to others.', effects: { solidarity: 12, legalStatus: -10, dignity: 8 } },
-      { id: 'clinic', text: 'Seek treatment at a community clinic off the record', consequence: 'You get care without official channels.', effects: { health: 6, savings: -4, solidarity: 2 } },
+      { id: 'help_injured', text: 'Help the injured worker find care through unofficial channels', consequence: 'You help without involving the company.', effects: { solidarity: 6, savings: -3, dignity: 4 } },
     ],
   },
   {
@@ -73,6 +73,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'take', text: 'Take the overtime', consequence: 'You work more.', effects: { savings: 15, health: -10 } },
       { id: 'refuse', text: 'Refuse', consequence: 'You protect your rest.', effects: { health: 8, savings: -10 } },
+      { id: 'negotiate_shift', text: 'Negotiate for a different shift that pays better', consequence: 'You find a compromise.', effects: { savings: 8, health: -3 } },
     ],
   },
   {
@@ -82,6 +83,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'agent', text: 'Use the company agent', consequence: 'You pay the fee.', effects: { savings: -5 } },
       { id: 'cheaper', text: 'Find a cheaper channel', consequence: 'You seek alternatives.', effects: { savings: 8, legalStatus: -3 } },
+      { id: 'pool', text: 'Pool with others to reduce fees', consequence: 'You save together.', effects: { savings: 5, solidarity: 5 } },
     ],
   },
   {
@@ -91,6 +93,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'join', text: 'Join the strike', consequence: 'You stand with them.', effects: { solidarity: 15, legalStatus: -12, dignity: 12 }, nextBlock: 9 },
       { id: 'stay', text: 'Stay at work', consequence: 'You keep working.', effects: { savings: 8, solidarity: -8 }, nextBlock: 10 },
+      { id: 'document_strike', text: 'Document quietly and share with a journalist', consequence: 'You bear witness without joining the strike.', effects: { dignity: 6, solidarity: 4, legalStatus: -5 }, nextBlock: 10 },
     ],
   },
   {
@@ -100,6 +103,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'low', text: 'Lie low', consequence: 'You retreat.', effects: { legalStatus: 5, solidarity: -8 }, nextBlock: 11 },
       { id: 'secret', text: 'Continue organising in secret', consequence: 'You persist.', effects: { solidarity: 12, legalStatus: -12 }, nextBlock: 11 },
+      { id: 'support', text: 'Help others quietly without leading', consequence: 'You support from the shadows.', effects: { solidarity: 8, legalStatus: -6, dignity: 4 }, nextBlock: 11 },
     ],
   },
   {
@@ -109,6 +113,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'rebuild', text: 'Try to rebuild trust', consequence: 'You reach out.', effects: { solidarity: 8, dignity: 5 }, nextBlock: 11 },
       { id: 'survive', text: 'Focus on survival', consequence: 'You keep your head down.', effects: { savings: 5, solidarity: -5 }, nextBlock: 11 },
+      { id: 'confide', text: 'Share your guilt with one trusted worker', consequence: 'You open up to one person.', effects: { solidarity: 5, dignity: 4, savings: -2 }, nextBlock: 11 },
     ],
   },
   {
@@ -118,6 +123,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'renew', text: 'Renew', consequence: 'You sign again.', effects: { savings: 5, legalStatus: 2 } },
       { id: 'switch', text: 'Try to switch sponsors', consequence: 'You seek a way out.', effects: { legalStatus: -5, dignity: 5 } },
+      { id: 'explore', text: 'Renew but start quietly exploring options', consequence: 'You buy time and stay alert.', effects: { savings: 4, legalStatus: 2, dignity: 3 } },
     ],
   },
   {
@@ -127,6 +133,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'yes', text: 'Take the transfer', consequence: 'You move to the port.', effects: { savings: 10, health: -5 } },
       { id: 'no', text: 'Stay in construction', consequence: 'You remain.', effects: { solidarity: 5 } },
+      { id: 'trial', text: 'Ask for a trial period before deciding', consequence: 'You test the waters.', effects: { savings: 5, health: -2, legalStatus: 2 } },
     ],
   },
   {
@@ -136,6 +143,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'send', text: 'Send more home', consequence: 'You stretch yourself.', effects: { savings: -10, health: -5 } },
       { id: 'explain', text: 'Explain, keep something back', consequence: 'You protect a reserve.', effects: { savings: 5, dignity: 3 } },
+      { id: 'partial', text: 'Send a smaller amount with a detailed letter', consequence: 'You balance obligations with honesty.', effects: { savings: -3, dignity: 5, solidarity: 2 } },
     ],
   },
   {
@@ -145,6 +153,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'demand', text: 'Demand your passport', consequence: 'You assert your right.', effects: { legalStatus: 12, dignity: 10 } },
       { id: 'leave', text: 'Leave it with the sponsor', consequence: 'You avoid the conflict.', effects: { legalStatus: -5 } },
+      { id: 'copy', text: 'Request a copy for emergencies', consequence: 'You secure a partial win.', effects: { legalStatus: 4, dignity: 4 } },
     ],
   },
   {
@@ -154,6 +163,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'reach', text: 'Reach out, build a network', consequence: 'You build solidarity.', effects: { solidarity: 15, legalStatus: -8 } },
       { id: 'down', text: 'Keep your head down', consequence: 'You stay quiet.', effects: { savings: 3, solidarity: -5 } },
+      { id: 'anonymous', text: 'Document and share information anonymously', consequence: 'You contribute without exposing yourself.', effects: { solidarity: 6, legalStatus: -3, dignity: 4 } },
     ],
   },
   {
@@ -163,6 +173,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'pride', text: 'Take pride in the work', consequence: 'You claim the achievement.', effects: { dignity: 8 } },
       { id: 'refuse', text: 'Refuse to identify with it', consequence: 'You reject the narrative.', effects: { dignity: 5, solidarity: 5 } },
+      { id: 'honour', text: 'Accept the work but refuse the hype', consequence: 'You honour your labour without the propaganda.', effects: { dignity: 6, solidarity: 2 } },
     ],
   },
   {
@@ -172,6 +183,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'push', text: 'Push through', consequence: 'You work sick.', effects: { savings: 5, health: -15 } },
       { id: 'care', text: 'Seek proper care', consequence: 'You prioritise health.', effects: { health: 10, savings: -10, legalStatus: -5 } },
+      { id: 'clinic_illness', text: 'Seek treatment at a community clinic off the record', consequence: 'You find help without official channels.', effects: { health: 6, savings: -5, solidarity: 2 } },
     ],
   },
   {
@@ -181,6 +193,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'finish', text: 'Focus on finishing', consequence: 'You count the days.', effects: { savings: 8, solidarity: -5 } },
       { id: 'fight', text: 'Fight for those who come after', consequence: 'You stay and organise.', effects: { solidarity: 15, dignity: 12, legalStatus: -10 } },
+      { id: 'mentor', text: 'Finish your contract but mentor new arrivals', consequence: 'You prepare others while counting days.', effects: { solidarity: 8, dignity: 6, savings: 4 } },
     ],
   },
   {
@@ -190,6 +203,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'share', text: 'Share what you know', consequence: 'You reach out.', effects: { solidarity: 10, dignity: 5 } },
       { id: 'keep', text: 'Keep to yourself', consequence: 'You focus on survival.', effects: { savings: 5, solidarity: -5 } },
+      { id: 'tips', text: 'Share a few practical tips anonymously', consequence: 'You help without putting yourself at risk.', effects: { solidarity: 5, dignity: 3 } },
     ],
   },
   {
@@ -199,6 +213,7 @@ const blocks: DecisionBlock[] = [
     choices: [
       { id: 'renew', text: 'Renew for another project', consequence: 'You stay.', effects: { savings: 10, health: -5 } },
       { id: 'home', text: 'Try to go home', consequence: 'You seek your release.', effects: { dignity: 8, savings: -5 } },
+      { id: 'short_extend', text: 'Negotiate a shorter extension', consequence: 'You compromise on timing.', effects: { savings: 6, dignity: 5, health: -2 } },
     ],
   },
   {
