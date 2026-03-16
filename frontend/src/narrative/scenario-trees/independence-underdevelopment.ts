@@ -201,7 +201,7 @@ What framework do you establish?`,
       title: 'The IMF and Structural Adjustment',
       narrative: `You need foreign exchange to import capital goods and service any debt. The IMF offers financing. But the conditionality package requires: currency devaluation, reduced state spending, liberalized markets, privatization.
 
-Research shows structural adjustment often dismantles state capacity exactly when development requires it. But rejecting IMF financing means finding alternatives.
+Critics argue structural adjustment often dismantles state capacity exactly when development requires it (Stiglitz, Easterly). But defenders note IMF programs can restore market confidence, stabilize currencies, and create foundations for growth—though success depends on implementation and initial conditions (Ghana 1983-1991 vs. Argentina 1998-2001).
 
 What do you do?`,
       choices: [

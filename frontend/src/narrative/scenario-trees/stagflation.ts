@@ -18,7 +18,7 @@ const introArc: ScenarioArc = {
 
 Three schools of thought dominate the cabinet debate:
 
-**The Monetarists** — led by your central bank governor — argue that inflation must be crushed before it becomes embedded in expectations. They cite Paul Volcker's playbook: aggressive rate hikes, even at the cost of a deep recession.
+**The Central Bank** — led by your hawkish governor — argues that inflation must be crushed before it becomes embedded in expectations. They cite Paul Volcker's playbook: aggressive rate hikes, even at the cost of a deep recession. (Note: Volcker was a pragmatic central banker, not a pure monetarist—he used rate hikes pragmatically, not the steady money growth Milton Friedman advocated.)
 
 **The Keynesians** — led by your finance minister — argue for a coordinated approach using fiscal stimulus alongside gradual tightening. They cite James Tobin's "stabilization policy" — using demand management to soften the blow while controlling inflation.
 

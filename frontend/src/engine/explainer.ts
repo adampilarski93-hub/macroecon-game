@@ -56,9 +56,9 @@ export function generateCausalExplanation(
   const spendingShare = actions.spendingShareOfGdp ?? 0.25;
   const prevSpendingShare = pc.expenditure / Math.max(1, pc.gdp);
   if (spendingShare > prevSpendingShare + 0.02) {
-    details.push(`Government spending increased. This directly adds to demand (the G in GDP = C + I + G + X - M). The multiplier effect amplifies the impact.`);
+    details.push(`Government spending increased. In the short run with idle capacity (recession), this has a multiplier effect: each unit of G generates more than one unit of GDP. The multiplier is state-dependent: larger when unemployment is high (crowding in), smaller at full employment (crowding out).`);
   } else if (spendingShare < prevSpendingShare - 0.02) {
-    details.push(`Government spending decreased. This reduces demand directly — contractionary fiscal policy.`);
+    details.push(`Government spending decreased. This is contractionary fiscal policy. The impact depends on economic conditions: in a slump, cuts deepen recession; at full employment, cuts may reduce inflationary pressure.`);
   }
 
   // Inflation explanation
@@ -66,14 +66,14 @@ export function generateCausalExplanation(
   if (Math.abs(inflDelta) > 0.005) {
     if (inflDelta > 0) {
       const reasons: string[] = [];
-      if (cc.gdpGrowth > 0.03) reasons.push('strong demand');
-      if (curr.global.commodityPriceIndex > prev.global.commodityPriceIndex) reasons.push('rising commodity prices');
-      if (cc.exchangeRate > pc.exchangeRate * 1.02) reasons.push('currency depreciation making imports costlier');
+      if (cc.gdpGrowth > 0.03) reasons.push('strong demand (Phillips Curve effect—though Friedman/Phelps showed this tradeoff breaks down once expectations adjust)');
+      if (curr.global.commodityPriceIndex > prev.global.commodityPriceIndex) reasons.push('rising commodity prices (cost-push inflation)');
+      if (cc.exchangeRate > pc.exchangeRate * 1.02) reasons.push('currency depreciation making imports costlier (pass-through inflation)');
       details.push(`Inflation rose from ${pct(pc.inflationRate)} to ${pct(cc.inflationRate)}${reasons.length ? ` driven by ${reasons.join(', ')}` : ''}.`);
     } else {
       details.push(`Inflation fell from ${pct(pc.inflationRate)} to ${pct(cc.inflationRate)}.`);
-      if ((actions.priceControlStrength ?? 0) > 0.3) details.push(`Price controls helped contain inflation.`);
-      if ((actions.incomesPolicyStrength ?? 0) > 0.3) details.push(`Incomes policy coordinated wage-price restraint.`);
+      if ((actions.priceControlStrength ?? 0) > 0.3) details.push(`Price controls helped contain inflation by limiting price increases in administered sectors.`);
+      if ((actions.incomesPolicyStrength ?? 0) > 0.3) details.push(`Incomes policy coordinated wage-price restraint, addressing inflation as distributional conflict rather than pure excess demand.`);
     }
   }
 
