@@ -10,7 +10,6 @@ import { createNarrativeTree as createSanctionsTree } from './scenario-trees/san
 import { createNarrativeTree as createChokepointTree } from './scenario-trees/chokepoint-closure';
 import { createNarrativeTree as createGulfMigrantTree } from './scenario-trees/gulf-migrant';
 import { createNarrativeTree as createPlurinationalTree } from './scenario-trees/plurinational-path';
-import { createNarrativeTree as createReservationGovernorTree } from './scenario-trees/reservation-governor';
 import { createNarrativeTree as createAiDisplacedTree } from './scenario-trees/ai-displaced';
 import { createNarrativeTree as createSovereigntyTree } from './scenario-trees/sovereignty-path';
 
@@ -348,40 +347,6 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
             : `The pressures of debt, dependency, and external interference proved too strong. But the seeds of sovereignty have been planted.`,
         };
       },
-    endings,
-    );
-  },
-  'reservation-governor': (scenarioId) => {
-    const { getNode, endings } = createReservationGovernorTree({ shuffle: true });
-    return makeConfig(
-      'reservation-governor',
-      'Reservation Governor',
-      'Red Mesa Nation',
-      ['sovereignty', 'economicStrength', 'publicSupport', 'culturalIntegrity', 'fiscalHealth'],
-      { sovereignty: 'Sovereignty', economicStrength: 'Economic Strength', publicSupport: 'Public Support', culturalIntegrity: 'Cultural Integrity', fiscalHealth: 'Fiscal Health' },
-      { sovereignty: 45, economicStrength: 35, publicSupport: 50, culturalIntegrity: 45, fiscalHealth: 40 },
-      getNode,
-      [],
-      {},
-      (stats) => {
-      const sovereignty = stats.sovereignty ?? 50;
-      const economic = stats.economicStrength ?? 50;
-      const support = stats.publicSupport ?? 50;
-      const culture = stats.culturalIntegrity ?? 50;
-      const fiscal = stats.fiscalHealth ?? 50;
-      const score = Math.round(
-        sovereignty * 0.2 + economic * 0.2 + support * 0.2 +
-        culture * 0.2 + fiscal * 0.2,
-      );
-      const won = sovereignty >= 40 && (economic >= 40 || support >= 45);
-      return {
-        won,
-        score: Math.min(100, Math.max(0, score)),
-        summary: won
-          ? `You strengthened the nation. Sovereignty, economy, and culture — the work continues.`
-          : `The struggle continues. The people remember. The land remains.`,
-      };
-    },
     endings,
     );
   },

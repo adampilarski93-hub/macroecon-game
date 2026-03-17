@@ -102,7 +102,7 @@ export function ScenarioSelect() {
       title: 'People & Places: Economies Up Close',
       subtitle: 'Human-scale stories of navigating economic forces',
       icon: IconPeople,
-      scenarioIds: ['gulf-migrant', 'reservation-governor', 'ai-displaced'],
+      scenarioIds: ['gulf-migrant', 'ai-displaced'],
     },
     tackleChallenge: {
       id: 'tackle-challenge',
@@ -132,12 +132,6 @@ export function ScenarioSelect() {
       difficulty: 'hard',
       description: 'Navigate as a migrant worker in a wealthy Gulf state.',
       objectives: ['Send remittances', 'Protect health', 'Build solidarity'],
-    },
-    'reservation-governor': {
-      name: 'Reservation Governor',
-      difficulty: 'hard',
-      description: 'Lead an Indian Reservation with sovereignty and development.',
-      objectives: ['Strengthen sovereignty', 'Build self-sufficiency'],
     },
     'ai-displaced': {
       name: 'AI Displaced',
