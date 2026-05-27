@@ -38,6 +38,11 @@ export interface CountryState {
   termsOfTrade: number;
   financialFragility: number;
   profitRate: number;
+  // Capital composition and state/capital relation metrics
+  publicInvestmentShare: number;      // 0-1: share of investment from public sources
+  publicOwnershipShare: number;       // 0-1: share of productive assets publicly owned
+  stateCapacity: number;                // 0-1: bureaucratic/institutional capacity
+  investmentQuality: number;          // derived: public=productive vs private=speculative
 }
 
 export interface GlobalState {

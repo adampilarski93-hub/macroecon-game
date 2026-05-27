@@ -45,6 +45,7 @@ export function computeSimulatorDiagnostics(
       tariffRate,
       planningIntensity: planning,
       publicBankingStrength: pubBank,
+      infrastructureShare: infra,
     },
     previousGdp,
   );
@@ -78,7 +79,11 @@ export function computeSimulatorDiagnostics(
   return {
     growth: [
       { label: 'Consumption C', value: effectiveGdp !== 0 ? yParts.c / effectiveGdp : 0, equation: 'C/Y' },
-      { label: 'Investment I', value: effectiveGdp !== 0 ? yParts.i / effectiveGdp : 0, equation: 'I/Y' },
+      { label: 'Investment I (total)', value: effectiveGdp !== 0 ? yParts.i / effectiveGdp : 0, equation: 'I/Y' },
+      { label: '— Public I', value: effectiveGdp !== 0 ? yParts.publicInvestment / effectiveGdp : 0, equation: 'publicI/Y (state-led)' },
+      { label: '— Private I', value: effectiveGdp !== 0 ? yParts.privateInvestment / effectiveGdp : 0, equation: 'privateI/Y (market-led)' },
+      { label: 'Public inv. share', value: yParts.publicInvestmentShare, equation: 'publicI / totalI' },
+      { label: 'Investment quality', value: yParts.investmentQuality, equation: 'f(publicShare, regulation)' },
       { label: 'Government G', value: effectiveGdp !== 0 ? yParts.g / effectiveGdp : 0, equation: 'G/Y' },
       { label: 'Net Exports NX', value: effectiveGdp !== 0 ? nx / effectiveGdp : 0, equation: '(X-M)/Y' },
       { label: 'Supply capacity', value: supplyCapacity, equation: 'f(K, L, TFP, planning, infrastructure)' },

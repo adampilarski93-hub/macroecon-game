@@ -24,7 +24,19 @@ export function consumption(y: number, taxRate: number, params: ScenarioParams):
   return blendedMPC * (1 - taxRate) * y;
 }
 
-/* ── Investment ── */
+/* ── Investment ──
+ * 
+ * Public vs Private Investment Distinction:
+ * - Public investment (planning, public banking, infrastructure): 
+ *   Higher productivity, less interest-sensitive, directed toward productive capacity
+ * - Private investment: 
+ *   More interest-sensitive, subject to financial cycles and speculative booms
+ * 
+ * The mix matters for:
+ * 1. Overall investment level (public investment is counter-cyclical)
+ * 2. Investment quality (public targets productivity, private chases returns)
+ * 3. Fiscal multiplier (public spending has higher multipliers in recessions)
+ */
 
 export function investment(
   y: number,
@@ -36,36 +48,83 @@ export function investment(
   capacityUtilization: number = 0.85,
   publicBankingStrength: number = 0,
   taxRate: number = 0.2,
-): number {
+  infrastructureShare: number = 0,
+): { 
+  total: number; 
+  publicComponent: number; 
+  privateComponent: number;
+  publicShare: number;
+  quality: number;  // investment quality score
+} {
   const r = policyRate - inflationExpectations;
   const rNatural = 0.02;
 
-  // Base investment as share of GDP — driven by DEMAND and capacity utilisation
-  // (accelerator principle: firms invest when they need more capacity)
-  const demandDrive = 0.18 + 0.08 * Math.max(0, capacityUtilization - 0.75);
+  // === PRIVATE INVESTMENT ===
+  // Driven by profit expectations, heavily interest-sensitive
+  // Subject to financial cycles (boom-bust dynamics)
+  
+  // Base private investment — accelerator principle
+  const privateDemandDrive = 0.14 + 0.06 * Math.max(0, capacityUtilization - 0.75);
+  
+  // Interest rate effect — STRONG for private (financial returns)
+  const privateInterestSensitivity = params.investmentInterestElasticity * 0.7;
+  const privateRateEffect = 1 - privateInterestSensitivity * Math.max(-0.05, r - rNatural);
+  
+  // Tax effect — SMALL but present for private
+  const privateTaxEffect = 1 - 0.15 * Math.max(0, taxRate - 0.25);
+  
+  // Financial regulation: curbs speculative private investment
+  // Weak regulation enables speculative booms (higher I but fragile)
+  const finRegEffect = 1 - 0.20 * Math.min(1, Math.max(0, financialRegulationStrength));
+  
+  // Animal spirits / confidence cycle (simplified as pro-cyclical)
+  const privateConfidence = 1 + 0.15 * Math.max(-0.5, Math.min(0.5, capacityUtilization - 0.8));
+  
+  const privateIBase = privateDemandDrive * y;
+  const privateI = privateIBase * privateRateEffect * privateTaxEffect * finRegEffect * privateConfidence;
 
-  // Interest rate effect — MODEST (empirical elasticity ~-0.2 to -0.4)
-  const interestSensitivity = params.investmentInterestElasticity * 0.5; // halved from original
-  const rateEffect = 1 - interestSensitivity * Math.max(-0.05, r - rNatural);
+  // === PUBLIC INVESTMENT ===
+  // Driven by state capacity and planning, not profit expectations
+  // Counter-cyclical: increases when private investment falls
+  
+  // Planning intensity: mobilizes forced savings, directed credit
+  // More effective in developing economies (catch-up growth)
+  const gdpPerCapita = y / Math.max(1, 500);
+  const planningBonus = planningIntensity * 0.15 * Math.max(0.3, 1 - gdpPerCapita / 20);
+  
+  // Infrastructure investment: directly productive, state-led
+  const infraBonus = infrastructureShare * 0.12;
+  
+  // Public banking: counter-cyclical lending (fills credit gaps)
+  // Effect increases when private investment is weak
+  const creditGap = Math.max(0, 0.2 - privateI / y); // gap between target and actual
+  const publicBankBonus = publicBankingStrength * 0.06 * (1 + creditGap);
+  
+  // Public investment is LESS interest-sensitive
+  // Central banks can hold rates low without killing public investment
+  const publicRateEffect = 1 - 0.3 * privateInterestSensitivity * Math.max(0, r - rNatural);
+  
+  const publicI = y * (planningBonus + infraBonus + publicBankBonus) * publicRateEffect;
 
-  // Tax effect — SMALL (empirical elasticity ~-0.1 to -0.3)
-  // Taxes above 0.3 have modest negative effect; below 0.3 negligible
-  const taxEffect = 1 - 0.15 * Math.max(0, taxRate - 0.25);
+  // === INVESTMENT COMPOSITION ===
+  const totalI = privateI + publicI;
+  const publicShare = totalI > 0 ? publicI / totalI : 0;
+  
+  // === INVESTMENT QUALITY ===
+  // Public investment has higher "quality" — more productive, less speculative
+  // Quality affects: productivity growth, capacity expansion, debt sustainability
+  // Private investment quality depends on financial regulation
+  const privateQuality = 0.6 + 0.3 * financialRegulationStrength; // 0.6-0.9 range
+  const publicQuality = 0.85; // consistently high
+  const weightedQuality = publicShare * publicQuality + (1 - publicShare) * privateQuality;
 
-  // Financial regulation dampens speculative investment (reduces boom but prevents bust)
-  const finRegEffect = 1 - 0.15 * Math.min(1, Math.max(0, financialRegulationStrength));
-
-  // Planning intensity: MOBILISES investment (forced savings, directed credit)
-  // Strong at low-middle income (catching up), weaker at high income (complexity)
-  const gdpPerCapita = y / Math.max(1, 500); // rough proxy
-  const planningBonus = planningIntensity * 0.12 * Math.max(0.3, 1 - gdpPerCapita / 20);
-
-  // Public banking: counter-cyclical lending, fills credit gaps
-  const publicBankBonus = publicBankingStrength * 0.04;
-
-  const IBase = demandDrive * y;
-  const rawInvestment = IBase * rateEffect * taxEffect * finRegEffect + y * planningBonus + y * publicBankBonus;
-  return Math.max(0, rawInvestment);
+  return {
+    total: Math.max(0, totalI),
+    publicComponent: Math.max(0, publicI),
+    privateComponent: Math.max(0, privateI),
+    publicShare: Math.min(1, Math.max(0, publicShare)),
+    quality: weightedQuality,
+  };
 }
 
 /* ── Government spending ── */
@@ -82,7 +141,18 @@ export function equilibriumY(
   params: ScenarioParams,
   actions: PolicyActions,
   previousGdp: number,
-): { y: number; c: number; i: number; g: number; x: number; m: number } {
+): { 
+  y: number; 
+  c: number; 
+  i: number; 
+  g: number; 
+  x: number; 
+  m: number;
+  publicInvestment: number;
+  privateInvestment: number;
+  publicInvestmentShare: number;
+  investmentQuality: number;
+} {
   const taxRate = actions.incomeTaxRate ?? 0.2;
   const spendingShare = actions.spendingShareOfGdp ?? 0.25;
   const policyRate = country.policyRate;
@@ -90,6 +160,7 @@ export function equilibriumY(
   const finReg = actions.financialRegulationStrength ?? 0;
   const planning = actions.planningIntensity ?? 0;
   const pubBank = actions.publicBankingStrength ?? 0;
+  const infra = actions.infrastructureShare ?? 0;
   const tariffRate = actions.tariffRate ?? 0.1;
 
   const yPrev = previousGdp || country.gdp;
@@ -108,20 +179,30 @@ export function equilibriumY(
   const potentialGdp = country.potentialGdp || yPrev * 1.02;
   const capacityUtil = Math.min(1, Math.max(0.5, yPrev / potentialGdp));
 
-  // STATE-DEPENDENT fiscal multiplier:
-  // In recession (negative output gap): spending has strong multiplier (crowding IN)
-  // At full employment (positive gap): weaker multiplier (some crowding out)
+  // STATE-DEPENDENT fiscal multiplier — NOW ALSO DEPENDS ON CAPITAL COMPOSITION:
+  // Multiplier is HIGHER when public investment share is higher
+  // (public spending is more productively absorbed, less crowding out)
   const outputGap = potentialGdp > 0 ? (yPrev - potentialGdp) / potentialGdp : 0;
-  const multiplierAdj = outputGap < -0.03
+  const baseMultiplier = outputGap < -0.03
     ? 1.3  // recession: multiplier boosted
     : outputGap > 0.03
       ? 0.7  // overheating: reduced effectiveness
       : 1.0; // normal
+  
+  // Capital-composition-adjusted multiplier
+  // Higher public investment share = higher multiplier (public spending more effective)
+  // This captures: public investment targets idle resources, builds capacity
+  // while private investment competes for scarce resources at full employment
+  const compositionMultiplier = 1 + 0.15 * (country.publicInvestmentShare ?? 0);
+  const multiplierAdj = baseMultiplier * compositionMultiplier;
 
   let y = yPrev;
+  let investResult = investment(y, policyRate, piE, params, finReg, planning, capacityUtil, pubBank, taxRate, infra);
+  
   for (let iter = 0; iter < 50; iter++) {
     const c = consumption(y, taxRate, params);
-    const i = investment(y, policyRate, piE, params, finReg, planning, capacityUtil, pubBank, taxRate);
+    investResult = investment(y, policyRate, piE, params, finReg, planning, capacityUtil, pubBank, taxRate, infra);
+    const i = investResult.total;
     const g = governmentSpending(y, spendingShare) * multiplierAdj;
     const m = importPropensity * y;
     const yNew = c + i + g + xBase - m;
@@ -134,10 +215,26 @@ export function equilibriumY(
   y = Math.max(y, yPrev * 0.1);
 
   const c = consumption(y, taxRate, params);
-  const i = investment(y, policyRate, piE, params, finReg, planning, capacityUtil, pubBank, taxRate);
+  investResult = investment(y, policyRate, piE, params, finReg, planning, capacityUtil, pubBank, taxRate, infra);
+  const i = investResult.total;
+  const publicInvestment = investResult.publicComponent;
+  const privateInvestment = investResult.privateComponent;
+  const publicInvestmentShare = investResult.publicShare;
+  const investmentQuality = investResult.quality;
   const g = governmentSpending(y, spendingShare) * multiplierAdj;
   const m = importPropensity * y;
   const x = xBase;
 
-  return { y: Math.max(0, y), c, i, g, x, m };
+  return { 
+    y: Math.max(0, y), 
+    c, 
+    i, 
+    g, 
+    x, 
+    m,
+    publicInvestment,
+    privateInvestment,
+    publicInvestmentShare,
+    investmentQuality,
+  };
 }

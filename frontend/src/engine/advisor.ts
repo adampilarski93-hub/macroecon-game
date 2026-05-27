@@ -79,6 +79,33 @@ function tradeAdvisory(country: CountryState, state: SimulationState): AdvisoryI
   return items;
 }
 
+function capitalCompositionAdvisory(country: CountryState): AdvisoryItem[] {
+  const items: AdvisoryItem[] = [];
+  const pubInvShare = country.publicInvestmentShare ?? 0;
+  const pubOwnShare = country.publicOwnershipShare ?? 0;
+  const invQuality = country.investmentQuality ?? 0.7;
+  const stateCap = country.stateCapacity ?? 0.5;
+
+  // Marxian perspective on capital composition
+  if (pubInvShare < 0.2 && pubOwnShare < 0.15) {
+    items.push({ school: 'Marxian', topic: 'growth', title: 'Capital composition favors private accumulation', instruction: 'Your economy relies heavily on private investment. Consider expanding public banking, planning intensity, or state-owned enterprises to direct investment toward social needs rather than profit maximization.', explanation: 'Kalecki showed that investment determines profits under capitalism. When private capital dominates, investment flows where profits are highest—not necessarily where social needs are greatest. China\'s rapid development combined state capacity with market mechanisms, directing investment toward infrastructure and industrialization. High private dominance without countervailing public power leads to underinvestment in public goods, financialization, and periodic crises as capital seeks returns over sustainability.' });
+  }
+
+  if (pubInvShare > 0.35 && stateCap < 0.6) {
+    items.push({ school: 'Structuralist', topic: 'growth', title: 'State-led investment without adequate capacity', instruction: 'High public investment share but low state capacity risks inefficiency. Strengthen institutional quality through anti-corruption measures, technocratic meritocracy, and transparent procurement before expanding planning further.', explanation: 'Prebisch and the ECLAC school recognized that state capacity varies across development stages. Simply expanding public investment without capable bureaucracy—what Evans called "embedded autonomy"—leads to rent-seeking, patronage, and inefficient capital allocation. The East Asian developmental states (South Korea, Taiwan) succeeded because they combined high investment with Weberian bureaucratic capacity. Your state capacity must match your intervention ambition.' });
+  }
+
+  if (invQuality < 0.6) {
+    items.push({ school: 'Post-Keynesian', topic: 'outlook', title: 'Investment quality deteriorating—speculative boom risks', instruction: 'Your investment quality score is low, suggesting much private investment is speculative rather than productive. Strengthen financial regulation to channel credit toward real capital formation and away from asset price bubbles.', explanation: 'Minsky\'s financial instability hypothesis shows that unregulated private investment cycles through hedge, speculative, and Ponzi phases. Low investment quality means your growth rests on financial bubbles rather than productive capacity. When the bubble bursts—as in 2008—supposed investment becomes non-performing loans, triggering debt deflation. Public investment typically has higher quality (directed at infrastructure, capacity) but requires state capacity to deploy effectively.' });
+  }
+
+  if (pubInvShare > 0.4 && invQuality > 0.8) {
+    items.push({ school: 'Keynesian', topic: 'growth', title: 'High-quality public investment enables sustainable growth', instruction: 'Your capital composition—high public investment share with high quality—is the foundation for long-term growth. Maintain this balance; avoid privatization drives that would sacrifice productive investment for short-term efficiency gains.', explanation: 'Mariana Mazzucato\'s work on the entrepreneurial state shows that public investment often bears the risks that private capital shuns—basic research, infrastructure, early-stage technology. The internet, GPS, touchscreen technology, and green energy all received decisive public investment before private profit could be extracted. Your current capital composition reflects this wisdom: public investment targets the high-risk, high-social-return projects that markets underprovide.' });
+  }
+
+  return items;
+}
+
 function outlookAdvisory(country: CountryState, state: SimulationState): AdvisoryItem[] {
   const items: AdvisoryItem[] = [];
   const risks: string[] = [];
@@ -88,6 +115,9 @@ function outlookAdvisory(country: CountryState, state: SimulationState): Advisor
   if (country.currentAccount < -25) risks.push('trade deficit');
   if (country.approval < 0.35) risks.push('low public support');
   if (country.gdpGrowth < -0.005) risks.push('recession');
+  // Add capital composition risks
+  if ((country.publicInvestmentShare ?? 0) < 0.15 && (country.investmentQuality ?? 0.7) < 0.65) risks.push('low-quality private investment dominance');
+  if ((country.stateCapacity ?? 0.5) < 0.4 && (country.publicOwnershipShare ?? 0) > 0.3) risks.push('state overreach beyond capacity');
 
   if (risks.length === 0) {
     items.push({ school: 'General', topic: 'outlook', title: 'Economy is broadly stable', instruction: 'No urgent crises. Use this window to invest in long-term capacity: infrastructure, education, industrial development, and social protections. Build fiscal buffers and financial resilience for the next shock.', explanation: 'Stability is an opportunity, not a destination. Countries that invest during good times weather bad times better. Minsky\'s insight — stability breeds instability — means complacency is the greatest risk right now.' });
@@ -108,6 +138,7 @@ export function getAdvisory(state: SimulationState): AdvisoryItem[] {
   out.push(...growthAdvisory(country));
   out.push(...unemploymentAdvisory(country));
   out.push(...tradeAdvisory(country, state));
+  out.push(...capitalCompositionAdvisory(country)); // New: capital composition awareness
 
   if (country.inflationRate >= INFLATION_THRESHOLD) out.push(...inflationAdvisory(country));
   if (country.debtToGdp >= debtThreshold) out.push(...debtAdvisory(country, debtThreshold));

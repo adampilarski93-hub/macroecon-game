@@ -740,6 +740,11 @@ export function createInitialState(scenarioId: string): SimulationState | null {
     termsOfTrade: def.initialCountry.termsOfTrade ?? 1.0,
     financialFragility: def.initialCountry.financialFragility ?? 0.1,
     profitRate: def.initialCountry.profitRate ?? 0.1,
+    // Capital composition and state/capital relation (default values)
+    publicInvestmentShare: def.initialCountry.publicInvestmentShare ?? 0.15,
+    publicOwnershipShare: def.initialCountry.publicOwnershipShare ?? 0.1,
+    stateCapacity: def.initialCountry.stateCapacity ?? 0.5,
+    investmentQuality: def.initialCountry.investmentQuality ?? 0.7,
   };
 
   const global: GlobalState = {

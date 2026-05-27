@@ -751,13 +751,14 @@ export function step(
   const financialRegulationStrength = clamp(actions.financialRegulationStrength ?? 0, 0, 1);
 
   /* ── Demand equilibrium ── */
-  const { y, c, i, g, x, m } = equilibriumY(
+  const equilibriumResult = equilibriumY(
     countryWithPolicy,
     global,
     scenario,
     actions,
     previousGdp,
   );
+  const { y, c, i, g, x, m } = equilibriumResult;
 
   /* ── External sector ── */
   const currentAccount = x - m;
@@ -898,8 +899,23 @@ export function step(
   const perPeriodGrowth = Math.pow(1 + annualPotentialGrowth, 1 / periods) - 1;
   const newPotentialGdp = prevPotential * (1 + perPeriodGrowth);
 
-  // Recalculate debt-to-GDP with effective GDP
+  // Recalculate debt-to-GDP with effective GDP for use in state capacity calculation
   const effectiveDebtToGdp = effectiveGdp > 0 ? newDebt / effectiveGdp : 0;
+
+  /* ── Capital composition and state/capital relation metrics ── */
+  // Track the composition of investment and state capacity
+  const publicOwnershipShare = clamp(
+    (country.publicOwnershipShare ?? 0.1) + 0.02 * planningIntensity - 0.01 * (1 - financialRegulationStrength),
+    0, 1
+  );
+  const stateCapacity = clamp(
+    (country.stateCapacity ?? 0.5) + 0.005 * planningIntensity + 0.003 * infrastructureShare - 0.002 * (effectiveDebtToGdp > 0.8 ? 0.1 : 0),
+    0.1, 1
+  );
+  
+  // Investment composition from equilibrium calculation
+  const publicInvestmentShare = equilibriumResult.publicInvestmentShare;
+  const investmentQuality = equilibriumResult.investmentQuality;
 
   const newCountry: CountryState = {
     ...countryWithPolicy,
@@ -930,6 +946,11 @@ export function step(
     termsOfTrade: newTermsOfTrade,
     financialFragility: newFragility,
     profitRate: newProfitRate,
+    // Capital composition and state/capital relation
+    publicInvestmentShare,
+    publicOwnershipShare,
+    stateCapacity,
+    investmentQuality,
   };
 
   /* ── Financial crisis from Minsky fragility ── */

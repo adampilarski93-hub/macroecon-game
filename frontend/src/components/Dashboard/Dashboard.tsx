@@ -94,6 +94,9 @@ export function Dashboard({ state, history }: DashboardProps) {
         approval: entry.state.country.approval * 100,
         wageShare: (entry.state.country.wageShare ?? 0.5) * 100,
         fragility: (entry.state.country.financialFragility ?? 0.1) * 100,
+        publicInvestmentShare: (entry.state.country.publicInvestmentShare ?? 0.15) * 100,
+        investmentQuality: (entry.state.country.investmentQuality ?? 0.7) * 100,
+        stateCapacity: (entry.state.country.stateCapacity ?? 0.5) * 100,
       }))
     : [{
         turn: state.turn,
@@ -104,6 +107,9 @@ export function Dashboard({ state, history }: DashboardProps) {
         approval: state.country.approval * 100,
         wageShare: (state.country.wageShare ?? 0.5) * 100,
         fragility: (state.country.financialFragility ?? 0.1) * 100,
+        publicInvestmentShare: (state.country.publicInvestmentShare ?? 0.15) * 100,
+        investmentQuality: (state.country.investmentQuality ?? 0.7) * 100,
+        stateCapacity: (state.country.stateCapacity ?? 0.5) * 100,
       }];
 
   useEffect(() => {
@@ -305,7 +311,7 @@ const kpis: KpiItem[] = [
         })}
       </div>
 
-      {/* Secondary KPIs: distribution, fragility, class dynamics */}
+      {/* Secondary KPIs: distribution, fragility, class dynamics, capital composition */}
       <div className="kpi-secondary-grid">
         <div className="kpi-secondary">
           <span className="kpi-secondary-label">Wage share</span>
@@ -346,6 +352,25 @@ const kpis: KpiItem[] = [
             </div>
           </div>
           <span className="kpi-secondary-hint">Who supports you? (Kalecki class dynamics)</span>
+        </div>
+        {/* Capital Composition KPIs - New */}
+        <div className="kpi-secondary">
+          <span className="kpi-secondary-label">Public investment share</span>
+          <span className="kpi-secondary-value">{((c.publicInvestmentShare ?? 0.15) * 100).toFixed(0)}%</span>
+          <div className="kpi-progress-bar"><div className="kpi-progress-fill" style={{ width: `${(c.publicInvestmentShare ?? 0.15) * 100}%`, background: (c.publicInvestmentShare ?? 0.15) > 0.3 ? '#06b6d4' : (c.publicInvestmentShare ?? 0.15) > 0.15 ? '#f59e0b' : '#94a3b8' }} /></div>
+          <span className="kpi-secondary-hint">State vs private capital formation (Mazzucato)</span>
+        </div>
+        <div className="kpi-secondary">
+          <span className="kpi-secondary-label">Investment quality</span>
+          <span className="kpi-secondary-value">{((c.investmentQuality ?? 0.7) * 100).toFixed(0)}%</span>
+          <div className="kpi-progress-bar"><div className="kpi-progress-fill" style={{ width: `${(c.investmentQuality ?? 0.7) * 100}%`, background: (c.investmentQuality ?? 0.7) > 0.8 ? '#22c55e' : (c.investmentQuality ?? 0.7) > 0.6 ? '#f59e0b' : '#ef4444' }} /></div>
+          <span className="kpi-secondary-hint">Productive vs speculative (Minsky)</span>
+        </div>
+        <div className="kpi-secondary">
+          <span className="kpi-secondary-label">State capacity</span>
+          <span className="kpi-secondary-value">{((c.stateCapacity ?? 0.5) * 100).toFixed(0)}%</span>
+          <div className="kpi-progress-bar"><div className="kpi-progress-fill" style={{ width: `${(c.stateCapacity ?? 0.5) * 100}%`, background: (c.stateCapacity ?? 0.5) > 0.7 ? '#22c55e' : (c.stateCapacity ?? 0.5) > 0.5 ? '#f59e0b' : '#ef4444' }} /></div>
+          <span className="kpi-secondary-hint">Bureaucratic effectiveness (Evans)</span>
         </div>
       </div>
 
