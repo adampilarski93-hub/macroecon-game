@@ -12,6 +12,7 @@ import { createNarrativeTree as createGulfMigrantTree } from './scenario-trees/g
 import { createNarrativeTree as createPlurinationalTree } from './scenario-trees/plurinational-path';
 import { createNarrativeTree as createAiDisplacedTree } from './scenario-trees/ai-displaced';
 import { createNarrativeTree as createSovereigntyTree } from './scenario-trees/sovereignty-path';
+import { createNarrativeTree as createCybersynTree } from './scenario-trees/cybersyn-chile';
 
 const COMMON_STAT_COLORS: Record<string, string> = {
   economicStrength: '#22c55e',
@@ -35,6 +36,15 @@ const COMMON_STAT_COLORS: Record<string, string> = {
   employability: '#3b82f6',
   infrastructure: '#6366f1',
   humanDevelopment: '#a855f7',
+  // Project Cybersyn stats
+  cyberneticInfrastructure: '#06b6d4',
+  workerControl: '#ef4444',
+  usTensions: '#dc2626',
+  internationalSolidarity: '#10b981',
+  economicReserves: '#f59e0b',
+  economicControl: '#8b5cf6',
+  politicalPolarization: '#f97316',
+  militaryTension: '#7c3aed',
 };
 
 type EvaluateEndingFn = ScenarioNarrativeConfig['evaluateEnding'];
@@ -382,6 +392,50 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
       };
     },
     endings,
+    );
+  },
+  'cybersyn-chile': (scenarioId) => {
+    const { getNode, endings } = createCybersynTree({ shuffle: true });
+    return makeConfig(
+      'cybersyn-chile',
+      'Project Cybersyn: Allende\'s Chile',
+      'Republic of Chile',
+      ['cyberneticInfrastructure', 'workerControl', 'economicReserves', 'usTensions', 'militaryTension', 'politicalPolarization'],
+      {
+        cyberneticInfrastructure: 'Cybernetic Infrastructure',
+        workerControl: 'Worker Control',
+        economicReserves: 'Economic Reserves',
+        usTensions: 'US Tensions',
+        militaryTension: 'Military Tension',
+        politicalPolarization: 'Political Polarization'
+      },
+      { cyberneticInfrastructure: 45, workerControl: 45, economicReserves: 50, usTensions: 30, militaryTension: 25, politicalPolarization: 40 },
+      getNode,
+      [],
+      {},
+      (stats) => {
+        const cyber = stats.cyberneticInfrastructure ?? 50;
+        const worker = stats.workerControl ?? 50;
+        const reserves = stats.economicReserves ?? 50;
+        const us = stats.usTensions ?? 50;
+        const military = stats.militaryTension ?? 50;
+        const polar = stats.politicalPolarization ?? 50;
+        // The coup is historically inevitable—score based on what was achieved before
+        const score = Math.round(
+          cyber * 0.25 + worker * 0.25 + reserves * 0.15 +
+          (100 - us) * 0.1 + (100 - military) * 0.1 + (100 - polar) * 0.15,
+        );
+        // "Victory" here means meaningful achievement before the fall
+        const won = (cyber >= 50 && worker >= 45) || (worker >= 55 && reserves >= 35);
+        return {
+          won,
+          score: Math.min(100, Math.max(0, score)),
+          summary: won
+            ? `You built something before the fall. Cybersyn demonstrated that real-time economic coordination could serve participation, not just control. The cordones proved worker self-management outproduces hierarchy. The legacy outlives the coup.`
+            : `The coup came before the experiment could prove itself. What remains is a caution: the forces of reaction move faster than democratic transformation. But the attempt matters.`,
+        };
+      },
+      endings,
     );
   },
 };

@@ -95,7 +95,7 @@ export function ScenarioSelect() {
       title: 'Stories & Strategy: Where Politics Meets Policy',
       subtitle: 'Narrative-driven scenarios with deep geopolitical stakes',
       icon: IconStories,
-      scenarioIds: ['sovereignty-path', 'plurinational-path', 'sanctions-isolation', 'independence-underdevelopment'],
+      scenarioIds: ['sovereignty-path', 'plurinational-path', 'cybersyn-chile', 'sanctions-isolation', 'independence-underdevelopment'],
     },
     peoplePlaces: {
       id: 'people-places',
@@ -139,6 +139,12 @@ export function ScenarioSelect() {
       description: 'Navigate unemployment after being replaced by AI.',
       objectives: ['Protect savings', 'Maintain dignity', 'Build solidarity'],
     },
+    'cybersyn-chile': {
+      name: 'Project Cybersyn',
+      difficulty: 'hard',
+      description: 'Lead Allende\'s Chile (1971-1973): Build the cybernetic economy while surviving US economic warfare and the coming coup.',
+      objectives: ['Implement Project Cybersyn', 'Balance worker control with coordination', 'Survive until September 1973'],
+    },
     'sanctions-isolation': {
       name: 'Under Sanctions',
       difficulty: 'hard',
@@ -157,6 +163,7 @@ export function ScenarioSelect() {
     'rising-industrializer': IconScenarioEconomy,
     'sanctions-isolation': IconScenarioStagflation,
     'chokepoint-closure': IconScenarioStagflation,
+    'cybersyn-chile': IconScenarioStagflation,
   };
 
   const renderScenarioCard = (scenarioId: string, isNarrativeOnly = false) => {
