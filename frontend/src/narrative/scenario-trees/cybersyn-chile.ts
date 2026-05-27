@@ -26,7 +26,7 @@ import { createArcBasedTree } from '../long-form-tree';
 // ════════════════════════════════════════════════════════════════
 
 const inceptionArc: ScenarioArc = {
-  id: 'inception',
+  id: 'start',
   blocks: [
     {
       phase: 1,
