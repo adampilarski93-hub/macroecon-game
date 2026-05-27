@@ -12,7 +12,7 @@ import { createNarrativeTree as createGulfMigrantTree } from './scenario-trees/g
 import { createNarrativeTree as createPlurinationalTree } from './scenario-trees/plurinational-path';
 import { createNarrativeTree as createAiDisplacedTree } from './scenario-trees/ai-displaced';
 import { createNarrativeTree as createSovereigntyTree } from './scenario-trees/sovereignty-path';
-import { createNarrativeTree as createCybersynTree } from './scenario-trees/cybersyn-chile';
+import { createNarrativeTree as createCybersynTree } from './scenario-trees/cybersyn-chile-simple';
 
 const COMMON_STAT_COLORS: Record<string, string> = {
   economicStrength: '#22c55e',
