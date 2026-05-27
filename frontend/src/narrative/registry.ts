@@ -13,6 +13,8 @@ import { createNarrativeTree as createPlurinationalTree } from './scenario-trees
 import { createNarrativeTree as createAiDisplacedTree } from './scenario-trees/ai-displaced';
 import { createNarrativeTree as createSovereigntyTree } from './scenario-trees/sovereignty-path';
 import { createNarrativeTree as createCybersynTree } from './scenario-trees/cybersyn-chile-simple';
+import { createNarrativeTree as createChinaPovertyTree } from './scenario-trees/china-poverty-eradication';
+import { createNarrativeTree as createAiHedgeFundTree } from './scenario-trees/ai-hedge-fund';
 
 const COMMON_STAT_COLORS: Record<string, string> = {
   economicStrength: '#22c55e',
@@ -45,6 +47,45 @@ const COMMON_STAT_COLORS: Record<string, string> = {
   economicControl: '#8b5cf6',
   politicalPolarization: '#f97316',
   militaryTension: '#7c3aed',
+  // China Poverty Eradication stats
+  dataAccuracy: '#3b82f6',
+  trustBuilding: '#10b981',
+  timeInvestment: '#f59e0b',
+  countyApproval: '#8b5cf6',
+  sustainability: '#22c55e',
+  humanSecurity: '#ef4444',
+  dependencyRisk: '#f97316',
+  culturalRupture: '#a855f7',
+  collectivePower: '#ec4899',
+  efficiency: '#14b8a6',
+  participation: '#8b5cf6',
+  fundsRemaining: '#f59e0b',
+  humanCapital: '#3b82f6',
+  shortTermIncome: '#22c55e',
+  integrity: '#6366f1',
+  // AI Hedge Fund stats
+  fundConcentration: '#dc2626',
+  siliciaExposure: '#f97316',
+  riskProfile: '#ef4444',
+  dryPowder: '#22c55e',
+  liquidityBuffer: '#3b82f6',
+  portfolioDiversification: '#10b981',
+  liquidityManagement: '#06b6d4',
+  leverageRatio: '#f59e0b',
+  marginCallRisk: '#dc2626',
+  informationAdvantage: '#8b5cf6',
+  legalRisk: '#ef4444',
+  portfolioProtection: '#22c55e',
+  fundValuationCertainty: '#3b82f6',
+  regulatoryStanding: '#10b981',
+  transparencyScore: '#06b6d4',
+  redemptionPressure: '#f97316',
+  lpRecovery: '#22c55e',
+  ownershipRetention: '#3b82f6',
+  reputationRehabilitation: '#10b981',
+  intellectualHonesty: '#8b5cf6',
+  futureCapitalAccess: '#22c55e',
+  riskRecidivism: '#ef4444',
 };
 
 type EvaluateEndingFn = ScenarioNarrativeConfig['evaluateEnding'];
@@ -433,6 +474,88 @@ export const scenarioNarrativeRegistry: Record<string, ScenarioNarrativeConfig |
           summary: won
             ? `You built something before the fall. Cybersyn demonstrated that real-time economic coordination could serve participation, not just control. The cordones proved worker self-management outproduces hierarchy. The legacy outlives the coup.`
             : `The coup came before the experiment could prove itself. What remains is a caution: the forces of reaction move faster than democratic transformation. But the attempt matters.`,
+        };
+      },
+      endings,
+    );
+  },
+  'china-poverty-eradication': (scenarioId) => {
+    const { getNode, endings } = createChinaPovertyTree({ shuffle: true });
+    return makeConfig(
+      'china-poverty-eradication',
+      'Targeted Poverty Alleviation',
+      'Dawan Village, Guizhou',
+      ['dataAccuracy', 'trustBuilding', 'sustainability', 'humanSecurity', 'fundsRemaining', 'humanCapital'],
+      {
+        dataAccuracy: 'Data Accuracy',
+        trustBuilding: 'Village Trust',
+        sustainability: 'Sustainability',
+        humanSecurity: 'Human Security',
+        fundsRemaining: 'Funds Remaining',
+        humanCapital: 'Human Capital'
+      },
+      { dataAccuracy: 40, trustBuilding: 40, sustainability: 40, humanSecurity: 40, fundsRemaining: 60, humanCapital: 40 },
+      getNode,
+      [],
+      {},
+      (stats) => {
+        const data = stats.dataAccuracy ?? 50;
+        const trust = stats.trustBuilding ?? 50;
+        const sustain = stats.sustainability ?? 50;
+        const security = stats.humanSecurity ?? 50;
+        const capital = stats.humanCapital ?? 50;
+        const score = Math.round(
+          data * 0.15 + trust * 0.25 + sustain * 0.25 +
+          security * 0.15 + capital * 0.2,
+        );
+        const won = trust >= 45 && sustain >= 45 && security >= 40;
+        return {
+          won,
+          score: Math.min(100, Math.max(0, score)),
+          summary: won
+            ? `You lifted the village above the poverty line—not just in income, but in capacity. The systems you built outlasted your tenure.`
+            : `Despite efforts, the village remained below the line. The structural constraints proved intractable—but the attempt illuminated real limits.`,
+        };
+      },
+      endings,
+    );
+  },
+  'ai-hedge-fund': (scenarioId) => {
+    const { getNode, endings } = createAiHedgeFundTree({ shuffle: true });
+    return makeConfig(
+      'ai-hedge-fund',
+      'The Insolvency',
+      'Kestrel Capital',
+      ['lpConfidence', 'integrityScore', 'fundSurvival', 'reputationRisk', 'liquidityManagement', 'riskProfile'],
+      {
+        lpConfidence: 'LP Confidence',
+        integrityScore: 'Integrity',
+        fundSurvival: 'Fund Survival',
+        reputationRisk: 'Reputation Risk',
+        liquidityManagement: 'Liquidity Management',
+        riskProfile: 'Risk Profile'
+      },
+      { lpConfidence: 50, integrityScore: 50, fundSurvival: 50, reputationRisk: 30, liquidityManagement: 45, riskProfile: 40 },
+      getNode,
+      [],
+      {},
+      (stats) => {
+        const lpConf = stats.lpConfidence ?? 50;
+        const integrity = stats.integrityScore ?? 50;
+        const survival = stats.fundSurvival ?? 50;
+        const rep = stats.reputationRisk ?? 50;
+        const liq = stats.liquidityManagement ?? 50;
+        const score = Math.round(
+          integrity * 0.3 + liq * 0.25 + survival * 0.25 +
+          (100 - rep) * 0.2,
+        );
+        const won = integrity >= 50 && survival >= 35;
+        return {
+          won,
+          score: Math.min(100, Math.max(0, score)),
+          summary: won
+            ? `You managed an impossible situation with integrity. The fund structure preserved capital; your reputation recovered through transparency.`
+            : `The fund collapsed under concentration and leverage. But the lessons you learned may save the next manager from similar hubris.`,
         };
       },
       endings,

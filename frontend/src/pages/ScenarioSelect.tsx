@@ -102,7 +102,7 @@ export function ScenarioSelect() {
       title: 'People & Places: Economies Up Close',
       subtitle: 'Human-scale stories of navigating economic forces',
       icon: IconPeople,
-      scenarioIds: ['gulf-migrant', 'ai-displaced'],
+      scenarioIds: ['china-poverty-eradication', 'ai-hedge-fund', 'gulf-migrant', 'ai-displaced'],
     },
     tackleChallenge: {
       id: 'tackle-challenge',
@@ -144,6 +144,18 @@ export function ScenarioSelect() {
       difficulty: 'hard',
       description: 'Lead Allende\'s Chile (1971-1973): Build the cybernetic economy while surviving US economic warfare and the coming coup.',
       objectives: ['Implement Project Cybersyn', 'Balance worker control with coordination', 'Survive until September 1973'],
+    },
+    'china-poverty-eradication': {
+      name: 'Targeted Poverty Alleviation',
+      difficulty: 'hard',
+      description: 'Serve as First Secretary in a Chinese village, tasked with lifting all households above the poverty line by 2020.',
+      objectives: ['Conduct household surveys', 'Balance immediate relief with sustainable investment', 'Navigate relocation vs retention'],
+    },
+    'ai-hedge-fund': {
+      name: 'The Insolvency',
+      difficulty: 'hard',
+      description: 'Manage a $200M AI-focused hedge fund through investment, concentration risk, and the collapse of your anchor position.',
+      objectives: ['Manage LP confidence', 'Navigate concentration risk', 'Survive the insolvency'],
     },
     'sanctions-isolation': {
       name: 'Under Sanctions',
