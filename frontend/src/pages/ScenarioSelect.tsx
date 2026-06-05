@@ -129,13 +129,13 @@ export function ScenarioSelect() {
     },
     'gulf-migrant': {
       name: 'Gulf Migrant',
-      difficulty: 'hard',
+      difficulty: 'medium',
       description: 'Navigate as a migrant worker in a wealthy Gulf state.',
       objectives: ['Send remittances', 'Protect health', 'Build solidarity'],
     },
     'ai-displaced': {
       name: 'AI Displaced',
-      difficulty: 'hard',
+      difficulty: 'medium',
       description: 'Navigate unemployment after being replaced by AI.',
       objectives: ['Protect savings', 'Maintain dignity', 'Build solidarity'],
     },
@@ -147,7 +147,7 @@ export function ScenarioSelect() {
     },
     'china-poverty-eradication': {
       name: 'Targeted Poverty Alleviation',
-      difficulty: 'hard',
+      difficulty: 'medium',
       description: 'Serve as First Secretary in a Chinese village, tasked with lifting all households above the poverty line by 2020.',
       objectives: ['Conduct household surveys', 'Balance immediate relief with sustainable investment', 'Navigate relocation vs retention'],
     },

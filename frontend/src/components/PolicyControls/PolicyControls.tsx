@@ -70,7 +70,7 @@ export function PolicyControls({ state, onStep, loading, mode = 'guided', gameOv
   const [multiYearAgendaStrength, setMultiYearAgendaStrength] = useState(0);
   const [infrastructureShare, setInfrastructureShare] = useState(0.15);
 
-  // Quick-set sliders (Easy mode)
+  // Quick-set sliders for guided mode
   const [quickStateRole, setQuickStateRole] = useState(0.5);
   const [quickRegulation, setQuickRegulation] = useState(0.5);
   const [quickCbStance, setQuickCbStance] = useState(0.5);
@@ -155,7 +155,7 @@ export function PolicyControls({ state, onStep, loading, mode = 'guided', gameOv
         {/* GUIDED MODE: 5 Strategic Levers with Heterodox Context */}
         {mode === 'guided' && (
           <section className="policy-school guided-mode">
-            <h3>Guided Simulation ? Key Policy Levers</h3>
+            <h3>Guided Simulation — Key Policy Levers</h3>
             <p className="guided-intro">
               Adjust these five strategic levers to shape your economy. Each represents a major policy domain grounded in heterodox economic traditions.
             </p>
