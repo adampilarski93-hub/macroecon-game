@@ -71,6 +71,7 @@ export function ScenarioSelect() {
 
   const [useCustomTurns, setUseCustomTurns] = useState(customMaxTurns > 0);
   const [sliderValue, setSliderValue] = useState(customMaxTurns > 0 ? customMaxTurns : 40);
+  const [showAbout, setShowAbout] = useState(false);
 
   useEffect(() => {
     fetchScenarios();
@@ -293,7 +294,56 @@ export function ScenarioSelect() {
         <button type="button" className="hero-tutorial-btn" onClick={() => navigate('/narrative/tutorial')}>
           Start with the Tutorial
         </button>
+        <button type="button" className="hero-about-btn" onClick={() => setShowAbout(true)} style={{ marginLeft: '12px', background: 'transparent', border: '1px solid currentColor' }}>
+          About This Model
+        </button>
       </div>
+
+      {showAbout && (
+        <div className="about-modal-overlay" onClick={() => setShowAbout(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+          <div className="about-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '640px', maxHeight: '80vh', overflow: 'auto', background: 'var(--bg)', color: 'var(--text)', padding: '24px', borderRadius: '12px', margin: '20px' }}>
+            <h2>About Macro Planner</h2>
+            <p><strong>An educational simulation, not a forecasting tool.</strong></p>
+            <p>
+              Macro Planner is designed to teach political economy through interactive scenarios. 
+              It integrates heterodox economic traditions—Post-Keynesian, Marxian, Structuralist, 
+              and mainstream perspectives—to help you understand how economic policy choices 
+              interact with theoretical frameworks.
+            </p>
+            <h3>Model Limitations</h3>
+            <ul>
+              <li>
+                <strong>Illustrative parameters:</strong> The simulation equations are parameterized 
+                for pedagogical clarity and plausible behavioral responses, not empirical calibration. 
+                Results should not be treated as forecasts of real economies.
+              </li>
+              <li>
+                <strong>Simplified dynamics:</strong> Real economies involve millions of agents, 
+                institutional path dependencies, and emergent phenomena that no compact model can capture. 
+                This is a stylized laboratory for thinking, not a crystal ball.
+              </li>
+              <li>
+                <strong>Capital composition:</strong> Recent additions (public vs. private investment, 
+                investment quality, state capacity) reflect theoretical arguments about who invests 
+                and how, but their quantitative effects are modeled, not measured from data.
+              </li>
+            </ul>
+            <h3>How to Use</h3>
+            <p>
+              Use the simulation to explore trade-offs, test economic intuitions, and understand 
+              how different schools of thought frame policy problems. Compare the advisor guidance 
+              against outcomes to see how theoretical assumptions shape recommendations.
+            </p>
+            <p>
+              For deeper analysis, the <strong>Full Simulation</strong> mode exposes the equation 
+              decomposition and allows deterministic runs to inspect causal chains.
+            </p>
+            <div style={{ marginTop: '20px', textAlign: 'right' }}>
+              <button type="button" onClick={() => setShowAbout(false)} className="hero-tutorial-btn">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {error && <div className="error">{error}</div>}
 

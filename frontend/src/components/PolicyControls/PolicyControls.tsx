@@ -253,6 +253,46 @@ export function PolicyControls({ state, onStep, loading, mode = 'guided', gameOv
             <div className="guided-tip">
               <strong>Tip:</strong> Each lever combines multiple policy instruments. For finer control, use Full Simulation mode.
             </div>
+
+            {/* Capital Composition Readout */}
+            <div className="capital-composition-panel" style={{ marginTop: '24px', padding: '16px', background: 'rgba(0,0,0,0.05)', borderRadius: '8px' }}>
+              <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px', opacity: 0.8 }}>
+                Capital Composition (State/Capital Relation)
+              </h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+                <div>
+                  <div style={{ fontSize: '12px', opacity: 0.7, marginBottom: '4px' }}>Public Investment Share</div>
+                  <div style={{ fontSize: '20px', fontWeight: 600, color: (c.publicInvestmentShare ?? 0.15) > 0.3 ? '#06b6d4' : 'inherit' }}>
+                    {((c.publicInvestmentShare ?? 0.15) * 100).toFixed(0)}%
+                  </div>
+                  <div style={{ fontSize: '11px', opacity: 0.6, marginTop: '4px' }}>
+                    {(c.publicInvestmentShare ?? 0.15) > 0.3 ? 'High public-led investment' : (c.publicInvestmentShare ?? 0.15) > 0.15 ? 'Mixed' : 'Private-dominated'}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', opacity: 0.7, marginBottom: '4px' }}>Investment Quality</div>
+                  <div style={{ fontSize: '20px', fontWeight: 600, color: (c.investmentQuality ?? 0.7) > 0.8 ? '#22c55e' : (c.investmentQuality ?? 0.7) > 0.6 ? '#f59e0b' : '#ef4444' }}>
+                    {((c.investmentQuality ?? 0.7) * 100).toFixed(0)}%
+                  </div>
+                  <div style={{ fontSize: '11px', opacity: 0.6, marginTop: '4px' }}>
+                    {(c.investmentQuality ?? 0.7) > 0.8 ? 'Productive focus' : (c.investmentQuality ?? 0.7) > 0.6 ? 'Some speculative risk' : 'Speculative bubble risk'}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', opacity: 0.7, marginBottom: '4px' }}>State Capacity</div>
+                  <div style={{ fontSize: '20px', fontWeight: 600, color: (c.stateCapacity ?? 0.5) > 0.7 ? '#22c55e' : (c.stateCapacity ?? 0.5) > 0.5 ? '#f59e0b' : '#ef4444' }}>
+                    {((c.stateCapacity ?? 0.5) * 100).toFixed(0)}%
+                  </div>
+                  <div style={{ fontSize: '11px', opacity: 0.6, marginTop: '4px' }}>
+                    {(c.stateCapacity ?? 0.5) > 0.7 ? 'Effective bureaucracy' : (c.stateCapacity ?? 0.5) > 0.5 ? 'Adequate' : 'Implementation gaps'}
+                  </div>
+                </div>
+              </div>
+              <p style={{ margin: '12px 0 0 0', fontSize: '12px', opacity: 0.7, lineHeight: 1.5 }}>
+                <PolicyHelp text="Public investment is less interest-sensitive and more counter-cyclical. Investment quality reflects the mix of productive infrastructure vs. speculative financial activity. State capacity determines whether public investment achieves its goals (Evans' 'embedded autonomy'). These metrics shape your fiscal multiplier and long-run growth potential." />
+                Higher public investment share + capacity = more effective stimulus, lower bubble risk.
+              </p>
+            </div>
           </section>
         )}
         {mode === 'simulator' && (
